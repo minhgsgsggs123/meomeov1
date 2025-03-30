@@ -30,8 +30,8 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
       })
       
 ------ Tab
-     local Tab1o = MakeTab({Name = "script meomeo"})
-     local Tab2o = MakeTab({Name = "script meomeo1"})
+     local Tab1o = MakeTab({Name = "script meomeo1"})
+     local Tab2o = MakeTab({Name = "script meomeo2"})
 ------- BUTTON
     
     AddButton(Tab1o, {
