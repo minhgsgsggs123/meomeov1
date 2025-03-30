@@ -1,0 +1,117 @@
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
+
+       local Window = MakeWindow({
+         Hub = {
+         Title = "meomeo hub ",
+         Animation = "meomeo hub"
+         },
+        Key = {
+        KeySystem = false,
+        Title = "Key System",
+        Description = "",
+        KeyLink = "",
+        Keys = {"1234"},
+        Notifi = {
+        Notifications = true,
+        CorrectKey = "Running the Script...",
+       Incorrectkey = "The key is incorrect",
+       CopyKeyLink = "Copied to Clipboard"
+      }
+    }
+  })
+
+       MinimizeButton({
+       Image = "http://www.roblox.com/asset/?id=82892113915663",
+       Size = {60, 60},
+       Color = Color3.fromRGB(10, 10, 10),
+       Corner = true,
+       Stroke = false,
+       StrokeColor = Color3.fromRGB(255, 0, 0)
+      })
+      
+------ Tab
+     local Tab1o = MakeTab({Name = "script meomeo"})
+     local Tab2o = MakeTab({Name = "script meomeo1"})
+------- BUTTON
+    
+    AddButton(Tab1o, {
+     Name = "Redz Hub",
+    Callback = function()
+      local Settings = {
+JoinTeam = "Marines"; -- Pirates/Marines
+Translator = true; -- true/false
+}
+loadstring(game:HttpGet("https://raw.githubusercontent.com/nguyenthebaort/NTBhubV1/refs/heads/main/redzhub.txt"))(Settings)
+  end
+  })
+
+AddButton(Tab1o, {
+     Name = "zis",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/Zis/refs/heads/main/ZisRb11"))()
+  end
+  })
+
+AddButton(Tab1o, {
+     Name = "fix lag",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/TurboLite/Script/main/FixLag.lua"))()
+  end
+  })
+
+AddButton(Tab1o, {
+     Name = "astral hub full",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Overgustx2/Main/refs/heads/main/BloxFruits_25.html"))()
+  end
+  })
+
+AddButton(Tab1o, {
+     Name = "banana free",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/Banana-Hub/refs/heads/main/Banana-Free.lua"))()
+  end
+  })
+
+AddButton(Tab1o, {
+     Name = "Zeter v2",
+    Callback = function()
+getgenv().Version = "V2"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/Loader/main/Xeter.lua"))()
+  end
+  })
+
+AddButton(Tab1o, {
+     Name = "đạt thg",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/DatThg/refs/heads/main/DatThgV1"))()
+  end
+  })
+
+AddButton(Tab2o, {
+     Name = "trẩu ",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/TrauHub/refs/heads/main/TrauXt"))()
+  end
+  })
+
+AddButton(Tab2o, {
+     Name = "red bap",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/BapRed/main/BapRedHub"))()
+  end
+  })
+
+AddButton(Tab2o, {
+     Name = "kimp",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/KimPRoblox"))()
+  end
+  })
+
+AddButton(Tab2o, {
+     Name = "kimp v2",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/KimPRobloxV2"))()
+  end
+  })
