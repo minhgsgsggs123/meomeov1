@@ -1,0 +1,80 @@
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
+
+       local Window = MakeWindow({
+         Hub = {
+         Title = "meomeo Village ",
+         Animation = "meomeo Village"
+         },
+        Key = {
+        KeySystem = false,
+        Title = "Key System",
+        Description = "",
+        KeyLink = "",
+        Keys = {"1234"},
+        Notifi = {
+        Notifications = true,
+        CorrectKey = "Running the Script...",
+       Incorrectkey = "The key is incorrect",
+       CopyKeyLink = "Copied to Clipboard"
+      }
+    }
+  })
+
+       MinimizeButton({
+       Image = "http://www.roblox.com/asset/?id=82892113915663",
+       Size = {60, 60},
+       Color = Color3.fromRGB(10, 10, 10),
+       Corner = true,
+       Stroke = false,
+       StrokeColor = Color3.fromRGB(255, 0, 0)
+      })
+
+-- Script to scan the map to find hidden islands in Blox Fruits
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+-- List of possible coordinates of the mysterious island
+local possibleIslands = {
+Vector3.new(-3000, 50, 7000), -- First island
+Vector3.new(4000, 100, -8000), -- Second island
+Vector3.new(6000, 150, 3000), -- Third island
+Vector3.new(-5000, 50, -2000), -- Fourth island
+-- Add other coordinates if needed
+}
+
+-- Function to check if island exists or not
+function isIslandThere(position)
+local part = Instance.new("Part")
+part.Position = position
+part.Size = Vector3.new(10, 10, 10)
+part.Anchored = true
+part.CanCollide = false
+part.Transparency = 1 -- Hide the object so it won't be detected
+part.Parent = game.Workspace
+
+wait(1)
+
+local found = false
+if #part:GetTouchingParts() > 0 then
+found = true
+end
+
+part:Destroy()
+return found
+end
+
+-- Function to find mysterious island
+function findHiddenIslands()
+for _, pos in pairs(possibleIslands) do
+if isIslandThere(pos) then
+print("Mysterious island found at coordinates: " .. tostring(pos))
+-- You can add move to island action here
+else
+print("No island at: " .. tostring(pos))
+end
+end
+end
+
+-- Call the function to find the island
+findHiddenIslands()
