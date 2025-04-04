@@ -1,0 +1,248 @@
+--// Load UI Library
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
+local Window = Library:MakeWindow({Name = "MeoMeo Hub - Tìm Đảo Bí Ẩn & Mua Kiếm", HidePremium = false, SaveConfig = true, ConfigFolder = "BloxFruit_Config"})
+
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local Workspace = game:GetService("Workspace")
+
+-- Biến kiểm tra bật/tắt chức năng
+local autoFindingIslands = false
+local autoPickUp = false
+local autoLeverToggle = false
+local autoBuySwords = false
+local autoEquipSword = false
+
+-- Các thanh kiếm sẽ mua
+local swordsToBuy = {
+    "Sandai Kitetsu", -- Kiếm thứ nhất
+    "Shusui",         -- Kiếm thứ hai
+    "Wado"            -- Kiếm thứ ba
+}
+
+-- Tọa độ đảo bí ẩn
+local possibleIslands = {
+    Vector3.new(-3000, 50, 7000),
+    Vector3.new(4000, 100, -8000),
+    Vector3.new(6000, 150, 3000),
+    Vector3.new(-5000, 50, -2000),
+}
+
+-- Kiểm tra có đảo bí ẩn hay không
+function isIslandThere(position)
+    local part = Instance.new("Part")
+    part.Position = position
+    part.Size = Vector3.new(10, 10, 10)
+    part.Anchored = true
+    part.CanCollide = false
+    part.Transparency = 1
+    part.Parent = game.Workspace
+
+    wait(1)
+
+    local found = false
+    if #part:GetTouchingParts() > 0 then
+        found = true
+    end
+
+    part:Destroy()
+    return found
+end
+
+-- Tự động di chuyển đến đảo
+function moveToIsland(targetPosition)
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local humanoidRootPart = LocalPlayer.Character.HumanoidRootPart
+        local distance = (humanoidRootPart.Position - targetPosition).magnitude
+        local tweenInfo = TweenInfo.new(distance / 150, Enum.EasingStyle.Linear) -- Tốc độ bay
+        local tween = TweenService:Create(humanoidRootPart, tweenInfo, {Position = targetPosition})
+        
+        print("Đang di chuyển đến đảo bí ẩn...")
+        tween:Play()
+    end
+end
+
+-- Quét đảo bí ẩn
+function findHiddenIslands()
+    if autoFindingIslands then
+        for _, pos in pairs(possibleIslands) do
+            if isIslandThere(pos) then
+                print("Đảo bí ẩn được tìm thấy tại: " .. tostring(pos))
+                moveToIsland(pos) -- Di chuyển đến đảo
+                return true
+            end
+        end
+        print("Không tìm thấy đảo bí ẩn, chuẩn bị hop server...")
+    end
+    return false
+end
+
+-- Tự động nhặt bánh răng
+function autoPickUpGears()
+    if autoPickUp then
+        for _, part in pairs(Workspace:GetChildren()) do
+            if part:IsA("Part") and part.Name == "Gear" and (part.Position - LocalPlayer.Character.HumanoidRootPart.Position).magnitude < 10 then
+                -- Nhặt bánh răng
+                fireclickdetector(part:FindFirstChildOfClass("ClickDetector"))
+                print("Đã nhặt bánh răng tại: " .. tostring(part.Position))
+
+                -- Sau khi nhặt bánh răng, tìm và gạt cần gần đó
+                autoToggleLever()
+            end
+        end
+    end
+end
+
+-- Tự động gạt cần gần đó
+function autoToggleLever()
+    if autoLeverToggle then
+        for _, part in pairs(Workspace:GetChildren()) do
+            if part:IsA("Part") and part.Name == "Lever" and (part.Position - LocalPlayer.Character.HumanoidRootPart.Position).magnitude < 10 then
+                -- Kiểm tra nếu có ClickDetector trong cần gạt và click vào đó
+                local clickDetector = part:FindFirstChildOfClass("ClickDetector")
+                if clickDetector then
+                    fireclickdetector(clickDetector)
+                    print("Đã gạt cần tại: " .. tostring(part.Position))
+                end
+            end
+        end
+    end
+end
+
+-- Tự động mua kiếm
+function autoBuyWeapons()
+    for _, swordName in ipairs(swordsToBuy) do
+        local sword = game:GetService("ReplicatedStorage"):WaitForChild("Items"):FindFirstChild(swordName)
+
+        if sword then
+            local playerMoney = LocalPlayer.leaderstats and LocalPlayer.leaderstats.Beli
+            if playerMoney and playerMoney.Value >= sword.Cost then
+                -- Nếu có đủ tiền, tiến hành mua
+                local buyEvent = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("BuyItem")
+                buyEvent:FireServer(swordName)
+                print("Đã mua kiếm: " .. swordName)
+            else
+                print("Không đủ tiền để mua: " .. swordName)
+            end
+        else
+            print("Không tìm thấy kiếm: " .. swordName)
+        end
+    end
+end
+
+-- Tự động trang bị kiếm
+function autoEquipWeapon()
+    local swordName = "Sandai Kitetsu"  -- Tên kiếm bạn muốn trang bị, thay đổi nếu cần
+    local backpack = LocalPlayer.Backpack
+    local sword = backpack:FindFirstChild(swordName)
+
+    if sword then
+        -- Kiếm đã có sẵn trong ba lô, trang bị nó
+        LocalPlayer.Character.Humanoid:EquipTool(sword)
+        print("Trang bị kiếm: " .. swordName)
+    else
+        print("Kiếm không có trong ba lô.")
+    end
+end
+
+-- Tự động chuyển sang server mới
+function hopServer()
+    local Servers = HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/2753915549/servers/Public?sortOrder=Asc&limit=100"))
+    for _, v in pairs(Servers.data) do
+        if v.playing < v.maxPlayers then
+            print("Đang chuyển sang server mới...")
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, v.id, LocalPlayer)
+            wait(5)
+        end
+    end
+end
+
+-- Tab 1: Auto Gạt Cần
+Window:MakeTab({Name = "Auto Gạt Cần"}):AddToggle({
+    Name = "Tự động tìm đảo",
+    Default = false,
+    Callback = function(value)
+        autoFindingIslands = value
+        if value then
+            print("Bắt đầu tìm đảo bí ẩn!")
+            while autoFindingIslands do
+                findHiddenIslands()
+                wait(5)  -- Kiểm tra lại sau 5 giây
+            end
+        else
+            print("Đã tắt tìm đảo bí ẩn!")
+        end
+    end
+})
+
+Window:MakeTab({Name = "Auto Gạt Cần"}):AddToggle({
+    Name = "Tự động nhặt bánh răng",
+    Default = false,
+    Callback = function(value)
+        autoPickUp = value
+        if value then
+            print("Tự động nhặt bánh răng đã bật!")
+            while autoPickUp do
+                autoPickUpGears()
+                wait(1)  -- Lặp lại mỗi giây
+            end
+        else
+            print("Đã tắt tự động nhặt bánh răng!")
+        end
+    end
+})
+
+Window:MakeTab({Name = "Auto Gạt Cần"}):AddToggle({
+    Name = "Tự động gạt cần",
+    Default = false,
+    Callback = function(value)
+        autoLeverToggle = value
+        if value then
+            print("Tự động gạt cần đã bật!")
+        else
+            print("Đã tắt tự động gạt cần!")
+        end
+    end
+})
+
+-- Tab 2: Auto Tam Bảo Kiếm
+Window:MakeTab({Name = "Auto Tam Bảo Kiếm"}):AddToggle({
+    Name = "Tự động mua kiếm",
+    Default = false,
+    Callback = function(value)
+        autoBuySwords = value
+        if value then
+            print("Tự động mua kiếm đã bật!")
+            autoBuyWeapons()  -- Mua kiếm ngay khi bật
+        else
+            print("Đã tắt tự động mua kiếm!")
+        end
+    end
+})
+
+Window:MakeTab({Name = "Auto Tam Bảo Kiếm"}):AddToggle({
+    Name = "Tự động trang bị kiếm",
+    Default = false,
+    Callback = function(value)
+        autoEquipSword = value
+        if value then
+            print("Tự động trang bị kiếm đã bật!")
+            autoEquipWeapon()  -- Kiểm tra trang bị kiếm ngay khi bật
+        else
+            print("Đã tắt tự động trang bị kiếm!")
+        end
+    end
+})
+
+-- Hiển thị UI
+Library:Init()
+
+-- Lặp lại việc nhặt bánh răng liên tục
+RunService.Heartbeat:Connect(function()
+    autoPickUpGears()
+    autoEquipWeapon()
+end)
