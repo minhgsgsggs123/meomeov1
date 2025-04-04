@@ -115,3 +115,10 @@ AddButton(Tab2o, {
     loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/KimPRobloxV2"))()
   end
   })
+
+AddButton(Tab2o, {
+     Name = "rubu",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/RuBuRoblox.lua"))()
+  end
+  })
