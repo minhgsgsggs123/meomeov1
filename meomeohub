@@ -122,3 +122,10 @@ AddButton(Tab2o, {
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/RuBuRoblox.lua"))()
   end
   })
+
+AddButton(Tab2o, {
+     Name = "fly",
+    Callback = function()
+    loadstring(game:HttpGet("loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-v3-13879"))()"))()
+  end
+  })
