@@ -2,8 +2,8 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
 
        local Window = MakeWindow({
          Hub = {
-         Title = "meomeo hub ",
-         Animation = "meomeo hub"
+         Title = "meomeo Village ",
+         Animation = "meomeo Village"
          },
         Key = {
         KeySystem = false,
@@ -21,8 +21,8 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
   })
 
        MinimizeButton({
-       Image = "http://www.roblox.com/asset/?id=82892113915663",
-       Size = {60, 60},
+       Image = "",
+       Size = {60, 60},http://www.roblox.com/asset/?id=82892113915663
        Color = Color3.fromRGB(10, 10, 10),
        Corner = true,
        Stroke = false,
@@ -30,8 +30,8 @@ loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V
       })
       
 ------ Tab
-     local Tab1o = MakeTab({Name = "script meomeo1"})
-     local Tab2o = MakeTab({Name = "script meomeo2"})
+     local Tab1o = MakeTab({Name = "script minhdz1"})
+     local Tab2o = MakeTab({Name = "script minhdz2"})
 ------- BUTTON
     
     AddButton(Tab1o, {
@@ -66,28 +66,6 @@ AddButton(Tab1o, {
   end
   })
 
-AddButton(Tab1o, {
-     Name = "banana free",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/Banana-Hub/refs/heads/main/Banana-Free.lua"))()
-  end
-  })
-
-AddButton(Tab1o, {
-     Name = "Zeter v2",
-    Callback = function()
-getgenv().Version = "V2"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/Loader/main/Xeter.lua"))()
-  end
-  })
-
-AddButton(Tab1o, {
-     Name = "đạt thg",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/DatThg/refs/heads/main/DatThgV1"))()
-  end
-  })
-
 AddButton(Tab2o, {
      Name = "trẩu ",
     Callback = function()
@@ -103,6 +81,13 @@ AddButton(Tab2o, {
   })
 
 AddButton(Tab2o, {
+     Name = "Maru",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/MaruHub.lua"))()
+  end
+  })
+
+AddButton(Tab2o, {
      Name = "kimp",
     Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/KimPRoblox"))()
@@ -113,19 +98,5 @@ AddButton(Tab2o, {
      Name = "kimp v2",
     Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/KimPRobloxV2"))()
-  end
-  })
-
-AddButton(Tab2o, {
-     Name = "rubu",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/RuBuRoblox.lua"))()
-  end
-  })
-
-AddButton(Tab2o, {
-     Name = "fly",
-    Callback = function()
-    loadstring(game:HttpGet("loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-v3-13879"))()"))()
   end
   })
