@@ -1,4 +1,3 @@
--- Sử dụng loadstring để tải script từ URL
 local scriptURL = "https://raw.githubusercontent.com/Carbonater/Orion/main/Orion%20Lib/Orion%20Lib"
 local OrionLib = loadstring(game:HttpGet(scriptURL))()
 
