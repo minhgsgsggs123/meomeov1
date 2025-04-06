@@ -1,0 +1,157 @@
+-- Sử dụng loadstring để tải script từ URL
+local scriptURL = "https://raw.githubusercontent.com/Carbonater/Orion/main/Orion%20Lib/Orion%20Lib"
+local OrionLib = loadstring(game:HttpGet(scriptURL))()
+
+local Window = OrionLib:MakeWindow({
+    Name = "MeoMeo Hub - Blox Fruits Script",
+    HidePremium = false,
+    IntroEnabled = false
+})
+
+local npcQuest = {
+    [1] = {x = 100, y = 50, z = 200},
+    [2] = {x = 300, y = 50, z = 400},
+    [3] = {x = 500, y = 50, z = 600},
+    [4] = {x = 800, y = 50, z = 1000},
+}
+
+local bossLocation = {
+    ["Boss1"] = {x = 1500, y = 50, z = 1600},
+    ["Boss2"] = {x = 2500, y = 50, z = 2800},
+}
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+local weaponInventory = {}
+local fruitInventory = {}
+
+function EquipStrongestWeapon()
+    local strongestWeapon = nil
+    for _, weapon in pairs(weaponInventory) do
+        if not strongestWeapon or weapon.Damage > strongestWeapon.Damage then
+            strongestWeapon = weapon
+        end
+    end
+    if strongestWeapon then
+        character:FindFirstChild("Weapon").Value = strongestWeapon
+    end
+end
+
+local AutoFarmEnabled = false
+function AutoFarm()
+    while AutoFarmEnabled do
+        wait(1)
+        local targetNPC = npcQuest[1]
+        character:MoveTo(Vector3.new(targetNPC.x, targetNPC.y, targetNPC.z))
+        AttackNPC(targetNPC)
+    end
+end
+
+function AttackNPC(npc)
+    local target = npc
+    if (target.Position - character.HumanoidRootPart.Position).Magnitude < 20 then
+        local attackButton = character:FindFirstChild("AttackButton")
+        if attackButton then
+            attackButton:Fire()
+        end
+    end
+end
+
+local AutoQuestEnabled = false
+function AutoQuest()
+    while AutoQuestEnabled do
+        wait(1)
+        local questNPC = npcQuest[1]
+        StartQuest(questNPC)
+    end
+end
+
+function StartQuest(npc)
+    print("Nhận nhiệm vụ từ NPC tại tọa độ: " .. npc.x .. ", " .. npc.y .. ", " .. npc.z)
+end
+
+local function AutoFightBoss()
+    for bossName, bossPosition in pairs(bossLocation) do
+        local boss = workspace:FindFirstChild(bossName)
+        if boss then
+            while true do
+                wait(1)
+                if (boss.Position - character.HumanoidRootPart.Position).Magnitude < 50 then
+                    AttackBoss(boss)
+                else
+                    character:MoveTo(boss.Position)
+                end
+            end
+        end
+    end
+end
+
+function AttackBoss(boss)
+    if (boss.Position - character.HumanoidRootPart.Position).Magnitude < 50 then
+        local attackButton = character:FindFirstChild("AttackButton")
+        if attackButton then
+            attackButton:Fire()
+        end
+    end
+end
+
+function AutoFastAttack()
+    while true do
+        wait(0.1)
+        local attackButton = character:FindFirstChild("AttackButton")
+        if attackButton then
+            attackButton:Fire()
+        end
+    end
+end
+
+local MainTab = Window:MakeTab({
+    Name = "Auto Features",
+    Icon = "rbxassetid://6014031419",
+    PremiumOnly = false
+})
+
+MainTab:AddButton({
+    Name = "Toggle Auto Farm",
+    Callback = function()
+        AutoFarmEnabled = not AutoFarmEnabled
+        if AutoFarmEnabled then
+            AutoFarm()
+        end
+    end
+})
+
+MainTab:AddButton({
+    Name = "Toggle Auto Quest",
+    Callback = function()
+        AutoQuestEnabled = not AutoQuestEnabled
+        if AutoQuestEnabled then
+            AutoQuest()
+        end
+    end
+})
+
+MainTab:AddButton({
+    Name = "Equip Strongest Weapon",
+    Callback = EquipStrongestWeapon
+})
+
+MainTab:AddButton({
+    Name = "Auto Boss Fight",
+    Callback = function()
+        AutoFightBoss()
+    end
+})
+
+MainTab:AddButton({
+    Name = "Auto Fast Attack",
+    Callback = function()
+        AutoFastAttack()
+    end
+})
+
+while true do
+    wait(1)
+end
