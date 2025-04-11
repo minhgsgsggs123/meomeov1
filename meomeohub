@@ -100,3 +100,17 @@ AddButton(Tab2o, {
     loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/KimPRobloxV2"))()
   end
   })
+
+AddButton(Tab2o, {
+     Name = "tuan anh ios",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-V3.lua"))()
+  end
+  })
+
+AddButton(Tab2o, {
+     Name = "fly",
+    Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
+  end
+  })
