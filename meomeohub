@@ -1,116 +1,81 @@
-loadstring(game:HttpGet(("https://raw.githubusercontent.com/daucobonhi/Ui-Redz-V2/refs/heads/main/UiREDzV2.lua")))()
+-- Kiểm tra môi trường Roblox
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
 
-       local Window = MakeWindow({
-         Hub = {
-         Title = "meomeo Village ",
-         Animation = "meomeo Village"
-         },
-        Key = {
-        KeySystem = false,
-        Title = "Key System",
-        Description = "",
-        KeyLink = "",
-        Keys = {"1234"},
-        Notifi = {
-        Notifications = true,
-        CorrectKey = "Running the Script...",
-       Incorrectkey = "The key is incorrect",
-       CopyKeyLink = "Copied to Clipboard"
-      }
-    }
-  })
+-- Tạo ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Name = "RedzHubMenu"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-       MinimizeButton({
-       Image = "",
-       Size = {60, 60},http://www.roblox.com/asset/?id=82892113915663
-       Color = Color3.fromRGB(10, 10, 10),
-       Corner = true,
-       Stroke = false,
-       StrokeColor = Color3.fromRGB(255, 0, 0)
-      })
-      
------- Tab
-     local Tab1o = MakeTab({Name = "script minhdz1"})
-     local Tab2o = MakeTab({Name = "script minhdz2"})
-------- BUTTON
-    
-    AddButton(Tab1o, {
-     Name = "Redz Hub",
-    Callback = function()
-      local Settings = {
-JoinTeam = "Marines"; -- Pirates/Marines
-Translator = true; -- true/false
-}
-loadstring(game:HttpGet("https://raw.githubusercontent.com/nguyenthebaort/NTBhubV1/refs/heads/main/redzhub.txt"))(Settings)
-  end
-  })
+-- Tạo Frame chính (cửa sổ menu)
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Visible = true
+MainFrame.ZIndex = 2
+MainFrame.Parent = ScreenGui
 
-AddButton(Tab1o, {
-     Name = "zis",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/Zis/refs/heads/main/ZisRb11"))()
-  end
-  })
+-- Tạo tiêu đề
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, 0, 0, 30)
+TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+TitleLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+TitleLabel.Text = "Redz Hub"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextSize = 18
+TitleLabel.Font = Enum.Font.SourceSansBold
+TitleLabel.ZIndex = 3
+TitleLabel.Parent = MainFrame
 
-AddButton(Tab1o, {
-     Name = "fix lag",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/TurboLite/Script/main/FixLag.lua"))()
-  end
-  })
+-- Tạo nút đóng (X) ở góc trên bên phải
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -30, 0, 0)
+CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 14
+CloseButton.Font = Enum.Font.SourceSansBold
+CloseButton.ZIndex = 4
+CloseButton.Parent = MainFrame
 
-AddButton(Tab1o, {
-     Name = "astral hub full",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Overgustx2/Main/refs/heads/main/BloxFruits_25.html"))()
-  end
-  })
+-- Tạo nút vuông nhỏ để đóng/mở menu (ngoài menu, dùng hình ảnh)
+local ToggleButton = Instance.new("ImageButton")
+ToggleButton.Size = UDim2.new(0, 50, 0, 50)
+ToggleButton.Position = UDim2.new(0, 10, 0, 10) -- Góc trên bên trái màn hình
+ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+ToggleButton.Image = "rbxassetid://97405020185504" -- AssetId của hình ảnh
+ToggleButton.ZIndex = 1
+ToggleButton.Parent = ScreenGui -- Đặt trực tiếp trong ScreenGui, ngoài MainFrame
 
-AddButton(Tab2o, {
-     Name = "trẩu ",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/TrauHub/refs/heads/main/TrauXt"))()
-  end
-  })
+-- Biến kiểm soát trạng thái đóng/mở
+local isMenuOpen = true
 
-AddButton(Tab2o, {
-     Name = "red bap",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/BapRed/main/BapRedHub"))()
-  end
-  })
+-- Hàm đóng/mở menu
+local function ToggleMenu()
+    isMenuOpen = not isMenuOpen
+    MainFrame.Visible = isMenuOpen
+end
 
-AddButton(Tab2o, {
-     Name = "Maru",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/MaruHub.lua"))()
-  end
-  })
+-- Gán sự kiện cho nút đóng (X)
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy() -- Xóa hoàn toàn menu
+end)
 
-AddButton(Tab2o, {
-     Name = "kimp",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/KimPRoblox"))()
-  end
-  })
+-- Gán sự kiện cho nút vuông
+ToggleButton.MouseButton1Click:Connect(ToggleMenu)
 
-AddButton(Tab2o, {
-     Name = "kimp v2",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/KimP/refs/heads/main/KimPRobloxV2"))()
-  end
-  })
-
-AddButton(Tab2o, {
-     Name = "tuan anh ios",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-V3.lua"))()
-  end
-  })
-
-AddButton(Tab2o, {
-     Name = "fly",
-    Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
-  end
-  })
+-- Thông báo khi menu được tải
+local StarterGui = game:GetService("StarterGui")
+StarterGui:SetCore("SendNotification", {
+    Title = "Redz Hub",
+    Text = "Menu loaded successfully! Toggle button at top-left.",
+    Duration = 5
+})
