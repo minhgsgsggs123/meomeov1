@@ -6,9 +6,8 @@ local UserInputService = game:GetService("UserInputService")
 -- Tạo ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.Name = "RedzHubMenu"
+ScreenGui.Name = "MeowHubMenu"
 ScreenGui.ResetOnSpawn = false
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- Tạo Frame chính (cửa sổ menu)
 local MainFrame = Instance.new("Frame")
@@ -19,7 +18,6 @@ MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Draggable = true
 MainFrame.Visible = true
-MainFrame.ZIndex = 2
 MainFrame.Parent = ScreenGui
 
 -- Tạo tiêu đề
@@ -27,11 +25,10 @@ local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, 0, 0, 30)
 TitleLabel.Position = UDim2.new(0, 0, 0, 0)
 TitleLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-TitleLabel.Text = "meomeo hub"
+TitleLabel.Text = "Meow Hub"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 18
 TitleLabel.Font = Enum.Font.SourceSansBold
-TitleLabel.ZIndex = 3
 TitleLabel.Parent = MainFrame
 
 -- Tạo nút đóng (X) ở góc trên bên phải
@@ -43,17 +40,26 @@ CloseButton.Text = "X"
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseButton.TextSize = 14
 CloseButton.Font = Enum.Font.SourceSansBold
-CloseButton.ZIndex = 4
 CloseButton.Parent = MainFrame
 
--- Tạo nút vuông nhỏ để đóng/mở menu (ngoài menu, dùng hình ảnh)
-local ToggleButton = Instance.new("ImageButton")
+-- Tạo nút vuông nhỏ để đóng/mở menu (ngoài menu)
+local ToggleButton = Instance.new("TextButton")
 ToggleButton.Size = UDim2.new(0, 50, 0, 50)
 ToggleButton.Position = UDim2.new(0, 10, 0, 10) -- Góc trên bên trái màn hình
 ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-ToggleButton.Image = "rbxassetid://97405020185504" -- AssetId của hình ảnh
-ToggleButton.ZIndex = 1
+ToggleButton.Text = "" -- Xóa text để thay bằng hình ảnh
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.TextSize = 20
+ToggleButton.Font = Enum.Font.SourceSans
 ToggleButton.Parent = ScreenGui -- Đặt trực tiếp trong ScreenGui, ngoài MainFrame
+
+-- Tạo ImageLabel cho nút đóng/mở
+local ToggleImage = Instance.new("ImageLabel")
+ToggleImage.Size = UDim2.new(1, 0, 1, 0) -- Kích thước bằng với ToggleButton
+ToggleImage.Position = UDim2.new(0, 0, 0, 0)
+ToggleImage.BackgroundTransparency = 1
+ToggleImage.Image = "rbxassetid://84675645823223" -- ID ảnh được cung cấp
+ToggleImage.Parent = ToggleButton
 
 -- Biến kiểm soát trạng thái đóng/mở
 local isMenuOpen = true
@@ -75,7 +81,7 @@ ToggleButton.MouseButton1Click:Connect(ToggleMenu)
 -- Thông báo khi menu được tải
 local StarterGui = game:GetService("StarterGui")
 StarterGui:SetCore("SendNotification", {
-    Title = "Redz Hub",
-    Text = "Menu loaded successfully! Toggle button at top-left.",
+    Title = "Meow Hub",
+    Text = "Menu loaded successfully!",
     Duration = 5
 })
