@@ -8,7 +8,6 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.Name = "RedzHubMenu"
 ScreenGui.ResetOnSpawn = false
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 -- Tạo Frame chính (cửa sổ menu)
 local MainFrame = Instance.new("Frame")
@@ -19,7 +18,6 @@ MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Draggable = true
 MainFrame.Visible = true
-MainFrame.ZIndex = 2
 MainFrame.Parent = ScreenGui
 
 -- Tạo tiêu đề
@@ -31,7 +29,6 @@ TitleLabel.Text = "Redz Hub"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 18
 TitleLabel.Font = Enum.Font.SourceSansBold
-TitleLabel.ZIndex = 3
 TitleLabel.Parent = MainFrame
 
 -- Tạo nút đóng (X) ở góc trên bên phải
@@ -43,16 +40,17 @@ CloseButton.Text = "X"
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseButton.TextSize = 14
 CloseButton.Font = Enum.Font.SourceSansBold
-CloseButton.ZIndex = 4
 CloseButton.Parent = MainFrame
 
--- Tạo nút vuông nhỏ để đóng/mở menu (ngoài menu, dùng hình ảnh)
-local ToggleButton = Instance.new("ImageButton")
+-- Tạo nút vuông nhỏ để đóng/mở menu (ngoài menu)
+local ToggleButton = Instance.new("TextButton")
 ToggleButton.Size = UDim2.new(0, 50, 0, 50)
 ToggleButton.Position = UDim2.new(0, 10, 0, 10) -- Góc trên bên trái màn hình
 ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-ToggleButton.Image = "rbxassetid://97405020185504" -- AssetId của hình ảnh
-ToggleButton.ZIndex = 1
+ToggleButton.Text = "□"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.TextSize = 20
+ToggleButton.Font = Enum.Font.SourceSans
 ToggleButton.Parent = ScreenGui -- Đặt trực tiếp trong ScreenGui, ngoài MainFrame
 
 -- Biến kiểm soát trạng thái đóng/mở
@@ -76,6 +74,6 @@ ToggleButton.MouseButton1Click:Connect(ToggleMenu)
 local StarterGui = game:GetService("StarterGui")
 StarterGui:SetCore("SendNotification", {
     Title = "Redz Hub",
-    Text = "Menu loaded successfully! Toggle button at top-left.",
+    Text = "Menu loaded successfully!",
     Duration = 5
 })
