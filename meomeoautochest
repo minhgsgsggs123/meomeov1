@@ -6,23 +6,28 @@ local UserInputService = game:GetService("UserInputService")
 -- Tạo ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.Name = "MeowAutoChestMenu"
+ScreenGui.Name = "MeowHubMenu"
 ScreenGui.ResetOnSpawn = false
 
 -- Tạo Frame chính (cửa sổ menu)
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 300, 0, 200)
-MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.Size = UDim2.new(0, 380, 0, 280)
+MainFrame.Position = UDim2.new(0.5, -190, 0.5, -140)
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Draggable = true
 MainFrame.Visible = true
 MainFrame.Parent = ScreenGui
 
+-- Bo tròn góc MainFrame
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = MainFrame
+
 -- Thêm viền cầu vồng cho MainFrame
 local MainFrameBorder = Instance.new("UIStroke")
-MainFrameBorder.Thickness = 2
+MainFrameBorder.Thickness = 3
 MainFrameBorder.Color = Color3.fromRGB(255, 255, 255)
 MainFrameBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 MainFrameBorder.Parent = MainFrame
@@ -37,58 +42,316 @@ MainFrameGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
 })
-MainFrameGradient.Rotation = 45
+MainFrameGradient.Rotation = 0
 MainFrameGradient.Parent = MainFrameBorder
+
+-- Animation cho viền cầu vồng
+local animating = true
+spawn(function()
+    while animating and MainFrame.Parent do
+        for rotation = 0, 360, 2 do
+            if not animating or not MainFrame.Parent then break end
+            MainFrameGradient.Rotation = rotation
+            wait(0.03)
+        end
+    end
+end)
 
 -- Tạo tiêu đề
 local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Size = UDim2.new(1, 0, 0, 30)
+TitleLabel.Size = UDim2.new(1, 0, 0, 50)
 TitleLabel.Position = UDim2.new(0, 0, 0, 0)
-TitleLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-TitleLabel.Text = "Meow Auto Chest"
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "Meow Hub"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.TextSize = 18
+TitleLabel.TextSize = 24
 TitleLabel.Font = Enum.Font.SourceSansBold
 TitleLabel.Parent = MainFrame
 
 -- Tạo nút đóng (X) ở góc trên bên phải
 local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 30, 0, 30)
-CloseButton.Position = UDim2.new(1, -30, 0, 0)
-CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseButton.Size = UDim2.new(0, 35, 0, 35)
+CloseButton.Position = UDim2.new(1, -45, 0, 8)
+CloseButton.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
 CloseButton.Text = "X"
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.TextSize = 14
+CloseButton.TextSize = 18
 CloseButton.Font = Enum.Font.SourceSansBold
 CloseButton.Parent = MainFrame
 
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 8)
+CloseCorner.Parent = CloseButton
+
+-- Container cho nội dung
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(1, -30, 1, -70)
+ContentFrame.Position = UDim2.new(0, 15, 0, 60)
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.Parent = MainFrame
+
+-- Toggle Auto nhặt rường
+local AutoToggleFrame = Instance.new("Frame")
+AutoToggleFrame.Size = UDim2.new(1, 0, 0, 45)
+AutoToggleFrame.Position = UDim2.new(0, 0, 0, 0)
+AutoToggleFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+AutoToggleFrame.BorderSizePixel = 0
+AutoToggleFrame.Parent = ContentFrame
+
+local AutoCorner = Instance.new("UICorner")
+AutoCorner.CornerRadius = UDim.new(0, 10)
+AutoCorner.Parent = AutoToggleFrame
+
+local AutoLabel = Instance.new("TextLabel")
+AutoLabel.Size = UDim2.new(0.7, 0, 1, 0)
+AutoLabel.Position = UDim2.new(0, 15, 0, 0)
+AutoLabel.BackgroundTransparency = 1
+AutoLabel.Text = "Auto nhặt rường"
+AutoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+AutoLabel.TextSize = 16
+AutoLabel.Font = Enum.Font.SourceSans
+AutoLabel.TextXAlignment = Enum.TextXAlignment.Left
+AutoLabel.Parent = AutoToggleFrame
+
+-- Tạo toggle switch
+local ToggleSwitch = Instance.new("Frame")
+ToggleSwitch.Size = UDim2.new(0, 50, 0, 25)
+ToggleSwitch.Position = UDim2.new(1, -65, 0.5, -12.5)
+ToggleSwitch.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+ToggleSwitch.BorderSizePixel = 0
+ToggleSwitch.Parent = AutoToggleFrame
+
+local SwitchCorner = Instance.new("UICorner")
+SwitchCorner.CornerRadius = UDim.new(1, 0)
+SwitchCorner.Parent = ToggleSwitch
+
+local SwitchButton = Instance.new("Frame")
+SwitchButton.Size = UDim2.new(0, 21, 0, 21)
+SwitchButton.Position = UDim2.new(0, 2, 0.5, -10.5)
+SwitchButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+SwitchButton.BorderSizePixel = 0
+SwitchButton.Parent = ToggleSwitch
+
+local ButtonCorner = Instance.new("UICorner")
+ButtonCorner.CornerRadius = UDim.new(1, 0)
+ButtonCorner.Parent = SwitchButton
+
+-- Trạng thái toggle và biến cho auto farm
+local isAutoEnabled = false
+local autoFarmThread = nil
+local ChestCount, ResetThreshold = 0, 5
+local FailedTeleports, MaxFailedTeleports = 0, 3
+local CollectedChests = {}
+
+-- Hàm lấy character
+local function getCharacter()
+    while not LocalPlayer.Character do LocalPlayer.CharacterAdded:Wait() end
+    return LocalPlayer.Character:WaitForChild("HumanoidRootPart").Parent
+end
+
+-- Hàm teleport
+local function Teleport(targetCFrame)
+    local root = getCharacter().HumanoidRootPart
+    root.CFrame = targetCFrame
+end
+
+-- Hàm lấy danh sách rương
+local function getChests()
+    local chests = {}
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj.Name:find("Chest") and obj:IsA("Part") and obj:FindFirstChild("TouchInterest") then
+            if not CollectedChests[obj] then
+                table.insert(chests, obj)
+            end
+        end
+    end
+    table.sort(chests, function(a, b)
+        return (getCharacter().HumanoidRootPart.Position - a.Position).Magnitude < 
+               (getCharacter().HumanoidRootPart.Position - b.Position).Magnitude
+    end)
+    return chests
+end
+
+-- Hàm auto farm chính
+local function startAutoFarm()
+    autoFarmThread = task.spawn(function()
+        while isAutoEnabled and task.wait(0.5) do
+            local chests = getChests()
+            
+            -- Nếu không còn rương nào để nhặt, reset
+            if #chests == 0 and next(CollectedChests) ~= nil then
+                CollectedChests = {}
+                ChestCount = 0
+                print("Đã nhặt hết tất cả rương! Reset nhân vật để tìm rương mới...")
+                LocalPlayer.Character:BreakJoints()
+                task.wait(5) -- Chờ respawn
+            end
+            
+            if #chests > 0 then
+                local targetChest = chests[1]
+                local oldPosition = getCharacter().HumanoidRootPart.Position
+                Teleport(targetChest.CFrame)
+                
+                task.wait(0.5)
+                
+                if not targetChest.Parent or not targetChest:FindFirstChild("TouchInterest") then
+                    ChestCount = ChestCount + 1
+                    FailedTeleports = 0
+                    CollectedChests[targetChest] = true
+                    print("Đã nhặt được rương, tổng số rương: ", ChestCount)
+                else
+                    FailedTeleports = FailedTeleports + 1
+                    Teleport(CFrame.new(oldPosition))
+                    print("Dịch chuyển thất bại, số lần thất bại:", FailedTeleports)
+                end
+                
+                -- Reset nếu dịch chuyển thất bại quá nhiều lần
+                if FailedTeleports >= MaxFailedTeleports then
+                    print("Reset nhân vật do dịch chuyển thất bại quá nhiều!")
+                    FailedTeleports = 0
+                    LocalPlayer.Character:BreakJoints()
+                    task.wait(5)
+                end
+            end
+        end
+    end)
+end
+
+-- Tạo nút invisible để nhận click
+local ToggleClickButton = Instance.new("TextButton")
+ToggleClickButton.Size = UDim2.new(1, 0, 1, 0)
+ToggleClickButton.BackgroundTransparency = 1
+ToggleClickButton.Text = ""
+ToggleClickButton.Parent = ToggleSwitch
+
+ToggleClickButton.MouseButton1Click:Connect(function()
+    isAutoEnabled = not isAutoEnabled
+    if isAutoEnabled then
+        ToggleSwitch.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+        SwitchButton:TweenPosition(UDim2.new(1, -23, 0.5, -10.5), "Out", "Quad", 0.2, true)
+        startAutoFarm()
+        print("Auto nhặt rương: BẬT")
+    else
+        ToggleSwitch.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        SwitchButton:TweenPosition(UDim2.new(0, 2, 0.5, -10.5), "Out", "Quad", 0.2, true)
+        if autoFarmThread then
+            task.cancel(autoFarmThread)
+            autoFarmThread = nil
+        end
+        print("Auto nhặt rương: TẮT")
+    end
+end)
+
+-- Thông tin người chơi
+local InfoLabels = {"Name :", "Level :", "Beli :", "Time :"}
+local InfoValueLabels = {}
+
+-- Hàm lấy Level của người chơi
+local function getPlayerLevel()
+    local success, level = pcall(function()
+        return LocalPlayer.Data.Level.Value or 0
+    end)
+    return success and level or 0
+end
+
+-- Hàm lấy Beli của người chơi
+local function getPlayerBeli()
+    local success, beli = pcall(function()
+        return LocalPlayer.Data.Beli.Value or 0
+    end)
+    if success then
+        -- Format số có dấu phẩy
+        local formatted = tostring(beli):reverse():gsub("(%d%d%d)", "%1,"):reverse()
+        if formatted:sub(1,1) == "," then formatted = formatted:sub(2) end
+        return formatted
+    end
+    return "0"
+end
+
+-- Hàm format thời gian
+local ScriptStartTime = os.time()
+local function getRunTime()
+    local elapsed = os.time() - ScriptStartTime
+    local hours = math.floor(elapsed / 3600)
+    local minutes = math.floor((elapsed % 3600) / 60)
+    local seconds = elapsed % 60
+    return string.format("%02d:%02d:%02d", hours, minutes, seconds)
+end
+
+for i, labelText in ipairs(InfoLabels) do
+    local InfoFrame = Instance.new("Frame")
+    InfoFrame.Size = UDim2.new(1, 0, 0, 35)
+    InfoFrame.Position = UDim2.new(0, 0, 0, 60 + (i - 1) * 40)
+    InfoFrame.BackgroundTransparency = 1
+    InfoFrame.Parent = ContentFrame
+    
+    local Label = Instance.new("TextLabel")
+    Label.Size = UDim2.new(0.4, 0, 1, 0)
+    Label.Position = UDim2.new(0, 15, 0, 0)
+    Label.BackgroundTransparency = 1
+    Label.Text = labelText
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.TextSize = 16
+    Label.Font = Enum.Font.SourceSans
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.Parent = InfoFrame
+    
+    local Value = Instance.new("TextLabel")
+    Value.Size = UDim2.new(0.6, -15, 1, 0)
+    Value.Position = UDim2.new(0.4, 0, 0, 0)
+    Value.BackgroundTransparency = 1
+    Value.Text = "..."
+    Value.TextColor3 = Color3.fromRGB(200, 200, 200)
+    Value.TextSize = 16
+    Value.Font = Enum.Font.SourceSans
+    Value.TextXAlignment = Enum.TextXAlignment.Left
+    Value.Parent = InfoFrame
+    
+    InfoValueLabels[i] = Value
+end
+
+-- Cập nhật thông tin liên tục
+task.spawn(function()
+    while ScreenGui.Parent do
+        -- Cập nhật Name
+        InfoValueLabels[1].Text = LocalPlayer.Name
+        
+        -- Cập nhật Level
+        InfoValueLabels[2].Text = tostring(getPlayerLevel())
+        
+        -- Cập nhật Beli
+        InfoValueLabels[3].Text = getPlayerBeli()
+        
+        -- Cập nhật Time
+        InfoValueLabels[4].Text = getRunTime()
+        
+        task.wait(1) -- Cập nhật mỗi giây
+    end
+end)
+
 -- Tạo nút vuông nhỏ để đóng/mở menu (ngoài menu)
 local ToggleButton = Instance.new("TextButton")
-ToggleButton.Size = UDim2.new(0, 40, 0, 40)
+ToggleButton.Size = UDim2.new(0, 50, 0, 50)
 ToggleButton.Position = UDim2.new(0, 10, 0, 10)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 ToggleButton.Text = ""
-ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ToggleButton.TextSize = 20
-ToggleButton.Font = Enum.Font.SourceSans
+ToggleButton.BorderSizePixel = 0
 ToggleButton.Parent = ScreenGui
-ToggleButton.BorderSizePixel = 2
 
--- Thêm UICorner để bo tròn nút
-local Corner = Instance.new("UICorner")
-Corner.CornerRadius = UDim.new(0, 12)
-Corner.Parent = ToggleButton
+-- Bo tròn nút toggle
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 12)
+ToggleCorner.Parent = ToggleButton
 
--- Thêm UIGradient cho viền cầu vồng
-local BorderFrame = Instance.new("Frame")
-BorderFrame.Size = UDim2.new(1, 4, 1, 4)
-BorderFrame.Position = UDim2.new(0, -2, 0, -2)
-BorderFrame.BackgroundTransparency = 1
-BorderFrame.BorderSizePixel = 0
-BorderFrame.Parent = ToggleButton
+-- Viền cầu vồng cho nút toggle
+local ToggleBorder = Instance.new("UIStroke")
+ToggleBorder.Thickness = 3
+ToggleBorder.Color = Color3.fromRGB(255, 255, 255)
+ToggleBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+ToggleBorder.Parent = ToggleButton
 
-local Gradient = Instance.new("UIGradient")
-Gradient.Color = ColorSequence.new({
+local ToggleGradient = Instance.new("UIGradient")
+ToggleGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
     ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)),
     ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
@@ -97,34 +360,38 @@ Gradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
 })
-Gradient.Rotation = 45
-Gradient.Parent = BorderFrame
+ToggleGradient.Rotation = 0
+ToggleGradient.Parent = ToggleBorder
 
-local BorderStroke = Instance.new("UIStroke")
-BorderStroke.Thickness = 2
-BorderStroke.Color = Color3.fromRGB(255, 255, 255)
-BorderStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-BorderStroke.Parent = BorderFrame
-Gradient.Parent = BorderStroke
+-- Animation cho viền nút toggle
+spawn(function()
+    while ToggleButton.Parent do
+        for rotation = 0, 360, 2 do
+            if not ToggleButton.Parent then break end
+            ToggleGradient.Rotation = rotation
+            wait(0.03)
+        end
+    end
+end)
 
--- Tạo ImageLabel cho nút đóng/mở
+-- Icon cho nút toggle
 local ToggleImage = Instance.new("ImageLabel")
-ToggleImage.Size = UDim2.new(1, 0, 1, 0)
-ToggleImage.Position = UDim2.new(0, 0, 0, 0)
+ToggleImage.Size = UDim2.new(0.7, 0, 0.7, 0)
+ToggleImage.Position = UDim2.new(0.15, 0, 0.15, 0)
 ToggleImage.BackgroundTransparency = 1
 ToggleImage.Image = "rbxassetid://84675645823223"
 ToggleImage.Parent = ToggleButton
 
--- Tạo dialog cảnh báo ở giữa menu
+-- Dialog cảnh báo
 local WarningFrame = Instance.new("Frame")
-WarningFrame.Size = UDim2.new(0, 120, 0, 60)
-WarningFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+WarningFrame.Size = UDim2.new(0, 150, 0, 85)
+WarningFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 WarningFrame.BorderSizePixel = 0
 WarningFrame.Visible = false
 WarningFrame.Parent = ScreenGui
 
 local WarningCorner = Instance.new("UICorner")
-WarningCorner.CornerRadius = UDim.new(0, 8)
+WarningCorner.CornerRadius = UDim.new(0, 10)
 WarningCorner.Parent = WarningFrame
 
 local WarningBorder = Instance.new("UIStroke")
@@ -134,21 +401,13 @@ WarningBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 WarningBorder.Parent = WarningFrame
 
 local WarningGradient = Instance.new("UIGradient")
-WarningGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
-    ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)),
-    ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
-    ColorSequenceKeypoint.new(0.67, Color3.fromRGB(0, 0, 255)),
-    ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
-})
+WarningGradient.Color = MainFrameGradient.Color
 WarningGradient.Rotation = 45
 WarningGradient.Parent = WarningBorder
 
 local WarningText = Instance.new("TextLabel")
-WarningText.Size = UDim2.new(1, -20, 0, 40)
-WarningText.Position = UDim2.new(0, 10, 0, 5)
+WarningText.Size = UDim2.new(1, -20, 0, 45)
+WarningText.Position = UDim2.new(0, 10, 0, 8)
 WarningText.BackgroundTransparency = 1
 WarningText.Text = "Bạn có chắc chắn muốn tắt menu không?"
 WarningText.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -158,26 +417,34 @@ WarningText.TextWrapped = true
 WarningText.Parent = WarningFrame
 
 local YesButton = Instance.new("TextButton")
-YesButton.Size = UDim2.new(0, 40, 0, 20)
-YesButton.Position = UDim2.new(0.25, -20, 1, -25)
-YesButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+YesButton.Size = UDim2.new(0, 50, 0, 22)
+YesButton.Position = UDim2.new(0.25, -25, 1, -28)
+YesButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 YesButton.Text = "Có"
 YesButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-YesButton.TextSize = 10
+YesButton.TextSize = 11
 YesButton.Font = Enum.Font.SourceSansBold
 YesButton.Parent = WarningFrame
 
+local YesCorner = Instance.new("UICorner")
+YesCorner.CornerRadius = UDim.new(0, 6)
+YesCorner.Parent = YesButton
+
 local NoButton = Instance.new("TextButton")
-NoButton.Size = UDim2.new(0, 40, 0, 20)
-NoButton.Position = UDim2.new(0.75, -20, 1, -25)
-NoButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+NoButton.Size = UDim2.new(0, 50, 0, 22)
+NoButton.Position = UDim2.new(0.75, -25, 1, -28)
+NoButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 NoButton.Text = "Không"
 NoButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-NoButton.TextSize = 10
+NoButton.TextSize = 11
 NoButton.Font = Enum.Font.SourceSansBold
 NoButton.Parent = WarningFrame
 
--- Hàm hiển thị dialog và xử lý
+local NoCorner = Instance.new("UICorner")
+NoCorner.CornerRadius = UDim.new(0, 6)
+NoCorner.Parent = NoButton
+
+-- Hàm hiển thị dialog
 local function ShowWarning()
     local mainPos = MainFrame.AbsolutePosition
     local mainSize = MainFrame.AbsoluteSize
@@ -186,52 +453,45 @@ local function ShowWarning()
     local centerY = mainPos.Y + (mainSize.Y / 2) - (warnSize.Y / 2)
     WarningFrame.Position = UDim2.new(0, centerX, 0, centerY)
     WarningFrame.Visible = true
-    print("WarningFrame position set to: X=" .. centerX .. ", Y=" .. centerY) -- Debug print
 end
 
 local function HideWarning()
     WarningFrame.Visible = false
 end
 
--- Cập nhật vị trí WarningFrame khi kéo MainFrame
+-- Cập nhật vị trí warning khi kéo menu
 MainFrame.Changed:Connect(function(property)
     if property == "AbsolutePosition" and WarningFrame.Visible then
         ShowWarning()
     end
 end)
 
--- Biến kiểm soát trạng thái đóng/mở
+-- Biến kiểm soát trạng thái menu
 local isMenuOpen = true
 
--- Hàm đóng/mở menu
+-- Hàm toggle menu
 local function ToggleMenu()
     isMenuOpen = not isMenuOpen
     MainFrame.Visible = isMenuOpen
 end
 
--- Gán sự kiện cho nút đóng (X)
-CloseButton.MouseButton1Click:Connect(function()
-    ShowWarning()
-end)
+-- Gán sự kiện
+CloseButton.MouseButton1Click:Connect(ShowWarning)
 
--- Gán sự kiện cho nút "Có"
 YesButton.MouseButton1Click:Connect(function()
     HideWarning()
+    animating = false
     ScreenGui:Destroy()
 end)
 
--- Gán sự kiện cho nút "Không"
-NoButton.MouseButton1Click:Connect(function()
-    HideWarning()
-end)
+NoButton.MouseButton1Click:Connect(HideWarning)
 
--- Gán sự kiện cho nút vuông
 ToggleButton.MouseButton1Click:Connect(ToggleMenu)
 
--- Thông báo khi menu được tải
+-- Thông báo tải thành công
 local StarterGui = game:GetService("StarterGui")
 StarterGui:SetCore("SendNotification", {
-    Title = "Meow Auto Chest",
+    Title = "Meow Hub",
     Text = "Menu loaded successfully!",
     Duration = 5
 })
