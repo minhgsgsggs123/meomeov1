@@ -6,7 +6,7 @@ local UserInputService = game:GetService("UserInputService")
 -- Tạo ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.Name = "MeowHubMenu"
+ScreenGui.Name = "MeowAutoChestMenu"
 ScreenGui.ResetOnSpawn = false
 
 -- Tạo Frame chính (cửa sổ menu)
@@ -45,7 +45,7 @@ local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, 0, 0, 30)
 TitleLabel.Position = UDim2.new(0, 0, 0, 0)
 TitleLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-TitleLabel.Text = "Meow Hub"
+TitleLabel.Text = "Meow Auto Chest"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 18
 TitleLabel.Font = Enum.Font.SourceSansBold
@@ -117,7 +117,7 @@ ToggleImage.Parent = ToggleButton
 
 -- Tạo dialog cảnh báo ở giữa menu
 local WarningFrame = Instance.new("Frame")
-WarningFrame.Size = UDim2.new(0, 120, 0, 60) -- Kích thước 120x60
+WarningFrame.Size = UDim2.new(0, 120, 0, 60)
 WarningFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 WarningFrame.BorderSizePixel = 0
 WarningFrame.Visible = false
@@ -147,13 +147,14 @@ WarningGradient.Rotation = 45
 WarningGradient.Parent = WarningBorder
 
 local WarningText = Instance.new("TextLabel")
-WarningText.Size = UDim2.new(1, -20, 0, 20) -- Giảm kích thước chiều cao
-WarningText.Position = UDim2.new(0, 10, 0, 10)
+WarningText.Size = UDim2.new(1, -20, 0, 40)
+WarningText.Position = UDim2.new(0, 10, 0, 5)
 WarningText.BackgroundTransparency = 1
 WarningText.Text = "Bạn có chắc chắn muốn tắt menu không?"
 WarningText.TextColor3 = Color3.fromRGB(255, 255, 255)
-WarningText.TextSize = 8 -- Giảm kích thước chữ
+WarningText.TextSize = 10
 WarningText.Font = Enum.Font.SourceSans
+WarningText.TextWrapped = true
 WarningText.Parent = WarningFrame
 
 local YesButton = Instance.new("TextButton")
@@ -230,7 +231,7 @@ ToggleButton.MouseButton1Click:Connect(ToggleMenu)
 -- Thông báo khi menu được tải
 local StarterGui = game:GetService("StarterGui")
 StarterGui:SetCore("SendNotification", {
-    Title = "Meow auto chest",
+    Title = "Meow Auto Chest",
     Text = "Menu loaded successfully!",
     Duration = 5
 })
