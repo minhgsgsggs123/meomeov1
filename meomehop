@@ -1,12 +1,53 @@
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
 
 -- Tạo ScreenGui
 local gui = Instance.new("ScreenGui")
 gui.Name = "meowhub"
 gui.ResetOnSpawn = false
-gui.IgnoreGuiInset = true -- Quan trọng để ô vuông kéo được
 gui.Parent = game.CoreGui
+
+-- Tạo nút toggle menu (ô vuông bo tròn nhỏ)
+local ToggleBtn = Instance.new("ImageButton")
+ToggleBtn.Name = "MenuToggle"
+ToggleBtn.Size = UDim2.new(0, 50, 0, 50)
+ToggleBtn.Position = UDim2.new(0, 20, 0, 20)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+ToggleBtn.BorderSizePixel = 0
+
+-- Thêm viền màu hồng nhạt
+local ToggleStroke = Instance.new("UIStroke")
+ToggleStroke.Color = Color3.fromRGB(255, 182, 193)
+ToggleStroke.Thickness = 2
+ToggleStroke.Parent = ToggleBtn
+
+-- Bo tròn nút toggle
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 12)
+ToggleCorner.Parent = ToggleBtn
+
+-- Icon bên trong nút toggle (có thể thay bằng ảnh ID)
+local ToggleIcon = Instance.new("ImageLabel")
+ToggleIcon.Name = "Icon"
+ToggleIcon.Size = UDim2.new(0, 30, 0, 30)
+ToggleIcon.Position = UDim2.new(0.5, -15, 0.5, -15)
+ToggleIcon.BackgroundTransparency = 1
+ToggleIcon.Image = "rbxassetid://YourImageIdHere" -- Thay YourImageIdHere bằng ID ảnh của bạn
+ToggleIcon.Parent = ToggleBtn
+
+-- Nếu không có ảnh, hiển thị text thay thế
+if ToggleIcon.Image == "rbxassetid://YourImageIdHere" then
+    ToggleIcon.Image = ""
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Text = "☰"
+    TextLabel.Font = Enum.Font.GothamBold
+    TextLabel.TextSize = 20
+    TextLabel.TextColor3 = Color3.fromRGB(255, 182, 193)
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Size = UDim2.new(1, 0, 1, 0)
+    TextLabel.Parent = ToggleIcon
+end
+
+ToggleBtn.Parent = gui
 
 -- Frame chính
 local Main = Instance.new("Frame")
@@ -17,6 +58,7 @@ Main.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 Main.BorderSizePixel = 0
 Main.Active = true
 Main.Draggable = true
+Main.Visible = false -- Ẩn ban đầu
 Main.Parent = gui
 
 -- Bo tròn
@@ -24,7 +66,7 @@ local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 10)
 UICorner.Parent = Main
 
--- Header
+-- Header (Thanh trên)
 local Header = Instance.new("Frame")
 Header.Size = UDim2.new(1, 0, 0, 36)
 Header.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
@@ -58,14 +100,21 @@ CloseBtn.Position = UDim2.new(1, -35, 0, 0)
 CloseBtn.Parent = Header
 
 CloseBtn.MouseButton1Click:Connect(function()
-	Main.Visible = false
+    -- Hiệu ứng đóng mượt
+    TweenService:Create(Main, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(Header, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(Title, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+    
+    wait(0.3)
+    Main.Visible = false
 end)
 
+-- Hiệu ứng hover nút tắt
 CloseBtn.MouseEnter:Connect(function()
-	TweenService:Create(CloseBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 192, 203)}):Play()
+    TweenService:Create(CloseBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 192, 203)}):Play()
 end)
 CloseBtn.MouseLeave:Connect(function()
-	TweenService:Create(CloseBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+    TweenService:Create(CloseBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 end)
 
 -- Nội dung trống
@@ -80,81 +129,36 @@ local ContentCorner = Instance.new("UICorner")
 ContentCorner.CornerRadius = UDim.new(0, 8)
 ContentCorner.Parent = Content
 
--- Hiệu ứng mở mượt
-Main.BackgroundTransparency = 1
-Header.BackgroundTransparency = 1
-Title.TextTransparency = 1
-TweenService:Create(Main, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
-TweenService:Create(Header, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
-TweenService:Create(Title, TweenInfo.new(0.6), {TextTransparency = 0}):Play()
-
--- =========================
--- Ô vuông bật/tắt menu - SỬA LỖI ẢNH
--- =========================
-local ToggleBtn = Instance.new("ImageButton")
-ToggleBtn.Size = UDim2.new(0, 40, 0, 40)
-ToggleBtn.Position = UDim2.new(0, 20, 0, 20)
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
-ToggleBtn.BorderColor3 = Color3.fromRGB(255, 192, 203)
-ToggleBtn.BorderSizePixel = 2
-ToggleBtn.Parent = gui
-
--- QUAN TRỌNG: Sửa lỗi ảnh không hiện
-ToggleBtn.Image = "rbxassetid://136073921963463"
-ToggleBtn.ImageColor3 = Color3.fromRGB(255, 255, 255) -- Đảm bảo màu ảnh hiển thị rõ
-ToggleBtn.ScaleType = Enum.ScaleType.Fit -- Hiển thị toàn bộ ảnh
-ToggleBtn.BackgroundTransparency = 0 -- Đảm bảo nền hiển thị
-
-local ToggleCorner = Instance.new("UICorner")
-ToggleCorner.CornerRadius = UDim.new(0, 12)
-ToggleCorner.Parent = ToggleBtn
-
--- Hover phóng to/nhỏ mượt
-ToggleBtn.MouseEnter:Connect(function()
-	TweenService:Create(ToggleBtn, TweenInfo.new(0.2), {Size = UDim2.new(0, 50, 0, 50)}):Play()
-end)
-ToggleBtn.MouseLeave:Connect(function()
-	TweenService:Create(ToggleBtn, TweenInfo.new(0.2), {Size = UDim2.new(0, 40, 0, 40)}):Play()
-end)
-
--- Bật/tắt MainFrame
+-- Chức năng toggle menu
 ToggleBtn.MouseButton1Click:Connect(function()
-	Main.Visible = not Main.Visible
+    if Main.Visible then
+        -- Đóng menu
+        TweenService:Create(Main, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+        TweenService:Create(Header, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+        TweenService:Create(Title, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+        
+        wait(0.3)
+        Main.Visible = false
+    else
+        -- Mở menu
+        Main.Visible = true
+        Main.BackgroundTransparency = 1
+        Header.BackgroundTransparency = 1
+        Title.TextTransparency = 1
+        
+        TweenService:Create(Main, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+        TweenService:Create(Header, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+        TweenService:Create(Title, TweenInfo.new(0.6), {TextTransparency = 0}):Play()
+    end
 end)
 
--- Kéo ô vuông di chuyển
-local dragging = false
-local dragInput
-local dragStart = Vector2.new()
-local startPos = Vector2.new()
-
-local function update(input)
-	local delta = input.Position - dragStart
-	ToggleBtn.Position = UDim2.new(0, startPos.X + delta.X, 0, startPos.Y + delta.Y)
-end
-
-ToggleBtn.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-		dragging = true
-		dragStart = input.Position
-		startPos = Vector2.new(ToggleBtn.Position.X.Offset, ToggleBtn.Position.Y.Offset)
-
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
-			end
-		end)
-	end
+-- Hiệu ứng hover cho nút toggle
+ToggleBtn.MouseEnter:Connect(function()
+    TweenService:Create(ToggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
+    TweenService:Create(ToggleStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(255, 105, 180)}):Play()
 end)
 
-ToggleBtn.InputChanged:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseMovement then
-		dragInput = input
-	end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-	if dragging and input == dragInput then
-		update(input)
-	end
+ToggleBtn.MouseLeave:Connect(function()
+    TweenService:Create(ToggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 240, 245)}):Play()
+    TweenService:Create(ToggleStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(255, 182, 193)}):Play()
 end)
