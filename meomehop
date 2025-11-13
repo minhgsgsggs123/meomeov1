@@ -1,5 +1,5 @@
-
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 -- Tạo ScreenGui
 local gui = Instance.new("ScreenGui")
@@ -60,7 +60,6 @@ CloseBtn.MouseButton1Click:Connect(function()
 	Main.Visible = false
 end)
 
--- Hiệu ứng hover nút tắt
 CloseBtn.MouseEnter:Connect(function()
 	TweenService:Create(CloseBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 192, 203)}):Play()
 end)
@@ -87,3 +86,64 @@ Title.TextTransparency = 1
 TweenService:Create(Main, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
 TweenService:Create(Header, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
 TweenService:Create(Title, TweenInfo.new(0.6), {TextTransparency = 0}):Play()
+
+-- =========================
+-- Ô vuông bật/tắt menu
+-- =========================
+local ToggleBtn = Instance.new("ImageButton") -- Dùng ImageButton để thêm ID ảnh
+ToggleBtn.Size = UDim2.new(0, 40, 0, 40)
+ToggleBtn.Position = UDim2.new(0, 20, 0, 20)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193) -- Hồng nhạt
+ToggleBtn.BorderColor3 = Color3.fromRGB(255, 192, 203)
+ToggleBtn.BorderSizePixel = 2
+ToggleBtn.Parent = gui
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 12)
+ToggleCorner.Parent = ToggleBtn
+
+-- Thêm ảnh vào nút (thay bằng asset ID của bạn)
+ToggleBtn.Image = "rbxassetid://136073921963463" 
+ToggleBtn.ImageColor3 = Color3.fromRGB(255, 182, 193)
+
+-- Bật/Tắt Main khi nhấn
+ToggleBtn.MouseButton1Click:Connect(function()
+	Main.Visible = not Main.Visible
+end)
+
+-- Kéo ô vuông di chuyển
+local dragging = false
+local dragInput, mousePos, framePos
+
+local function update(input)
+	local delta = input.Position - mousePos
+	ToggleBtn.Position = UDim2.new(
+		0, framePos.X + delta.X,
+		0, framePos.Y + delta.Y
+	)
+end
+
+ToggleBtn.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		mousePos = input.Position
+		framePos = ToggleBtn.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+ToggleBtn.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		dragInput = input
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		update(input)
+	end
+end)
