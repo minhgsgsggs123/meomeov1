@@ -1,36 +1,36 @@
--- Pink Theme Redz Hub UI
+-- Redz Hub Inspired UI
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
 local gui = Instance.new("ScreenGui")
-gui.Name = "PinkRedzHub"
+gui.Name = "RedzHubUI"
 gui.Parent = player.PlayerGui
 
 -- Main Frame
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 500, 0, 350)
-mainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
-mainFrame.BackgroundColor3 = Color3.fromRGB(25, 20, 30)
+mainFrame.Size = UDim2.new(0, 450, 0, 300)
+mainFrame.Position = UDim2.new(0.5, -225, 0.5, -150)
+mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 mainFrame.BorderSizePixel = 0
 mainFrame.ClipsDescendants = true
 mainFrame.Parent = gui
 
 -- Corner
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 10)
+corner.CornerRadius = UDim.new(0, 8)
 corner.Parent = mainFrame
 
 -- Top Bar
 local topBar = Instance.new("Frame")
 topBar.Size = UDim2.new(1, 0, 0, 40)
-topBar.BackgroundColor3 = Color3.fromRGB(35, 25, 40)
+topBar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 topBar.BorderSizePixel = 0
 topBar.Parent = mainFrame
 
 local topBarCorner = Instance.new("UICorner")
-topBarCorner.CornerRadius = UDim.new(0, 10)
+topBarCorner.CornerRadius = UDim.new(0, 8)
 topBarCorner.Parent = topBar
 
 -- Title
@@ -39,7 +39,7 @@ title.Size = UDim2.new(0, 200, 1, 0)
 title.Position = UDim2.new(0, 15, 0, 0)
 title.BackgroundTransparency = 1
 title.Text = "REDZ HUB"
-title.TextColor3 = Color3.fromRGB(255, 182, 193) -- Light Pink
+title.TextColor3 = Color3.fromRGB(255, 50, 50)
 title.Font = Enum.Font.GothamBold
 title.TextSize = 18
 title.TextXAlignment = Enum.TextXAlignment.Left
@@ -49,7 +49,7 @@ title.Parent = topBar
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 30, 0, 30)
 closeBtn.Position = UDim2.new(1, -35, 0, 5)
-closeBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180) -- Hot Pink
+closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
 closeBtn.Text = "X"
 closeBtn.TextColor3 = Color3.white
 closeBtn.Font = Enum.Font.GothamBold
@@ -57,22 +57,22 @@ closeBtn.TextSize = 14
 closeBtn.Parent = topBar
 
 local closeCorner = Instance.new("UICorner")
-closeCorner.CornerRadius = UDim.new(0, 6)
+closeCorner.CornerRadius = UDim.new(0, 4)
 closeCorner.Parent = closeBtn
 
 -- Sidebar
 local sidebar = Instance.new("Frame")
-sidebar.Size = UDim2.new(0, 140, 1, -40)
+sidebar.Size = UDim2.new(0, 120, 1, -40)
 sidebar.Position = UDim2.new(0, 0, 0, 40)
-sidebar.BackgroundColor3 = Color3.fromRGB(30, 25, 35)
+sidebar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 sidebar.BorderSizePixel = 0
 sidebar.Parent = mainFrame
 
 -- Content Area
 local contentArea = Instance.new("Frame")
-contentArea.Size = UDim2.new(1, -140, 1, -40)
-contentArea.Position = UDim2.new(0, 140, 0, 40)
-contentArea.BackgroundColor3 = Color3.fromRGB(25, 20, 30)
+contentArea.Size = UDim2.new(1, -120, 1, -40)
+contentArea.Position = UDim2.new(0, 120, 0, 40)
+contentArea.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 contentArea.BorderSizePixel = 0
 contentArea.Parent = mainFrame
 
@@ -92,15 +92,15 @@ for i, buttonName in pairs(buttons) do
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, -10, 0, 35)
     btn.Position = UDim2.new(0, 5, 0, 10 + (i-1)*40)
-    btn.BackgroundColor3 = Color3.fromRGB(40, 35, 45)
+    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     btn.Text = buttonName
-    btn.TextColor3 = Color3.fromRGB(255, 200, 210) -- Light Pink Text
+    btn.TextColor3 = Color3.fromRGB(200, 200, 200)
     btn.Font = Enum.Font.Gotham
     btn.TextSize = 14
     btn.Parent = sidebar
     
     local btnCorner = Instance.new("UICorner")
-    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.CornerRadius = UDim.new(0, 4)
     btnCorner.Parent = btn
     
     -- Create page for this button
@@ -109,12 +109,11 @@ for i, buttonName in pairs(buttons) do
     page.Position = UDim2.new(0, 10, 0, 10)
     page.BackgroundTransparency = 1
     page.ScrollBarThickness = 3
-    page.ScrollBarImageColor3 = Color3.fromRGB(255, 182, 193) -- Pink Scrollbar
     page.Visible = false
     page.Parent = contentArea
     
     local pageLayout = Instance.new("UIListLayout")
-    pageLayout.Padding = UDim.new(0, 8)
+    pageLayout.Padding = UDim.new(0, 5)
     pageLayout.Parent = page
     
     pages[buttonName] = page
@@ -129,43 +128,39 @@ for i, buttonName in pairs(buttons) do
         -- Update button colors
         for _, otherBtn in pairs(sidebar:GetChildren()) do
             if otherBtn:IsA("TextButton") then
-                otherBtn.BackgroundColor3 = Color3.fromRGB(40, 35, 45)
-                otherBtn.TextColor3 = Color3.fromRGB(255, 200, 210)
+                otherBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
             end
         end
-        btn.BackgroundColor3 = Color3.fromRGB(255, 105, 180) -- Hot Pink when active
-        btn.TextColor3 = Color3.white
+        btn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
     end)
 end
 
--- Add sample content to AimBot page
+-- Add sample content to first page
 local aimbotPage = pages["AimBot"]
 
--- Toggle Button
 local toggle1 = Instance.new("TextButton")
-toggle1.Size = UDim2.new(1, 0, 0, 35)
-toggle1.BackgroundColor3 = Color3.fromRGB(50, 40, 55)
+toggle1.Size = UDim2.new(1, 0, 0, 30)
+toggle1.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 toggle1.Text = "Enable AimBot"
-toggle1.TextColor3 = Color3.fromRGB(255, 182, 193)
+toggle1.TextColor3 = Color3.white
 toggle1.Font = Enum.Font.Gotham
 toggle1.TextSize = 14
 toggle1.Parent = aimbotPage
 
 local toggle1Corner = Instance.new("UICorner")
-toggle1Corner.CornerRadius = UDim.new(0, 6)
+toggle1Corner.CornerRadius = UDim.new(0, 4)
 toggle1Corner.Parent = toggle1
 
--- Slider
 local slider1 = Instance.new("Frame")
-slider1.Size = UDim2.new(1, 0, 0, 60)
+slider1.Size = UDim2.new(1, 0, 0, 50)
 slider1.BackgroundTransparency = 1
 slider1.Parent = aimbotPage
 
 local slider1Label = Instance.new("TextLabel")
-slider1Label.Size = UDim2.new(1, 0, 0, 25)
+slider1Label.Size = UDim2.new(1, 0, 0, 20)
 slider1Label.BackgroundTransparency = 1
 slider1Label.Text = "FOV Size: 50"
-slider1Label.TextColor3 = Color3.fromRGB(255, 182, 193)
+slider1Label.TextColor3 = Color3.white
 slider1Label.Font = Enum.Font.Gotham
 slider1Label.TextSize = 14
 slider1Label.TextXAlignment = Enum.TextXAlignment.Left
@@ -175,9 +170,7 @@ slider1Label.Parent = slider1
 if buttons[1] then
     pages[buttons[1]].Visible = true
     currentPage = pages[buttons[1]]
-    local firstBtn = sidebar:FindFirstChildOfClass("TextButton")
-    firstBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
-    firstBtn.TextColor3 = Color3.white
+    sidebar:FindFirstChildOfClass("TextButton").BackgroundColor3 = Color3.fromRGB(255, 50, 50)
 end
 
 -- Close functionality
@@ -221,20 +214,3 @@ UserInputService.InputChanged:Connect(function(input)
         update(input)
     end
 end)
-
--- Hover effects for buttons
-for _, btn in pairs(sidebar:GetChildren()) do
-    if btn:IsA("TextButton") then
-        btn.MouseEnter:Connect(function()
-            if btn.BackgroundColor3 ~= Color3.fromRGB(255, 105, 180) then
-                btn.BackgroundColor3 = Color3.fromRGB(45, 40, 50)
-            end
-        end)
-        
-        btn.MouseLeave:Connect(function()
-            if btn.BackgroundColor3 ~= Color3.fromRGB(255, 105, 180) then
-                btn.BackgroundColor3 = Color3.fromRGB(40, 35, 45)
-            end
-        end)
-    end
-end
