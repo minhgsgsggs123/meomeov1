@@ -1,248 +1,240 @@
---// Load UI Library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
-local Window = Library:MakeWindow({Name = "MeoMeo Hub - Tìm Đảo Bí Ẩn & Mua Kiếm", HidePremium = false, SaveConfig = true, ConfigFolder = "BloxFruit_Config"})
-
-local HttpService = game:GetService("HttpService")
-local TeleportService = game:GetService("TeleportService")
+-- Pink Theme Redz Hub UI
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-local Workspace = game:GetService("Workspace")
+local UserInputService = game:GetService("UserInputService")
 
--- Biến kiểm tra bật/tắt chức năng
-local autoFindingIslands = false
-local autoPickUp = false
-local autoLeverToggle = false
-local autoBuySwords = false
-local autoEquipSword = false
+local player = Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Name = "PinkRedzHub"
+gui.Parent = player.PlayerGui
 
--- Các thanh kiếm sẽ mua
-local swordsToBuy = {
-    "Sandai Kitetsu", -- Kiếm thứ nhất
-    "Shusui",         -- Kiếm thứ hai
-    "Wado"            -- Kiếm thứ ba
+-- Main Frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 500, 0, 350)
+mainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
+mainFrame.BackgroundColor3 = Color3.fromRGB(25, 20, 30)
+mainFrame.BorderSizePixel = 0
+mainFrame.ClipsDescendants = true
+mainFrame.Parent = gui
+
+-- Corner
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = mainFrame
+
+-- Top Bar
+local topBar = Instance.new("Frame")
+topBar.Size = UDim2.new(1, 0, 0, 40)
+topBar.BackgroundColor3 = Color3.fromRGB(35, 25, 40)
+topBar.BorderSizePixel = 0
+topBar.Parent = mainFrame
+
+local topBarCorner = Instance.new("UICorner")
+topBarCorner.CornerRadius = UDim.new(0, 10)
+topBarCorner.Parent = topBar
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(0, 200, 1, 0)
+title.Position = UDim2.new(0, 15, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "REDZ HUB"
+title.TextColor3 = Color3.fromRGB(255, 182, 193) -- Light Pink
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = topBar
+
+-- Close Button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 5)
+closeBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180) -- Hot Pink
+closeBtn.Text = "X"
+closeBtn.TextColor3 = Color3.white
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 14
+closeBtn.Parent = topBar
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 6)
+closeCorner.Parent = closeBtn
+
+-- Sidebar
+local sidebar = Instance.new("Frame")
+sidebar.Size = UDim2.new(0, 140, 1, -40)
+sidebar.Position = UDim2.new(0, 0, 0, 40)
+sidebar.BackgroundColor3 = Color3.fromRGB(30, 25, 35)
+sidebar.BorderSizePixel = 0
+sidebar.Parent = mainFrame
+
+-- Content Area
+local contentArea = Instance.new("Frame")
+contentArea.Size = UDim2.new(1, -140, 1, -40)
+contentArea.Position = UDim2.new(0, 140, 0, 40)
+contentArea.BackgroundColor3 = Color3.fromRGB(25, 20, 30)
+contentArea.BorderSizePixel = 0
+contentArea.Parent = mainFrame
+
+-- Buttons for sidebar
+local buttons = {
+    "AimBot",
+    "Visuals", 
+    "Movement",
+    "Misc",
+    "Settings"
 }
 
--- Tọa độ đảo bí ẩn
-local possibleIslands = {
-    Vector3.new(-3000, 50, 7000),
-    Vector3.new(4000, 100, -8000),
-    Vector3.new(6000, 150, 3000),
-    Vector3.new(-5000, 50, -2000),
-}
+local currentPage = nil
+local pages = {}
 
--- Kiểm tra có đảo bí ẩn hay không
-function isIslandThere(position)
-    local part = Instance.new("Part")
-    part.Position = position
-    part.Size = Vector3.new(10, 10, 10)
-    part.Anchored = true
-    part.CanCollide = false
-    part.Transparency = 1
-    part.Parent = game.Workspace
-
-    wait(1)
-
-    local found = false
-    if #part:GetTouchingParts() > 0 then
-        found = true
-    end
-
-    part:Destroy()
-    return found
-end
-
--- Tự động di chuyển đến đảo
-function moveToIsland(targetPosition)
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local humanoidRootPart = LocalPlayer.Character.HumanoidRootPart
-        local distance = (humanoidRootPart.Position - targetPosition).magnitude
-        local tweenInfo = TweenInfo.new(distance / 150, Enum.EasingStyle.Linear) -- Tốc độ bay
-        local tween = TweenService:Create(humanoidRootPart, tweenInfo, {Position = targetPosition})
+for i, buttonName in pairs(buttons) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -10, 0, 35)
+    btn.Position = UDim2.new(0, 5, 0, 10 + (i-1)*40)
+    btn.BackgroundColor3 = Color3.fromRGB(40, 35, 45)
+    btn.Text = buttonName
+    btn.TextColor3 = Color3.fromRGB(255, 200, 210) -- Light Pink Text
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 14
+    btn.Parent = sidebar
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.Parent = btn
+    
+    -- Create page for this button
+    local page = Instance.new("ScrollingFrame")
+    page.Size = UDim2.new(1, -20, 1, -20)
+    page.Position = UDim2.new(0, 10, 0, 10)
+    page.BackgroundTransparency = 1
+    page.ScrollBarThickness = 3
+    page.ScrollBarImageColor3 = Color3.fromRGB(255, 182, 193) -- Pink Scrollbar
+    page.Visible = false
+    page.Parent = contentArea
+    
+    local pageLayout = Instance.new("UIListLayout")
+    pageLayout.Padding = UDim.new(0, 8)
+    pageLayout.Parent = page
+    
+    pages[buttonName] = page
+    
+    btn.MouseButton1Click:Connect(function()
+        if currentPage then
+            currentPage.Visible = false
+        end
+        page.Visible = true
+        currentPage = page
         
-        print("Đang di chuyển đến đảo bí ẩn...")
-        tween:Play()
-    end
-end
-
--- Quét đảo bí ẩn
-function findHiddenIslands()
-    if autoFindingIslands then
-        for _, pos in pairs(possibleIslands) do
-            if isIslandThere(pos) then
-                print("Đảo bí ẩn được tìm thấy tại: " .. tostring(pos))
-                moveToIsland(pos) -- Di chuyển đến đảo
-                return true
+        -- Update button colors
+        for _, otherBtn in pairs(sidebar:GetChildren()) do
+            if otherBtn:IsA("TextButton") then
+                otherBtn.BackgroundColor3 = Color3.fromRGB(40, 35, 45)
+                otherBtn.TextColor3 = Color3.fromRGB(255, 200, 210)
             end
         end
-        print("Không tìm thấy đảo bí ẩn, chuẩn bị hop server...")
-    end
-    return false
+        btn.BackgroundColor3 = Color3.fromRGB(255, 105, 180) -- Hot Pink when active
+        btn.TextColor3 = Color3.white
+    end)
 end
 
--- Tự động nhặt bánh răng
-function autoPickUpGears()
-    if autoPickUp then
-        for _, part in pairs(Workspace:GetChildren()) do
-            if part:IsA("Part") and part.Name == "Gear" and (part.Position - LocalPlayer.Character.HumanoidRootPart.Position).magnitude < 10 then
-                -- Nhặt bánh răng
-                fireclickdetector(part:FindFirstChildOfClass("ClickDetector"))
-                print("Đã nhặt bánh răng tại: " .. tostring(part.Position))
+-- Add sample content to AimBot page
+local aimbotPage = pages["AimBot"]
 
-                -- Sau khi nhặt bánh răng, tìm và gạt cần gần đó
-                autoToggleLever()
-            end
-        end
-    end
+-- Toggle Button
+local toggle1 = Instance.new("TextButton")
+toggle1.Size = UDim2.new(1, 0, 0, 35)
+toggle1.BackgroundColor3 = Color3.fromRGB(50, 40, 55)
+toggle1.Text = "Enable AimBot"
+toggle1.TextColor3 = Color3.fromRGB(255, 182, 193)
+toggle1.Font = Enum.Font.Gotham
+toggle1.TextSize = 14
+toggle1.Parent = aimbotPage
+
+local toggle1Corner = Instance.new("UICorner")
+toggle1Corner.CornerRadius = UDim.new(0, 6)
+toggle1Corner.Parent = toggle1
+
+-- Slider
+local slider1 = Instance.new("Frame")
+slider1.Size = UDim2.new(1, 0, 0, 60)
+slider1.BackgroundTransparency = 1
+slider1.Parent = aimbotPage
+
+local slider1Label = Instance.new("TextLabel")
+slider1Label.Size = UDim2.new(1, 0, 0, 25)
+slider1Label.BackgroundTransparency = 1
+slider1Label.Text = "FOV Size: 50"
+slider1Label.TextColor3 = Color3.fromRGB(255, 182, 193)
+slider1Label.Font = Enum.Font.Gotham
+slider1Label.TextSize = 14
+slider1Label.TextXAlignment = Enum.TextXAlignment.Left
+slider1Label.Parent = slider1
+
+-- Show first page by default
+if buttons[1] then
+    pages[buttons[1]].Visible = true
+    currentPage = pages[buttons[1]]
+    local firstBtn = sidebar:FindFirstChildOfClass("TextButton")
+    firstBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+    firstBtn.TextColor3 = Color3.white
 end
 
--- Tự động gạt cần gần đó
-function autoToggleLever()
-    if autoLeverToggle then
-        for _, part in pairs(Workspace:GetChildren()) do
-            if part:IsA("Part") and part.Name == "Lever" and (part.Position - LocalPlayer.Character.HumanoidRootPart.Position).magnitude < 10 then
-                -- Kiểm tra nếu có ClickDetector trong cần gạt và click vào đó
-                local clickDetector = part:FindFirstChildOfClass("ClickDetector")
-                if clickDetector then
-                    fireclickdetector(clickDetector)
-                    print("Đã gạt cần tại: " .. tostring(part.Position))
-                end
-            end
-        end
-    end
-end
-
--- Tự động mua kiếm
-function autoBuyWeapons()
-    for _, swordName in ipairs(swordsToBuy) do
-        local sword = game:GetService("ReplicatedStorage"):WaitForChild("Items"):FindFirstChild(swordName)
-
-        if sword then
-            local playerMoney = LocalPlayer.leaderstats and LocalPlayer.leaderstats.Beli
-            if playerMoney and playerMoney.Value >= sword.Cost then
-                -- Nếu có đủ tiền, tiến hành mua
-                local buyEvent = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("BuyItem")
-                buyEvent:FireServer(swordName)
-                print("Đã mua kiếm: " .. swordName)
-            else
-                print("Không đủ tiền để mua: " .. swordName)
-            end
-        else
-            print("Không tìm thấy kiếm: " .. swordName)
-        end
-    end
-end
-
--- Tự động trang bị kiếm
-function autoEquipWeapon()
-    local swordName = "Sandai Kitetsu"  -- Tên kiếm bạn muốn trang bị, thay đổi nếu cần
-    local backpack = LocalPlayer.Backpack
-    local sword = backpack:FindFirstChild(swordName)
-
-    if sword then
-        -- Kiếm đã có sẵn trong ba lô, trang bị nó
-        LocalPlayer.Character.Humanoid:EquipTool(sword)
-        print("Trang bị kiếm: " .. swordName)
-    else
-        print("Kiếm không có trong ba lô.")
-    end
-end
-
--- Tự động chuyển sang server mới
-function hopServer()
-    local Servers = HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/2753915549/servers/Public?sortOrder=Asc&limit=100"))
-    for _, v in pairs(Servers.data) do
-        if v.playing < v.maxPlayers then
-            print("Đang chuyển sang server mới...")
-            TeleportService:TeleportToPlaceInstance(game.PlaceId, v.id, LocalPlayer)
-            wait(5)
-        end
-    end
-end
-
--- Tab 1: Auto Gạt Cần
-Window:MakeTab({Name = "Auto Gạt Cần"}):AddToggle({
-    Name = "Tự động tìm đảo",
-    Default = false,
-    Callback = function(value)
-        autoFindingIslands = value
-        if value then
-            print("Bắt đầu tìm đảo bí ẩn!")
-            while autoFindingIslands do
-                findHiddenIslands()
-                wait(5)  -- Kiểm tra lại sau 5 giây
-            end
-        else
-            print("Đã tắt tìm đảo bí ẩn!")
-        end
-    end
-})
-
-Window:MakeTab({Name = "Auto Gạt Cần"}):AddToggle({
-    Name = "Tự động nhặt bánh răng",
-    Default = false,
-    Callback = function(value)
-        autoPickUp = value
-        if value then
-            print("Tự động nhặt bánh răng đã bật!")
-            while autoPickUp do
-                autoPickUpGears()
-                wait(1)  -- Lặp lại mỗi giây
-            end
-        else
-            print("Đã tắt tự động nhặt bánh răng!")
-        end
-    end
-})
-
-Window:MakeTab({Name = "Auto Gạt Cần"}):AddToggle({
-    Name = "Tự động gạt cần",
-    Default = false,
-    Callback = function(value)
-        autoLeverToggle = value
-        if value then
-            print("Tự động gạt cần đã bật!")
-        else
-            print("Đã tắt tự động gạt cần!")
-        end
-    end
-})
-
--- Tab 2: Auto Tam Bảo Kiếm
-Window:MakeTab({Name = "Auto Tam Bảo Kiếm"}):AddToggle({
-    Name = "Tự động mua kiếm",
-    Default = false,
-    Callback = function(value)
-        autoBuySwords = value
-        if value then
-            print("Tự động mua kiếm đã bật!")
-            autoBuyWeapons()  -- Mua kiếm ngay khi bật
-        else
-            print("Đã tắt tự động mua kiếm!")
-        end
-    end
-})
-
-Window:MakeTab({Name = "Auto Tam Bảo Kiếm"}):AddToggle({
-    Name = "Tự động trang bị kiếm",
-    Default = false,
-    Callback = function(value)
-        autoEquipSword = value
-        if value then
-            print("Tự động trang bị kiếm đã bật!")
-            autoEquipWeapon()  -- Kiểm tra trang bị kiếm ngay khi bật
-        else
-            print("Đã tắt tự động trang bị kiếm!")
-        end
-    end
-})
-
--- Hiển thị UI
-Library:Init()
-
--- Lặp lại việc nhặt bánh răng liên tục
-RunService.Heartbeat:Connect(function()
-    autoPickUpGears()
-    autoEquipWeapon()
+-- Close functionality
+closeBtn.MouseButton1Click:Connect(function()
+    gui:Destroy()
 end)
+
+-- Make window draggable
+local dragging = false
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+topBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+topBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+-- Hover effects for buttons
+for _, btn in pairs(sidebar:GetChildren()) do
+    if btn:IsA("TextButton") then
+        btn.MouseEnter:Connect(function()
+            if btn.BackgroundColor3 ~= Color3.fromRGB(255, 105, 180) then
+                btn.BackgroundColor3 = Color3.fromRGB(45, 40, 50)
+            end
+        end)
+        
+        btn.MouseLeave:Connect(function()
+            if btn.BackgroundColor3 ~= Color3.fromRGB(255, 105, 180) then
+                btn.BackgroundColor3 = Color3.fromRGB(40, 35, 45)
+            end
+        end)
+    end
+end
