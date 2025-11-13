@@ -5,6 +5,7 @@ local UserInputService = game:GetService("UserInputService")
 local gui = Instance.new("ScreenGui")
 gui.Name = "meowhub"
 gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true -- Quan trọng để ô vuông kéo được
 gui.Parent = game.CoreGui
 
 -- Frame chính
@@ -23,7 +24,7 @@ local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 10)
 UICorner.Parent = Main
 
--- Header (Thanh trên)
+-- Header
 local Header = Instance.new("Frame")
 Header.Size = UDim2.new(1, 0, 0, 36)
 Header.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
@@ -93,7 +94,7 @@ TweenService:Create(Title, TweenInfo.new(0.6), {TextTransparency = 0}):Play()
 local ToggleBtn = Instance.new("ImageButton")
 ToggleBtn.Size = UDim2.new(0, 40, 0, 40)
 ToggleBtn.Position = UDim2.new(0, 20, 0, 20)
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193) -- Hồng nhạt
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
 ToggleBtn.BorderColor3 = Color3.fromRGB(255, 192, 203)
 ToggleBtn.BorderSizePixel = 2
 ToggleBtn.Parent = gui
@@ -102,20 +103,20 @@ local ToggleCorner = Instance.new("UICorner")
 ToggleCorner.CornerRadius = UDim.new(0, 12)
 ToggleCorner.Parent = ToggleBtn
 
--- Thêm ảnh vào nút (thay bằng asset ID của bạn)
-ToggleBtn.Image = "rbxassetid://136073921963463" 
+-- Thêm ảnh vào nút
+ToggleBtn.Image = "rbxassetid://136073921963463"
 
--- Bật/Tắt Main khi nhấn
-ToggleBtn.MouseButton1Click:Connect(function()
-	Main.Visible = not Main.Visible
-end)
-
--- Hiệu ứng hover phóng to/nhỏ mượt
+-- Hover phóng to/nhỏ mượt
 ToggleBtn.MouseEnter:Connect(function()
 	TweenService:Create(ToggleBtn, TweenInfo.new(0.2), {Size = UDim2.new(0, 50, 0, 50)}):Play()
 end)
 ToggleBtn.MouseLeave:Connect(function()
 	TweenService:Create(ToggleBtn, TweenInfo.new(0.2), {Size = UDim2.new(0, 40, 0, 40)}):Play()
+end)
+
+-- Bật/tắt MainFrame
+ToggleBtn.MouseButton1Click:Connect(function()
+	Main.Visible = not Main.Visible
 end)
 
 -- Kéo ô vuông di chuyển
@@ -124,11 +125,17 @@ local dragInput
 local dragStart = Vector2.new()
 local startPos = Vector2.new()
 
+local function update(input)
+	local delta = input.Position - dragStart
+	ToggleBtn.Position = UDim2.new(0, startPos.X + delta.X, 0, startPos.Y + delta.Y)
+end
+
 ToggleBtn.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
 		dragging = true
 		dragStart = input.Position
 		startPos = Vector2.new(ToggleBtn.Position.X.Offset, ToggleBtn.Position.Y.Offset)
+
 		input.Changed:Connect(function()
 			if input.UserInputState == Enum.UserInputState.End then
 				dragging = false
@@ -144,8 +151,7 @@ ToggleBtn.InputChanged:Connect(function(input)
 end)
 
 UserInputService.InputChanged:Connect(function(input)
-	if input == dragInput and dragging then
-		local delta = input.Position - dragStart
-		ToggleBtn.Position = UDim2.new(0, startPos.X + delta.X, 0, startPos.Y + delta.Y)
+	if dragging and input == dragInput then
+		update(input)
 	end
 end)
