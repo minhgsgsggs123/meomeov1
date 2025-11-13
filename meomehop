@@ -89,7 +89,7 @@ TweenService:Create(Header, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Pl
 TweenService:Create(Title, TweenInfo.new(0.6), {TextTransparency = 0}):Play()
 
 -- =========================
--- Ô vuông bật/tắt menu
+-- Ô vuông bật/tắt menu - SỬA LỖI ẢNH
 -- =========================
 local ToggleBtn = Instance.new("ImageButton")
 ToggleBtn.Size = UDim2.new(0, 40, 0, 40)
@@ -99,12 +99,15 @@ ToggleBtn.BorderColor3 = Color3.fromRGB(255, 192, 203)
 ToggleBtn.BorderSizePixel = 2
 ToggleBtn.Parent = gui
 
+-- QUAN TRỌNG: Sửa lỗi ảnh không hiện
+ToggleBtn.Image = "rbxassetid://136073921963463"
+ToggleBtn.ImageColor3 = Color3.fromRGB(255, 255, 255) -- Đảm bảo màu ảnh hiển thị rõ
+ToggleBtn.ScaleType = Enum.ScaleType.Fit -- Hiển thị toàn bộ ảnh
+ToggleBtn.BackgroundTransparency = 0 -- Đảm bảo nền hiển thị
+
 local ToggleCorner = Instance.new("UICorner")
 ToggleCorner.CornerRadius = UDim.new(0, 12)
 ToggleCorner.Parent = ToggleBtn
-
--- Thêm ảnh vào nút
-ToggleBtn.Image = "rbxassetid://136073921963463"
 
 -- Hover phóng to/nhỏ mượt
 ToggleBtn.MouseEnter:Connect(function()
