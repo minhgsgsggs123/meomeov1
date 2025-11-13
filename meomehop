@@ -1,302 +1,237 @@
+-- Kiểm tra môi trường Roblox
 local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
-local RunService = game:GetService("RunService")
-
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
 
 -- Tạo ScreenGui
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "CustomHubUI"
-screenGui.ResetOnSpawn = false
-screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Name = "MeowHubMenu"
+ScreenGui.ResetOnSpawn = false
 
--- Tạo Main Frame
-local mainFrame = Instance.new("Frame")
-mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 400, 0, 500)
-mainFrame.Position = UDim2.new(0.5, -200, 0.5, -250)
-mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-mainFrame.BorderSizePixel = 0
-mainFrame.ClipsDescendants = true
+-- Tạo Frame chính (cửa sổ menu)
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Visible = true
+MainFrame.Parent = ScreenGui
 
--- Tạo gradient background
-local gradient = Instance.new("UIGradient")
-gradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 40)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 20, 30))
+-- Thêm viền cầu vồng cho MainFrame
+local MainFrameBorder = Instance.new("UIStroke")
+MainFrameBorder.Thickness = 2
+MainFrameBorder.Color = Color3.fromRGB(255, 255, 255)
+MainFrameBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+MainFrameBorder.Parent = MainFrame
+
+local MainFrameGradient = Instance.new("UIGradient")
+MainFrameGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+    ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)),
+    ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
+    ColorSequenceKeypoint.new(0.67, Color3.fromRGB(0, 0, 255)),
+    ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
 })
-gradient.Rotation = 45
-gradient.Parent = mainFrame
+MainFrameGradient.Rotation = 45
+MainFrameGradient.Parent = MainFrameBorder
 
--- Tạo corner radius
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 8)
-corner.Parent = mainFrame
+-- Tạo tiêu đề
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, 0, 0, 30)
+TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+TitleLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+TitleLabel.Text = "Meow Hub"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextSize = 18
+TitleLabel.Font = Enum.Font.SourceSansBold
+TitleLabel.Parent = MainFrame
 
--- Tạo shadow effect
-local shadow = Instance.new("ImageLabel")
-shadow.Name = "Shadow"
-shadow.Size = UDim2.new(1, 10, 1, 10)
-shadow.Position = UDim2.new(0, -5, 0, -5)
-shadow.BackgroundTransparency = 1
-shadow.Image = "rbxassetid://1316045217"
-shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-shadow.ImageTransparency = 0.8
-shadow.ScaleType = Enum.ScaleType.Slice
-shadow.SliceCenter = Rect.new(10, 10, 118, 118)
-shadow.Parent = mainFrame
+-- Tạo nút đóng (X) ở góc trên bên phải
+local CloseButton = Instance.new("TextButton")
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -30, 0, 0)
+CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 14
+CloseButton.Font = Enum.Font.SourceSansBold
+CloseButton.Parent = MainFrame
 
--- Tạo header
-local header = Instance.new("Frame")
-header.Name = "Header"
-header.Size = UDim2.new(1, 0, 0, 40)
-header.Position = UDim2.new(0, 0, 0, 0)
-header.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-header.BorderSizePixel = 0
+-- Tạo nút vuông nhỏ để đóng/mở menu (ngoài menu)
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 40, 0, 40)
+ToggleButton.Position = UDim2.new(0, 10, 0, 10)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+ToggleButton.Text = ""
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.TextSize = 20
+ToggleButton.Font = Enum.Font.SourceSans
+ToggleButton.Parent = ScreenGui
+ToggleButton.BorderSizePixel = 2
 
-local headerCorner = Instance.new("UICorner")
-headerCorner.CornerRadius = UDim.new(0, 8)
-headerCorner.Parent = header
+-- Thêm UICorner để bo tròn nút
+local Corner = Instance.new("UICorner")
+Corner.CornerRadius = UDim.new(0, 12)
+Corner.Parent = ToggleButton
 
--- Tạo title
-local title = Instance.new("TextLabel")
-title.Name = "Title"
-title.Size = UDim2.new(0, 200, 1, 0)
-title.Position = UDim2.new(0, 10, 0, 0)
-title.BackgroundTransparency = 1
-title.Text = "CUSTOM HUB"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.TextSize = 18
-title.Font = Enum.Font.GothamBold
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.Parent = header
+-- Thêm UIGradient cho viền cầu vồng
+local BorderFrame = Instance.new("Frame")
+BorderFrame.Size = UDim2.new(1, 4, 1, 4)
+BorderFrame.Position = UDim2.new(0, -2, 0, -2)
+BorderFrame.BackgroundTransparency = 1
+BorderFrame.BorderSizePixel = 0
+BorderFrame.Parent = ToggleButton
 
--- Tạo nút đóng
-local closeButton = Instance.new("TextButton")
-closeButton.Name = "CloseButton"
-closeButton.Size = UDim2.new(0, 30, 0, 30)
-closeButton.Position = UDim2.new(1, -35, 0, 5)
-closeButton.BackgroundColor3 = Color3.fromRGB(220, 60, 60)
-closeButton.BorderSizePixel = 0
-closeButton.Text = "X"
-closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeButton.TextSize = 14
-closeButton.Font = Enum.Font.GothamBold
+local Gradient = Instance.new("UIGradient")
+Gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+    ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)),
+    ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
+    ColorSequenceKeypoint.new(0.67, Color3.fromRGB(0, 0, 255)),
+    ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
+})
+Gradient.Rotation = 45
+Gradient.Parent = BorderFrame
 
-local closeCorner = Instance.new("UICorner")
-closeCorner.CornerRadius = UDim.new(0, 4)
-closeCorner.Parent = closeButton
+local BorderStroke = Instance.new("UIStroke")
+BorderStroke.Thickness = 2
+BorderStroke.Color = Color3.fromRGB(255, 255, 255)
+BorderStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+BorderStroke.Parent = BorderFrame
+Gradient.Parent = BorderStroke
 
--- Tạo nút thu nhỏ/mở rộng
-local toggleButton = Instance.new("TextButton")
-toggleButton.Name = "ToggleButton"
-toggleButton.Size = UDim2.new(0, 30, 0, 30)
-toggleButton.Position = UDim2.new(1, -70, 0, 5)
-toggleButton.BackgroundColor3 = Color3.fromRGB(80, 80, 100)
-toggleButton.BorderSizePixel = 0
-toggleButton.Text = "_"
-toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleButton.TextSize = 14
-toggleButton.Font = Enum.Font.GothamBold
+-- Tạo ImageLabel cho nút đóng/mở
+local ToggleImage = Instance.new("ImageLabel")
+ToggleImage.Size = UDim2.new(1, 0, 1, 0)
+ToggleImage.Position = UDim2.new(0, 0, 0, 0)
+ToggleImage.BackgroundTransparency = 1
+ToggleImage.Image = "rbxassetid://84675645823223"
+ToggleImage.Parent = ToggleButton
 
-local toggleCorner = Instance.new("UICorner")
-toggleCorner.CornerRadius = UDim.new(0, 4)
-toggleCorner.Parent = toggleButton
+-- Tạo dialog cảnh báo ở giữa menu
+local WarningFrame = Instance.new("Frame")
+WarningFrame.Size = UDim2.new(0, 130, 0, 70) -- Tăng kích thước nhẹ để chứa văn bản
+WarningFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+WarningFrame.BorderSizePixel = 0
+WarningFrame.Visible = false
+WarningFrame.Parent = ScreenGui
 
--- Thêm các nút vào header
-closeButton.Parent = header
-toggleButton.Parent = header
-header.Parent = mainFrame
+local WarningCorner = Instance.new("UICorner")
+WarningCorner.CornerRadius = UDim.new(0, 8)
+WarningCorner.Parent = WarningFrame
 
--- Tạo content area
-local content = Instance.new("Frame")
-content.Name = "Content"
-content.Size = UDim2.new(1, -20, 1, -60)
-content.Position = UDim2.new(0, 10, 0, 50)
-content.BackgroundTransparency = 1
-content.Parent = mainFrame
+local WarningBorder = Instance.new("UIStroke")
+WarningBorder.Thickness = 2
+WarningBorder.Color = Color3.fromRGB(255, 255, 255)
+WarningBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+WarningBorder.Parent = WarningFrame
 
--- Tạo scrolling frame cho nội dung
-local scrollingFrame = Instance.new("ScrollingFrame")
-scrollingFrame.Name = "ScrollingFrame"
-scrollingFrame.Size = UDim2.new(1, 0, 1, 0)
-scrollingFrame.Position = UDim2.new(0, 0, 0, 0)
-scrollingFrame.BackgroundTransparency = 1
-scrollingFrame.BorderSizePixel = 0
-scrollingFrame.ScrollBarThickness = 5
-scrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 120)
-scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-scrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
-scrollingFrame.Parent = content
+local WarningGradient = Instance.new("UIGradient")
+WarningGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+    ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)),
+    ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
+    ColorSequenceKeypoint.new(0.67, Color3.fromRGB(0, 0, 255)),
+    ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
+})
+WarningGradient.Rotation = 45
+WarningGradient.Parent = WarningBorder
 
--- Tạo UIListLayout cho scrolling frame
-local listLayout = Instance.new("UIListLayout")
-listLayout.Padding = UDim.new(0, 10)
-listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-listLayout.Parent = scrollingFrame
+local WarningText = Instance.new("TextLabel")
+WarningText.Size = UDim2.new(1, -20, 0, 40)
+WarningText.Position = UDim2.new(0, 10, 0, 10)
+WarningText.BackgroundTransparency = 1
+WarningText.Text = "Bạn có chắc chắn muốn tắt menu không?"
+WarningText.TextColor3 = Color3.fromRGB(255, 255, 255)
+WarningText.TextSize = 9 -- Giảm kích thước chữ để vừa khung
+WarningText.Font = Enum.Font.SourceSans
+WarningText.TextWrapped = true -- Bọc văn bản nếu quá dài
+WarningText.Parent = WarningFrame
 
--- Thêm một số nút mẫu
-local buttonNames = {"Aimbot", "Wallhack", "Speed Hack", "Fly", "ESP", "Teleport", "Auto Farm", "No Clip"}
+local YesButton = Instance.new("TextButton")
+YesButton.Size = UDim2.new(0, 40, 0, 20)
+YesButton.Position = UDim2.new(0.25, -20, 1, -25)
+YesButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+YesButton.Text = "Có"
+YesButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+YesButton.TextSize = 10
+YesButton.Font = Enum.Font.SourceSansBold
+YesButton.Parent = WarningFrame
 
-for i, name in ipairs(buttonNames) do
-    local button = Instance.new("TextButton")
-    button.Name = name
-    button.Size = UDim2.new(1, 0, 0, 40)
-    button.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
-    button.BorderSizePixel = 0
-    button.Text = name
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.TextSize = 16
-    button.Font = Enum.Font.Gotham
-    button.LayoutOrder = i
-    
-    local buttonCorner = Instance.new("UICorner")
-    buttonCorner.CornerRadius = UDim.new(0, 6)
-    buttonCorner.Parent = button
-    
-    -- Hiệu ứng hover
-    button.MouseEnter:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(70, 70, 90)}):Play()
-    end)
-    
-    button.MouseLeave:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 70)}):Play()
-    end)
-    
-    -- Hiệu ứng click
-    button.MouseButton1Down:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(90, 90, 110)}):Play()
-    end)
-    
-    button.MouseButton1Up:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(70, 70, 90)}):Play()
-    end)
-    
-    button.Parent = scrollingFrame
+local NoButton = Instance.new("TextButton")
+NoButton.Size = UDim2.new(0, 40, 0, 20)
+NoButton.Position = UDim2.new(0.75, -20, 1, -25)
+NoButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+NoButton.Text = "Không"
+NoButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+NoButton.TextSize = 10
+NoButton.Font = Enum.Font.SourceSansBold
+NoButton.Parent = WarningFrame
+
+-- Hàm hiển thị dialog và xử lý
+local function ShowWarning()
+    local mainPos = MainFrame.AbsolutePosition
+    local mainSize = MainFrame.AbsoluteSize
+    local warnSize = WarningFrame.AbsoluteSize
+    local centerX = mainPos.X + (mainSize.X / 2) - (warnSize.X / 2)
+    local centerY = mainPos.Y + (mainSize.Y / 2) - (warnSize.Y / 2)
+    WarningFrame.Position = UDim2.new(0, centerX, 0, centerY)
+    WarningFrame.Visible = true
+    print("WarningFrame position set to: X=" .. centerX .. ", Y=" .. centerY) -- Debug print
 end
 
--- Thêm mainFrame vào screenGui
-mainFrame.Parent = screenGui
-screenGui.Parent = playerGui
-
--- Biến để theo dõi trạng thái UI
-local isUIVisible = true
-local isDragging = false
-local isResizing = false
-local dragStart, resizeStart
-local startPos
-
--- Chức năng đóng/mở UI
-local function toggleUI()
-    isUIVisible = not isUIVisible
-    
-    if isUIVisible then
-        TweenService:Create(mainFrame, TweenInfo.new(0.3), {Size = UDim2.new(0, 400, 0, 500)}):Play()
-        toggleButton.Text = "_"
-    else
-        TweenService:Create(mainFrame, TweenInfo.new(0.3), {Size = UDim2.new(0, 400, 0, 40)}):Play()
-        toggleButton.Text = "+"
-    end
+local function HideWarning()
+    WarningFrame.Visible = false
 end
 
--- Chức năng đóng UI
-local function closeUI()
-    TweenService:Create(mainFrame, TweenInfo.new(0.3), {Size = UDim2.new(0, 0, 0, 0)}):Play()
-    wait(0.3)
-    screenGui:Destroy()
+-- Cập nhật vị trí WarningFrame khi kéo MainFrame
+MainFrame.Changed:Connect(function(property)
+    if property == "AbsolutePosition" and WarningFrame.Visible then
+        ShowWarning()
+    end
+end)
+
+-- Biến kiểm soát trạng thái đóng/mở
+local isMenuOpen = true
+
+-- Hàm đóng/mở menu
+local function ToggleMenu()
+    isMenuOpen = not isMenuOpen
+    MainFrame.Visible = isMenuOpen
 end
 
--- Kết nối sự kiện cho các nút
-closeButton.MouseButton1Click:Connect(closeUI)
-toggleButton.MouseButton1Click:Connect(toggleUI)
-
--- Chức năng di chuyển UI
-header.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = true
-        dragStart = input.Position
-        startPos = mainFrame.Position
-    end
+-- Gán sự kiện cho nút đóng (X)
+CloseButton.MouseButton1Click:Connect(function()
+    ShowWarning()
 end)
 
-header.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = false
-    end
+-- Gán sự kiện cho nút "Có"
+YesButton.MouseButton1Click:Connect(function()
+    HideWarning()
+    ScreenGui:Destroy()
 end)
 
--- Chức năng thay đổi kích thước UI
-local resizeHandle = Instance.new("Frame")
-resizeHandle.Name = "ResizeHandle"
-resizeHandle.Size = UDim2.new(0, 20, 0, 20)
-resizeHandle.Position = UDim2.new(1, -20, 1, -20)
-resizeHandle.BackgroundColor3 = Color3.fromRGB(100, 100, 120)
-resizeHandle.BorderSizePixel = 0
-resizeHandle.ZIndex = 2
-
-local resizeCorner = Instance.new("UICorner")
-resizeCorner.CornerRadius = UDim.new(0, 4)
-resizeCorner.Parent = resizeHandle
-
-resizeHandle.Parent = mainFrame
-
-resizeHandle.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isResizing = true
-        resizeStart = input.Position
-        startPos = mainFrame.Size
-    end
+-- Gán sự kiện cho nút "Không"
+NoButton.MouseButton1Click:Connect(function()
+    HideWarning()
 end)
 
-resizeHandle.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isResizing = false
-    end
-end)
+-- Gán sự kiện cho nút vuông
+ToggleButton.MouseButton1Click:Connect(ToggleMenu)
 
--- Xử lý input để di chuyển và thay đổi kích thước
-UserInputService.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
-        if isDragging then
-            local delta = input.Position - dragStart
-            mainFrame.Position = UDim2.new(
-                startPos.X.Scale, 
-                startPos.X.Offset + delta.X,
-                startPos.Y.Scale, 
-                startPos.Y.Offset + delta.Y
-            )
-        elseif isResizing then
-            local delta = input.Position - resizeStart
-            local newSize = UDim2.new(
-                0, math.max(300, startPos.X.Offset + delta.X),
-                0, math.max(200, startPos.Y.Offset + delta.Y)
-            )
-            mainFrame.Size = newSize
-        end
-    end
-end)
-
--- Thêm phím tắt để mở/đóng UI (Ví dụ: phím RightShift)
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    
-    if input.KeyCode == Enum.KeyCode.RightShift then
-        if isUIVisible then
-            closeUI()
-        else
-            -- Nếu UI đã bị đóng, tạo lại
-            if not screenGui or not screenGui.Parent then
-                screenGui = script.Parent:FindFirstChild("CustomHubUI") or screenGui:Clone()
-                screenGui.Parent = playerGui
-                isUIVisible = true
-                mainFrame.Size = UDim2.new(0, 400, 0, 500)
-            else
-                toggleUI()
-            end
-        end
-    end
-end)
-
-print("Custom Hub UI loaded! Press RightShift to toggle UI.")
+-- Thông báo khi menu được tải
+local StarterGui = game:GetService("StarterGui")
+StarterGui:SetCore("SendNotification", {
+    Title = "Meow Hub",
+    Text = "Menu loaded successfully!",
+    Duration = 5
+})
