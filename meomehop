@@ -1,281 +1,93 @@
--- Kiểm tra môi trường Roblox
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local UserInputService = game:GetService("UserInputService")
+-- 🌸 Redz Hub - Pink Edition (UI Trống Hoàn Toàn)
+-- Giao diện cơ bản, phong cách Redz Hub
+-- Không có tab hay nút sẵn
+-- by ChatGPT 💖
+
 local TweenService = game:GetService("TweenService")
 
 -- Tạo ScreenGui
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.Name = "RedzStyleMenu"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+local gui = Instance.new("ScreenGui")
+gui.Name = "RedzHubPink"
+gui.ResetOnSpawn = false
+gui.Parent = game.CoreGui
 
--- Tạo Frame chính (cửa sổ menu)
-local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 350, 0, 400)
-MainFrame.Position = UDim2.new(0.5, -175, 0.5, -200)
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-MainFrame.BorderSizePixel = 0
-MainFrame.Active = true
-MainFrame.Draggable = true
-MainFrame.Visible = true
-MainFrame.Parent = ScreenGui
+-- Frame chính
+local Main = Instance.new("Frame")
+Main.Name = "MainFrame"
+Main.Size = UDim2.new(0, 650, 0, 380)
+Main.Position = UDim2.new(0.5, -325, 0.5, -190)
+Main.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.Draggable = true
+Main.Parent = gui
 
--- Thêm viền đỏ cho MainFrame
-local MainFrameBorder = Instance.new("UIStroke")
-MainFrameBorder.Thickness = 2
-MainFrameBorder.Color = Color3.fromRGB(200, 0, 0)
-MainFrameBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-MainFrameBorder.Parent = MainFrame
+-- Bo tròn
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = Main
 
--- Bo góc cho MainFrame
-local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 6)
-MainCorner.Parent = MainFrame
+-- Header (Thanh trên)
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 36)
+Header.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+Header.BorderSizePixel = 0
+Header.Parent = Main
 
--- Tạo thanh tiêu đề
-local TitleBar = Instance.new("Frame")
-TitleBar.Size = UDim2.new(1, 0, 0, 35)
-TitleBar.Position = UDim2.new(0, 0, 0, 0)
-TitleBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-TitleBar.BorderSizePixel = 0
-TitleBar.Parent = MainFrame
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 10)
+HeaderCorner.Parent = Header
 
-local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 6)
-TitleCorner.Parent = TitleBar
+local Title = Instance.new("TextLabel")
+Title.Text = "🌸 Redz Hub - Pink Edition"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+Title.TextColor3 = Color3.fromRGB(80, 30, 60)
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 12, 0, 0)
+Title.Size = UDim2.new(1, -50, 1, 0)
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
 
--- Tạo tiêu đề
-local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Size = UDim2.new(0, 120, 1, 0)
-TitleLabel.Position = UDim2.new(0, 10, 0, 0)
-TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "REDZ HUB"
-TitleLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
-TitleLabel.TextSize = 18
-TitleLabel.Font = Enum.Font.GothamBold
-TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-TitleLabel.Parent = TitleBar
+-- Nút tắt
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Text = "✖"
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 20
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.BackgroundTransparency = 1
+CloseBtn.Size = UDim2.new(0, 35, 1, 0)
+CloseBtn.Position = UDim2.new(1, -35, 0, 0)
+CloseBtn.Parent = Header
 
--- Tạo nút đóng (X) ở góc trên bên phải
-local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 25, 0, 25)
-CloseButton.Position = UDim2.new(1, -30, 0, 5)
-CloseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.TextSize = 14
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.Parent = TitleBar
-
-local CloseCorner = Instance.new("UICorner")
-CloseCorner.CornerRadius = UDim.new(0, 4)
-CloseCorner.Parent = CloseButton
-
--- Tạo nút vuông nhỏ để đóng/mở menu (ngoài menu)
-local ToggleButton = Instance.new("TextButton")
-ToggleButton.Size = UDim2.new(0, 45, 0, 45)
-ToggleButton.Position = UDim2.new(0, 20, 0, 20)
-ToggleButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-ToggleButton.Text = "R"
-ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ToggleButton.TextSize = 20
-ToggleButton.Font = Enum.Font.GothamBold
-ToggleButton.Parent = ScreenGui
-ToggleButton.BorderSizePixel = 0
-ToggleButton.ZIndex = 2
-
--- Bo tròn nút toggle
-local ToggleCorner = Instance.new("UICorner")
-ToggleCorner.CornerRadius = UDim.new(0, 8)
-ToggleCorner.Parent = ToggleButton
-
--- Thêm hiệu ứng đổ bóng
-local ToggleShadow = Instance.new("ImageLabel")
-ToggleShadow.Size = UDim2.new(1, 10, 1, 10)
-ToggleShadow.Position = UDim2.new(0, -5, 0, -5)
-ToggleShadow.BackgroundTransparency = 1
-ToggleShadow.Image = "rbxassetid://5554236805"
-ToggleShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
-ToggleShadow.ImageTransparency = 0.8
-ToggleShadow.ScaleType = Enum.ScaleType.Slice
-ToggleShadow.SliceCenter = Rect.new(23, 23, 277, 277)
-ToggleShadow.Parent = ToggleButton
-
--- Tạo container cho nội dung
-local ContentFrame = Instance.new("Frame")
-ContentFrame.Size = UDim2.new(1, -20, 1, -50)
-ContentFrame.Position = UDim2.new(0, 10, 0, 45)
-ContentFrame.BackgroundTransparency = 1
-ContentFrame.Parent = MainFrame
-
--- Tạo tab buttons
-local TabsFrame = Instance.new("Frame")
-TabsFrame.Size = UDim2.new(1, 0, 0, 40)
-TabsFrame.Position = UDim2.new(0, 0, 0, 0)
-TabsFrame.BackgroundTransparency = 1
-TabsFrame.Parent = ContentFrame
-
--- Tạo các tab
-local tabs = {"Main", "Combat", "Visuals", "Misc"}
-local currentTab = "Main"
-
-for i, tabName in ipairs(tabs) do
-    local TabButton = Instance.new("TextButton")
-    TabButton.Size = UDim2.new(0.25, -5, 1, 0)
-    TabButton.Position = UDim2.new((i-1) * 0.25, 0, 0, 0)
-    TabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    TabButton.Text = tabName
-    TabButton.TextColor3 = Color3.fromRGB(150, 150, 150)
-    TabButton.TextSize = 14
-    TabButton.Font = Enum.Font.Gotham
-    TabButton.Parent = TabsFrame
-    
-    local TabCorner = Instance.new("UICorner")
-    TabCorner.CornerRadius = UDim.new(0, 4)
-    TabCorner.Parent = TabButton
-    
-    if i == 1 then
-        TabButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    end
-    
-    TabButton.MouseButton1Click:Connect(function()
-        currentTab = tabName
-        -- Update tab appearances
-        for _, btn in ipairs(TabsFrame:GetChildren()) do
-            if btn:IsA("TextButton") then
-                btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-                btn.TextColor3 = Color3.fromRGB(150, 150, 150)
-            end
-        end
-        TabButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    end)
-end
-
--- Tạo scroll frame cho nội dung
-local ScrollFrame = Instance.new("ScrollingFrame")
-ScrollFrame.Size = UDim2.new(1, 0, 1, -45)
-ScrollFrame.Position = UDim2.new(0, 0, 0, 45)
-ScrollFrame.BackgroundTransparency = 1
-ScrollFrame.BorderSizePixel = 0
-ScrollFrame.ScrollBarThickness = 4
-ScrollFrame.ScrollBarImageColor3 = Color3.fromRGB(200, 0, 0)
-ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 300)
-ScrollFrame.Parent = ContentFrame
-
--- Tạo UIListLayout cho scroll frame
-local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Padding = UDim.new(0, 8)
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Parent = ScrollFrame
-
--- Thêm một số button example
-local function CreateButton(text, order)
-    local Button = Instance.new("TextButton")
-    Button.Size = UDim2.new(1, 0, 0, 40)
-    Button.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-    Button.Text = text
-    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Button.TextSize = 14
-    Button.Font = Enum.Font.Gotham
-    Button.LayoutOrder = order
-    Button.Parent = ScrollFrame
-    
-    local ButtonCorner = Instance.new("UICorner")
-    ButtonCorner.CornerRadius = UDim.new(0, 4)
-    ButtonCorner.Parent = Button
-    
-    local ButtonStroke = Instance.new("UIStroke")
-    ButtonStroke.Thickness = 1
-    ButtonStroke.Color = Color3.fromRGB(60, 60, 60)
-    ButtonStroke.Parent = Button
-    
-    -- Hiệu ứng hover
-    Button.MouseEnter:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(45, 45, 45)}):Play()
-    end)
-    
-    Button.MouseLeave:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}):Play()
-    end)
-    
-    Button.MouseButton1Click:Connect(function()
-        TweenService:Create(Button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(200, 0, 0)}):Play()
-        wait(0.1)
-        TweenService:Create(Button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}):Play()
-    end)
-end
-
--- Tạo các button example
-CreateButton("Enable All Scripts", 1)
-CreateButton("Aimbot", 2)
-CreateButton("ESP", 3)
-CreateButton("Speed Hack", 4)
-CreateButton("Fly", 5)
-CreateButton("No Clip", 6)
-CreateButton("Infinite Jump", 7)
-
--- Tạo watermark
-local Watermark = Instance.new("TextLabel")
-Watermark.Size = UDim2.new(0, 200, 0, 25)
-Watermark.Position = UDim2.new(1, -210, 0, 10)
-Watermark.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Watermark.Text = "REDZ HUB | v1.0"
-Watermark.TextColor3 = Color3.fromRGB(200, 0, 0)
-Watermark.TextSize = 14
-Watermark.Font = Enum.Font.GothamBold
-Watermark.Parent = ScreenGui
-
-local WatermarkCorner = Instance.new("UICorner")
-WatermarkCorner.CornerRadius = UDim.new(0, 4)
-WatermarkCorner.Parent = Watermark
-
-local WatermarkStroke = Instance.new("UIStroke")
-WatermarkStroke.Thickness = 1
-WatermarkStroke.Color = Color3.fromRGB(200, 0, 0)
-WatermarkStroke.Parent = Watermark
-
--- Biến kiểm soát trạng thái đóng/mở
-local isMenuOpen = true
-
--- Hàm đóng/mở menu với hiệu ứng
-local function ToggleMenu()
-    isMenuOpen = not isMenuOpen
-    
-    if isMenuOpen then
-        TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), 
-                           {Size = UDim2.new(0, 350, 0, 400)}):Play()
-    else
-        TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), 
-                           {Size = UDim2.new(0, 0, 0, 0)}):Play()
-    end
-end
-
--- Gán sự kiện cho nút đóng (X)
-CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
+CloseBtn.MouseButton1Click:Connect(function()
+	Main.Visible = false
 end)
 
--- Gán sự kiện cho nút toggle
-ToggleButton.MouseButton1Click:Connect(ToggleMenu)
-
--- Hiệu ứng hover cho toggle button
-ToggleButton.MouseEnter:Connect(function()
-    TweenService:Create(ToggleButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(230, 0, 0)}):Play()
+-- Hiệu ứng hover nút tắt
+CloseBtn.MouseEnter:Connect(function()
+	TweenService:Create(CloseBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 192, 203)}):Play()
+end)
+CloseBtn.MouseLeave:Connect(function()
+	TweenService:Create(CloseBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 end)
 
-ToggleButton.MouseLeave:Connect(function()
-    TweenService:Create(ToggleButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(200, 0, 0)}):Play()
-end)
+-- Nội dung trống
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1, -20, 1, -56)
+Content.Position = UDim2.new(0, 10, 0, 46)
+Content.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
+Content.BorderSizePixel = 0
+Content.Parent = Main
 
--- Thông báo khi menu được tải
-local StarterGui = game:GetService("StarterGui")
-StarterGui:SetCore("SendNotification", {
-    Title = "REDZ HUB",
-    Text = "Menu loaded successfully!",
-    Duration = 5,
-    Icon = "rbxassetid://0"
-})
+local ContentCorner = Instance.new("UICorner")
+ContentCorner.CornerRadius = UDim.new(0, 8)
+ContentCorner.Parent = Content
+
+-- Hiệu ứng mở mượt
+Main.BackgroundTransparency = 1
+Header.BackgroundTransparency = 1
+Title.TextTransparency = 1
+TweenService:Create(Main, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+TweenService:Create(Header, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+TweenService:Create(Title, TweenInfo.new(0.6), {TextTransparency = 0}):Play()
