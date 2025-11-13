@@ -1,216 +1,235 @@
--- Redz Hub Inspired UI
-local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
+-- Rayfield Interface Setup
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
-local player = Players.LocalPlayer
-local gui = Instance.new("ScreenGui")
-gui.Name = "RedzHubUI"
-gui.Parent = player.PlayerGui
+-- Tạo cửa sổ chính
+local Window = Rayfield:CreateWindow({
+    Name = "🔴 Redz Hub | "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name,
+    LoadingTitle = "Redz Hub",
+    LoadingSubtitle = "by Redz",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "RedzHub",
+        FileName = "Config"
+    },
+    Discord = {
+        Enabled = true,
+        Invite = "redz",
+        RememberJoins = true
+    },
+    KeySystem = true, -- Set to false để tắt key system
+    KeySettings = {
+        Title = "Redz Hub - Key System",
+        Subtitle = "Nhập Key",
+        Note = "Lấy key từ discord",
+        FileName = "RedzKey",
+        SaveKey = true,
+        GrabKeyFromSite = false,
+        Actions = {
+            [1] = {
+                Text = '📋 Copy Key',
+                OnPress = function()
+                    setclipboard("REDZHUB-FREE")
+                end,
+            },
+            [2] = {
+                Text = '🎮 Join Discord',
+                OnPress = function()
+                    setclipboard("https://discord.gg/redz")
+                end,
+            },
+        },
+        Key = {"REDZHUB-FREE", "REDZHUB-VIP"}
+    }
+})
 
--- Main Frame
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 450, 0, 300)
-mainFrame.Position = UDim2.new(0.5, -225, 0.5, -150)
-mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-mainFrame.BorderSizePixel = 0
-mainFrame.ClipsDescendants = true
-mainFrame.Parent = gui
+-- Tab chính
+local MainTab = Window:CreateTab("🏠 Trang Chủ", nil)
 
--- Corner
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 8)
-corner.Parent = mainFrame
+-- Section giới thiệu
+local MainSection = MainTab:CreateSection("Thông Tin")
 
--- Top Bar
-local topBar = Instance.new("Frame")
-topBar.Size = UDim2.new(1, 0, 0, 40)
-topBar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-topBar.BorderSizePixel = 0
-topBar.Parent = mainFrame
+local Label = MainTab:CreateLabel("Chào mừng đến với Redz Hub!")
+local Label = MainTab:CreateLabel("Phiên bản: v2.5.1")
+local Label = MainTab:CreateLabel("Game: "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
 
-local topBarCorner = Instance.new("UICorner")
-topBarCorner.CornerRadius = UDim.new(0, 8)
-topBarCorner.Parent = topBar
+-- Section buttons chính
+local ButtonsSection = MainTab:CreateSection("Tính Năng Chính")
 
--- Title
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(0, 200, 1, 0)
-title.Position = UDim2.new(0, 15, 0, 0)
-title.BackgroundTransparency = 1
-title.Text = "REDZ HUB"
-title.TextColor3 = Color3.fromRGB(255, 50, 50)
-title.Font = Enum.Font.GothamBold
-title.TextSize = 18
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.Parent = topBar
+local Button = MainTab:CreateButton({
+    Name = "🔧 Admin Commands",
+    Callback = function()
+        -- Code admin commands
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/redz-admin/scripts/main/admin.lua"))()
+    end,
+})
 
--- Close Button
-local closeBtn = Instance.new("TextButton")
-closeBtn.Size = UDim2.new(0, 30, 0, 30)
-closeBtn.Position = UDim2.new(1, -35, 0, 5)
-closeBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-closeBtn.Text = "X"
-closeBtn.TextColor3 = Color3.white
-closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextSize = 14
-closeBtn.Parent = topBar
+local Button = MainTab:CreateButton({
+    Name = "🔄 Auto Farm",
+    Callback = function()
+        Rayfield:Notify({
+            Title = "Auto Farm",
+            Content = "Đã kích hoạt Auto Farm!",
+            Duration = 3,
+            Image = 4483362458,
+        })
+        -- Code auto farm
+    end,
+})
 
-local closeCorner = Instance.new("UICorner")
-closeCorner.CornerRadius = UDim.new(0, 4)
-closeCorner.Parent = closeBtn
+-- Tab nhân vật
+local PlayerTab = Window:CreateTab("👤 Nhân Vật", nil)
 
--- Sidebar
-local sidebar = Instance.new("Frame")
-sidebar.Size = UDim2.new(0, 120, 1, -40)
-sidebar.Position = UDim2.new(0, 0, 0, 40)
-sidebar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-sidebar.BorderSizePixel = 0
-sidebar.Parent = mainFrame
+-- Section speed
+local SpeedSection = PlayerTab:CreateSection("Di Chuyển")
 
--- Content Area
-local contentArea = Instance.new("Frame")
-contentArea.Size = UDim2.new(1, -120, 1, -40)
-contentArea.Position = UDim2.new(0, 120, 0, 40)
-contentArea.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-contentArea.BorderSizePixel = 0
-contentArea.Parent = mainFrame
+local Slider = PlayerTab:CreateSlider({
+    Name = "Tốc độ chạy",
+    Range = {16, 500},
+    Increment = 10,
+    Suffix = "Speed",
+    CurrentValue = 16,
+    Flag = "SpeedSlider",
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+    end,
+})
 
--- Buttons for sidebar
-local buttons = {
-    "AimBot",
-    "Visuals", 
-    "Movement",
-    "Misc",
-    "Settings"
-}
-
-local currentPage = nil
-local pages = {}
-
-for i, buttonName in pairs(buttons) do
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, -10, 0, 35)
-    btn.Position = UDim2.new(0, 5, 0, 10 + (i-1)*40)
-    btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    btn.Text = buttonName
-    btn.TextColor3 = Color3.fromRGB(200, 200, 200)
-    btn.Font = Enum.Font.Gotham
-    btn.TextSize = 14
-    btn.Parent = sidebar
-    
-    local btnCorner = Instance.new("UICorner")
-    btnCorner.CornerRadius = UDim.new(0, 4)
-    btnCorner.Parent = btn
-    
-    -- Create page for this button
-    local page = Instance.new("ScrollingFrame")
-    page.Size = UDim2.new(1, -20, 1, -20)
-    page.Position = UDim2.new(0, 10, 0, 10)
-    page.BackgroundTransparency = 1
-    page.ScrollBarThickness = 3
-    page.Visible = false
-    page.Parent = contentArea
-    
-    local pageLayout = Instance.new("UIListLayout")
-    pageLayout.Padding = UDim.new(0, 5)
-    pageLayout.Parent = page
-    
-    pages[buttonName] = page
-    
-    btn.MouseButton1Click:Connect(function()
-        if currentPage then
-            currentPage.Visible = false
+local Toggle = PlayerTab:CreateToggle({
+    Name = "Auto Set Speed",
+    CurrentValue = false,
+    Flag = "AutoSpeed",
+    Callback = function(Value)
+        getgenv().AutoSpeed = Value
+        while AutoSpeed do
+            task.wait()
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Rayfield.Flags["SpeedSlider"]
         end
-        page.Visible = true
-        currentPage = page
-        
-        -- Update button colors
-        for _, otherBtn in pairs(sidebar:GetChildren()) do
-            if otherBtn:IsA("TextButton") then
-                otherBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-            end
+    end,
+})
+
+-- Section jump
+local JumpSection = PlayerTab:CreateSection("Nhảy")
+
+local Slider = PlayerTab:CreateSlider({
+    Name = "Độ cao nhảy",
+    Range = {50, 500},
+    Increment = 10,
+    Suffix = "Height",
+    CurrentValue = 50,
+    Flag = "JumpSlider",
+    Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+    end,
+})
+
+-- Tab game
+local GameTab = Window:CreateTab("🎮 Game", nil)
+
+-- Section auto farm
+local FarmSection = GameTab:CreateSection("Auto Farm")
+
+local Toggle = GameTab:CreateToggle({
+    Name = "⛏️ Auto Mine",
+    CurrentValue = false,
+    Flag = "AutoMine",
+    Callback = function(Value)
+        getgenv().AutoMine = Value
+        while AutoMine do
+            task.wait(0.5)
+            -- Code auto mine
         end
-        btn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-    end)
-end
+    end,
+})
 
--- Add sample content to first page
-local aimbotPage = pages["AimBot"]
+local Toggle = GameTab:CreateToggle({
+    Name = "💰 Auto Collect Coins",
+    CurrentValue = false,
+    Flag = "AutoCoins",
+    Callback = function(Value)
+        getgenv().AutoCoins = Value
+        while AutoCoins do
+            task.wait(0.1)
+            -- Code auto collect coins
+        end
+    end,
+})
 
-local toggle1 = Instance.new("TextButton")
-toggle1.Size = UDim2.new(1, 0, 0, 30)
-toggle1.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-toggle1.Text = "Enable AimBot"
-toggle1.TextColor3 = Color3.white
-toggle1.Font = Enum.Font.Gotham
-toggle1.TextSize = 14
-toggle1.Parent = aimbotPage
+-- Section teleport
+local TeleportSection = GameTab:CreateSection("Dịch Chuyển")
 
-local toggle1Corner = Instance.new("UICorner")
-toggle1Corner.CornerRadius = UDim.new(0, 4)
-toggle1Corner.Parent = toggle1
+local Dropdown = GameTab:CreateDropdown({
+    Name = "Địa điểm",
+    Options = {"Spawn", "Bank", "Shop", "Secret Area"},
+    CurrentOption = "Spawn",
+    Flag = "LocationDropdown",
+    Callback = function(Option)
+        -- Code teleport
+        Rayfield:Notify({
+            Title = "Teleport",
+            Content = "Đã dịch chuyển đến: "..Option,
+            Duration = 3,
+            Image = 4483362458,
+        })
+    end,
+})
 
-local slider1 = Instance.new("Frame")
-slider1.Size = UDim2.new(1, 0, 0, 50)
-slider1.BackgroundTransparency = 1
-slider1.Parent = aimbotPage
+-- Tab Settings
+local SettingsTab = Window:CreateTab("⚙️ Cài Đặt", nil)
 
-local slider1Label = Instance.new("TextLabel")
-slider1Label.Size = UDim2.new(1, 0, 0, 20)
-slider1Label.BackgroundTransparency = 1
-slider1Label.Text = "FOV Size: 50"
-slider1Label.TextColor3 = Color3.white
-slider1Label.Font = Enum.Font.Gotham
-slider1Label.TextSize = 14
-slider1Label.TextXAlignment = Enum.TextXAlignment.Left
-slider1Label.Parent = slider1
+-- Section UI settings
+local UISection = SettingsTab:CreateSection("Giao Diện")
 
--- Show first page by default
-if buttons[1] then
-    pages[buttons[1]].Visible = true
-    currentPage = pages[buttons[1]]
-    sidebar:FindFirstChildOfClass("TextButton").BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-end
+local Toggle = SettingsTab:CreateToggle({
+    Name = "Giao diện tối",
+    CurrentValue = false,
+    Flag = "DarkTheme",
+    Callback = function(Value)
+        if Value then
+            Rayfield:SetTheme("Dark")
+        else
+            Rayfield:SetTheme("Light")
+        end
+    end,
+})
 
--- Close functionality
-closeBtn.MouseButton1Click:Connect(function()
-    gui:Destroy()
-end)
-
--- Make window draggable
-local dragging = false
-local dragInput
-local dragStart
-local startPos
-
-local function update(input)
-    local delta = input.Position - dragStart
-    mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-end
-
-topBar.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragStart = input.Position
-        startPos = mainFrame.Position
-        
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
+local ColorPicker = SettingsTab:CreateColorPicker({
+    Name = "Màu chủ đạo",
+    Color = Color3.fromRGB(255, 0, 0),
+    Flag = "MainColor",
+    Callback = function(Value)
+        Rayfield:SetTheme("Red")
     end
-end)
+})
 
-topBar.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
-        dragInput = input
-    end
-end)
+-- Section config
+local ConfigSection = SettingsTab:CreateSection("Cấu Hình")
 
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
-        update(input)
-    end
-end)
+local Button = SettingsTab:CreateButton({
+    Name = "📥 Lưu cấu hình",
+    Callback = function()
+        Rayfield:Notify({
+            Title = "Thành công",
+            Content = "Đã lưu cấu hình!",
+            Duration = 3,
+            Image = 4483362458,
+        })
+    end,
+})
+
+local Button = SettingsTab:CreateButton({
+    Name = "🔄 Reset UI",
+    Callback = function()
+        Rayfield:Destroy()
+    end,
+})
+
+-- Thông báo khi load xong
+Rayfield:Notify({
+    Title = "Redz Hub",
+    Content = "Đã load thành công! Chúc bạn chơi game vui vẻ!",
+    Duration = 5,
+    Image = 4483362458,
+})
+
+-- Load settings
+Rayfield:LoadConfiguration()
