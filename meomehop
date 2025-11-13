@@ -1,13 +1,9 @@
--- 🌸 Redz Hub - Pink Edition (UI Trống Hoàn Toàn)
--- Giao diện cơ bản, phong cách Redz Hub
--- Không có tab hay nút sẵn
--- by ChatGPT 💖
 
 local TweenService = game:GetService("TweenService")
 
 -- Tạo ScreenGui
 local gui = Instance.new("ScreenGui")
-gui.Name = "RedzHubPink"
+gui.Name = "meowhub"
 gui.ResetOnSpawn = false
 gui.Parent = game.CoreGui
 
@@ -39,7 +35,7 @@ HeaderCorner.CornerRadius = UDim.new(0, 10)
 HeaderCorner.Parent = Header
 
 local Title = Instance.new("TextLabel")
-Title.Text = "🌸 Redz Hub - Pink Edition"
+Title.Text = "meow hub - lọ cùng bốp bốp "
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
 Title.TextColor3 = Color3.fromRGB(80, 30, 60)
