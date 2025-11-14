@@ -102,57 +102,28 @@ CloseBtn.Position = UDim2.new(1, -35, 0, 0)
 CloseBtn.ZIndex = 10 -- Đặt ZIndex cao hơn
 CloseBtn.Parent = Header
 
--- Thanh tab
+-- Thanh tab (chỉ có 1 tab Thông tin)
 local TabContainer = Instance.new("Frame")
 TabContainer.Size = UDim2.new(1, -20, 0, 40)
 TabContainer.Position = UDim2.new(0, 10, 0, 46)
 TabContainer.BackgroundTransparency = 1
 TabContainer.Parent = Main
 
--- Tab chính
-local MainTab = Instance.new("TextButton")
-MainTab.Name = "MainTab"
-MainTab.Text = "Chính"
-MainTab.Font = Enum.Font.GothamBold
-MainTab.TextSize = 14
-MainTab.TextColor3 = Color3.fromRGB(80, 30, 60)
-MainTab.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
-MainTab.Size = UDim2.new(0, 80, 1, 0)
-MainTab.Position = UDim2.new(0, 0, 0, 0)
-MainTab.Parent = TabContainer
-
-local MainTabCorner = Instance.new("UICorner")
-MainTabCorner.CornerRadius = UDim.new(0, 6)
-MainTabCorner.Parent = MainTab
-
--- Tab thông tin
+-- Tab thông tin (duy nhất)
 local InfoTab = Instance.new("TextButton")
 InfoTab.Name = "InfoTab"
 InfoTab.Text = "Thông tin"
 InfoTab.Font = Enum.Font.GothamBold
 InfoTab.TextSize = 14
-InfoTab.TextColor3 = Color3.fromRGB(80, 30, 60)
-InfoTab.BackgroundColor3 = Color3.fromRGB(255, 200, 210)
-InfoTab.Size = UDim2.new(0, 80, 1, 0)
-InfoTab.Position = UDim2.new(0, 85, 0, 0)
+InfoTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+InfoTab.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+InfoTab.Size = UDim2.new(0, 100, 1, 0)
+InfoTab.Position = UDim2.new(0, 0, 0, 0)
 InfoTab.Parent = TabContainer
 
 local InfoTabCorner = Instance.new("UICorner")
 InfoTabCorner.CornerRadius = UDim.new(0, 6)
 InfoTabCorner.Parent = InfoTab
-
--- Nội dung chính
-local MainContent = Instance.new("Frame")
-MainContent.Name = "MainContent"
-MainContent.Size = UDim2.new(1, -20, 1, -96)
-MainContent.Position = UDim2.new(0, 10, 0, 96)
-MainContent.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
-MainContent.BorderSizePixel = 0
-MainContent.Parent = Main
-
-local MainContentCorner = Instance.new("UICorner")
-MainContentCorner.CornerRadius = UDim.new(0, 8)
-MainContentCorner.Parent = MainContent
 
 -- Nội dung thông tin
 local InfoContent = Instance.new("Frame")
@@ -161,7 +132,6 @@ InfoContent.Size = UDim2.new(1, -20, 1, -96)
 InfoContent.Position = UDim2.new(0, 10, 0, 96)
 InfoContent.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
 InfoContent.BorderSizePixel = 0
-InfoContent.Visible = false
 InfoContent.Parent = Main
 
 local InfoContentCorner = Instance.new("UICorner")
@@ -244,28 +214,28 @@ BeliLabel.Position = UDim2.new(0, 5, 0, 85)
 BeliLabel.TextXAlignment = Enum.TextXAlignment.Left
 BeliLabel.Parent = AccountInfo
 
--- Điểm F
-local FPointLabel = Instance.new("TextLabel")
-FPointLabel.Text = "Điểm F: Đang tải..."
-FPointLabel.Font = Enum.Font.Gotham
-FPointLabel.TextSize = 14
-FPointLabel.TextColor3 = Color3.fromRGB(80, 30, 60)
-FPointLabel.BackgroundTransparency = 1
-FPointLabel.Size = UDim2.new(1, -10, 0, 20)
-FPointLabel.Position = UDim2.new(0, 5, 0, 110)
-FPointLabel.TextXAlignment = Enum.TextXAlignment.Left
-FPointLabel.Parent = AccountInfo
+-- Fragments
+local FragmentsLabel = Instance.new("TextLabel")
+FragmentsLabel.Text = "Fragments: Đang tải..."
+FragmentsLabel.Font = Enum.Font.Gotham
+FragmentsLabel.TextSize = 14
+FragmentsLabel.TextColor3 = Color3.fromRGB(80, 30, 60)
+FragmentsLabel.BackgroundTransparency = 1
+FragmentsLabel.Size = UDim2.new(1, -10, 0, 20)
+FragmentsLabel.Position = UDim2.new(0, 5, 0, 110)
+FragmentsLabel.TextXAlignment = Enum.TextXAlignment.Left
+FragmentsLabel.Parent = AccountInfo
 
--- Tạo frame cảnh báo (sử dụng Scale thay vì Offset)
+-- Tạo frame cảnh báo
 local WarningFrame = Instance.new("Frame")
 WarningFrame.Name = "WarningFrame"
 WarningFrame.Size = UDim2.new(0, 250, 0, 120)
 WarningFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-WarningFrame.Position = UDim2.new(0.5, 0, 0.5, 0) -- Chính giữa thực sự
+WarningFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 WarningFrame.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 WarningFrame.BorderSizePixel = 0
 WarningFrame.Visible = false
-WarningFrame.ZIndex = 20 -- ZIndex cao nhất
+WarningFrame.ZIndex = 20
 WarningFrame.Parent = Main
 
 local WarningCorner = Instance.new("UICorner")
@@ -277,7 +247,6 @@ WarningStroke.Color = Color3.fromRGB(255, 182, 193)
 WarningStroke.Thickness = 2
 WarningStroke.Parent = WarningFrame
 
--- Tiêu đề cảnh báo
 local WarningTitle = Instance.new("TextLabel")
 WarningTitle.Text = "Cảnh báo"
 WarningTitle.Font = Enum.Font.GothamBold
@@ -289,7 +258,6 @@ WarningTitle.Position = UDim2.new(0, 0, 0, 5)
 WarningTitle.ZIndex = 21
 WarningTitle.Parent = WarningFrame
 
--- Nội dung cảnh báo
 local WarningText = Instance.new("TextLabel")
 WarningText.Text = "Bạn có muốn tắt script không?"
 WarningText.Font = Enum.Font.Gotham
@@ -301,7 +269,6 @@ WarningText.Position = UDim2.new(0, 10, 0, 35)
 WarningText.ZIndex = 21
 WarningText.Parent = WarningFrame
 
--- Nút Có
 local YesBtn = Instance.new("TextButton")
 YesBtn.Text = "Có"
 YesBtn.Font = Enum.Font.GothamBold
@@ -317,7 +284,6 @@ local YesCorner = Instance.new("UICorner")
 YesCorner.CornerRadius = UDim.new(0, 6)
 YesCorner.Parent = YesBtn
 
--- Nút Không
 local NoBtn = Instance.new("TextButton")
 NoBtn.Text = "Không"
 NoBtn.Font = Enum.Font.GothamBold
@@ -348,7 +314,6 @@ end)
 
 -- Chức năng khi nhấn nút Có
 YesBtn.MouseButton1Click:Connect(function()
-    -- Xóa toàn bộ GUI (tắt script)
     gui:Destroy()
 end)
 
@@ -373,59 +338,25 @@ NoBtn.MouseLeave:Connect(function()
     TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
 end)
 
--- Chức năng chuyển tab
-MainTab.MouseButton1Click:Connect(function()
-    MainContent.Visible = true
-    InfoContent.Visible = false
-    MainTab.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
-    InfoTab.BackgroundColor3 = Color3.fromRGB(255, 200, 210)
-end)
-
-InfoTab.MouseButton1Click:Connect(function()
-    MainContent.Visible = false
-    InfoContent.Visible = true
-    MainTab.BackgroundColor3 = Color3.fromRGB(255, 200, 210)
-    InfoTab.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
-end)
-
 -- Hiệu ứng hover cho tab
-MainTab.MouseEnter:Connect(function()
-    if MainContent.Visible == false then
-        TweenService:Create(MainTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
-    end
-end)
-
-MainTab.MouseLeave:Connect(function()
-    if MainContent.Visible == false then
-        TweenService:Create(MainTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 200, 210)}):Play()
-    end
-end)
-
 InfoTab.MouseEnter:Connect(function()
-    if InfoContent.Visible == false then
-        TweenService:Create(InfoTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
-    end
+    TweenService:Create(InfoTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 85, 165)}):Play()
 end)
-
 InfoTab.MouseLeave:Connect(function()
-    if InfoContent.Visible == false then
-        TweenService:Create(InfoTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 200, 210)}):Play()
-    end
+    TweenService:Create(InfoTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 105, 180)}):Play()
 end)
 
--- Chức năng toggle menu (tốc độ nhanh hơn)
+-- Chức năng toggle menu
 ToggleBtn.MouseButton1Click:Connect(function()
     if Main.Visible then
-        -- Đóng menu (nhanh)
         TweenService:Create(Main, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
         TweenService:Create(Header, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
         TweenService:Create(Title, TweenInfo.new(0.15), {TextTransparency = 1}):Play()
         
         wait(0.15)
         Main.Visible = false
-        WarningFrame.Visible = false -- Ẩn cảnh báo khi đóng menu
+        WarningFrame.Visible = false
     else
-        -- Mở menu (nhanh)
         Main.Visible = true
         Main.BackgroundTransparency = 1
         Header.BackgroundTransparency = 1
@@ -437,7 +368,7 @@ ToggleBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Hiệu ứng hover cho nút toggle (nhanh hơn)
+-- Hiệu ứng hover cho nút toggle
 ToggleBtn.MouseEnter:Connect(function()
     TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
     TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 105, 180)}):Play()
@@ -448,36 +379,50 @@ ToggleBtn.MouseLeave:Connect(function()
     TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 182, 193)}):Play()
 end)
 
--- Cập nhật thông tin người dùng (cần thay đổi theo game cụ thể)
+-- Cập nhật thông tin Blox Fruits
 local function updatePlayerInfo()
-    -- Đây là phần cần chỉnh sửa theo game của bạn
-    -- Ví dụ: nếu game có leaderstats
     local leaderstats = player:FindFirstChild("leaderstats")
     if leaderstats then
-        local level = leaderstats:FindFirstChild("Level") or leaderstats:FindFirstChild("Lvl")
+        local level = leaderstats:FindFirstChild("Level")
         local beli = leaderstats:FindFirstChild("Beli") or leaderstats:FindFirstChild("Money")
-        local fpoint = leaderstats:FindFirstChild("FPoint") or leaderstats:FindFirstChild("F Points")
+        local fragments = leaderstats:FindFirstChild("Fragments")
         
         if level then
             LevelLabel.Text = "Level: " .. tostring(level.Value)
+        else
+            LevelLabel.Text = "Level: Không tìm thấy"
         end
         
         if beli then
             BeliLabel.Text = "Beli: " .. tostring(beli.Value)
+        else
+            BeliLabel.Text = "Beli: Không tìm thấy"
         end
         
-        if fpoint then
-            FPointLabel.Text = "Điểm F: " .. tostring(fpoint.Value)
+        if fragments then
+            FragmentsLabel.Text = "Fragments: " .. tostring(fragments.Value)
+        else
+            FragmentsLabel.Text = "Fragments: Không tìm thấy"
         end
     else
-        LevelLabel.Text = "Level: Không tìm thấy"
-        BeliLabel.Text = "Beli: Không tìm thấy"
-        FPointLabel.Text = "Điểm F: Không tìm thấy"
+        LevelLabel.Text = "Level: Không có leaderstats"
+        BeliLabel.Text = "Beli: Không có leaderstats"
+        FragmentsLabel.Text = "Fragments: Không có leaderstats"
     end
 end
 
--- Cập nhật thông tin mỗi 5 giây
-while true do
-    updatePlayerInfo()
-    wait(5)
-end
+-- Cập nhật thông tin liên tục
+spawn(function()
+    while wait(1) do
+        if Main.Visible then
+            updatePlayerInfo()
+        end
+    end
+end)
+
+-- Cập nhật ngay khi mở menu
+Main:GetPropertyChangedSignal("Visible"):Connect(function()
+    if Main.Visible then
+        updatePlayerInfo()
+    end
+end)
