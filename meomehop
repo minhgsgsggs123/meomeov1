@@ -100,16 +100,17 @@ CloseBtn.Position = UDim2.new(1, -35, 0, 0)
 CloseBtn.ZIndex = 10 -- Đặt ZIndex cao hơn
 CloseBtn.Parent = Header
 
--- Tạo frame cảnh báo (đặt trực tiếp trong ScreenGui, không phải trong Main)
+-- Tạo frame cảnh báo (đặt trong Main nhưng với ZIndex cao)
 local WarningFrame = Instance.new("Frame")
 WarningFrame.Name = "WarningFrame"
 WarningFrame.Size = UDim2.new(0, 300, 0, 150)
-WarningFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+WarningFrame.Position = UDim2.new(0.5, -150, 0.5, -75) -- Luôn ở giữa Main
+WarningFrame.AnchorPoint = Vector2.new(0.5, 0.5) -- Neo giữa
 WarningFrame.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 WarningFrame.BorderSizePixel = 0
 WarningFrame.Visible = false
 WarningFrame.ZIndex = 20 -- ZIndex cao nhất
-WarningFrame.Parent = gui
+WarningFrame.Parent = Main
 
 local WarningCorner = Instance.new("UICorner")
 WarningCorner.CornerRadius = UDim.new(0, 10)
