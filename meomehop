@@ -185,7 +185,9 @@ CloseBtn.MouseLeave:Connect(function()
     TweenService:Create(CloseBtn, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 end)
 
--- Nội dung trống
+-- ========== PHẦN CONTENT VÀ TAB SYSTEM ========== --
+
+-- Frame chính chứa nội dung
 local Content = Instance.new("Frame")
 Content.Size = UDim2.new(1, -20, 1, -56)
 Content.Position = UDim2.new(0, 10, 0, 46)
@@ -196,9 +198,8 @@ Content.Parent = Main
 local ContentCorner = Instance.new("UICorner")
 ContentCorner.CornerRadius = UDim.new(0, 8)
 ContentCorner.Parent = Content
--- Thêm phần này sau khi tạo Content frame
 
--- Tạo tab system với layout ngang như trong ảnh
+-- Tạo tab system với layout ngang
 local TabsContainer = Instance.new("Frame")
 TabsContainer.Name = "TabsContainer"
 TabsContainer.Size = UDim2.new(1, -20, 0, 40)
@@ -324,9 +325,6 @@ local function CreateInfoTab()
     Description.Position = UDim2.new(0, 15, 0, 50)
     Description.TextXAlignment = Enum.TextXAlignment.Left
     Description.Parent = TabContent
-    
-    -- Ở đây bạn có thể thêm các thông tin như:
-    -- Level hiện tại, Beli, Frags, Username, v.v.
 end
 
 -- Tab Main (trống)
@@ -341,9 +339,6 @@ local function CreateMainTab()
     Description.Position = UDim2.new(0, 15, 0, 50)
     Description.TextXAlignment = Enum.TextXAlignment.Left
     Description.Parent = TabContent
-    
-    -- Ở đây bạn có thể thêm:
-    -- Auto Farm, Auto Collect, Auto Click, v.v.
 end
 
 -- Tab Nhiệm vụ (trống)
@@ -358,10 +353,9 @@ local function CreateQuestTab()
     Description.Position = UDim2.new(0, 15, 0, 50)
     Description.TextXAlignment = Enum.TextXAlignment.Left
     Description.Parent = TabContent
-    
-    -- Ở đây bạn có thể thêm:
-    -- Auto Quest, Danh sách quest, Teleport đến NPC, v.v.
 end
+
+-- ========== KHỞI TẠO TAB SYSTEM ========== --
 
 -- Tạo các tab
 for i, tabName in ipairs(tabs) do
@@ -377,6 +371,9 @@ if firstTab then
     TweenService:Create(firstTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
     TweenService:Create(firstTab, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 end
+
+-- ========== CÁC CHỨC NĂNG KHÁC ========== --
+
 -- Chức năng khi nhấn nút X
 CloseBtn.MouseButton1Click:Connect(function()
     WarningFrame.Visible = true
