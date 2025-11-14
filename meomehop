@@ -1,4 +1,6 @@
 local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
 -- Tạo ScreenGui
 local gui = Instance.new("ScreenGui")
@@ -100,6 +102,160 @@ CloseBtn.Position = UDim2.new(1, -35, 0, 0)
 CloseBtn.ZIndex = 10 -- Đặt ZIndex cao hơn
 CloseBtn.Parent = Header
 
+-- Thanh tab
+local TabContainer = Instance.new("Frame")
+TabContainer.Size = UDim2.new(1, -20, 0, 40)
+TabContainer.Position = UDim2.new(0, 10, 0, 46)
+TabContainer.BackgroundTransparency = 1
+TabContainer.Parent = Main
+
+-- Tab chính
+local MainTab = Instance.new("TextButton")
+MainTab.Name = "MainTab"
+MainTab.Text = "Chính"
+MainTab.Font = Enum.Font.GothamBold
+MainTab.TextSize = 14
+MainTab.TextColor3 = Color3.fromRGB(80, 30, 60)
+MainTab.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+MainTab.Size = UDim2.new(0, 80, 1, 0)
+MainTab.Position = UDim2.new(0, 0, 0, 0)
+MainTab.Parent = TabContainer
+
+local MainTabCorner = Instance.new("UICorner")
+MainTabCorner.CornerRadius = UDim.new(0, 6)
+MainTabCorner.Parent = MainTab
+
+-- Tab thông tin
+local InfoTab = Instance.new("TextButton")
+InfoTab.Name = "InfoTab"
+InfoTab.Text = "Thông tin"
+InfoTab.Font = Enum.Font.GothamBold
+InfoTab.TextSize = 14
+InfoTab.TextColor3 = Color3.fromRGB(80, 30, 60)
+InfoTab.BackgroundColor3 = Color3.fromRGB(255, 200, 210)
+InfoTab.Size = UDim2.new(0, 80, 1, 0)
+InfoTab.Position = UDim2.new(0, 85, 0, 0)
+InfoTab.Parent = TabContainer
+
+local InfoTabCorner = Instance.new("UICorner")
+InfoTabCorner.CornerRadius = UDim.new(0, 6)
+InfoTabCorner.Parent = InfoTab
+
+-- Nội dung chính
+local MainContent = Instance.new("Frame")
+MainContent.Name = "MainContent"
+MainContent.Size = UDim2.new(1, -20, 1, -96)
+MainContent.Position = UDim2.new(0, 10, 0, 96)
+MainContent.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
+MainContent.BorderSizePixel = 0
+MainContent.Parent = Main
+
+local MainContentCorner = Instance.new("UICorner")
+MainContentCorner.CornerRadius = UDim.new(0, 8)
+MainContentCorner.Parent = MainContent
+
+-- Nội dung thông tin
+local InfoContent = Instance.new("Frame")
+InfoContent.Name = "InfoContent"
+InfoContent.Size = UDim2.new(1, -20, 1, -96)
+InfoContent.Position = UDim2.new(0, 10, 0, 96)
+InfoContent.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
+InfoContent.BorderSizePixel = 0
+InfoContent.Visible = false
+InfoContent.Parent = Main
+
+local InfoContentCorner = Instance.new("UICorner")
+InfoContentCorner.CornerRadius = UDim.new(0, 8)
+InfoContentCorner.Parent = InfoContent
+
+-- Thêm nội dung cho tab Thông tin
+local InfoScroll = Instance.new("ScrollingFrame")
+InfoScroll.Size = UDim2.new(1, -10, 1, -10)
+InfoScroll.Position = UDim2.new(0, 5, 0, 5)
+InfoScroll.BackgroundTransparency = 1
+InfoScroll.BorderSizePixel = 0
+InfoScroll.ScrollBarThickness = 6
+InfoScroll.ScrollBarImageColor3 = Color3.fromRGB(255, 182, 193)
+InfoScroll.Parent = InfoContent
+
+local InfoListLayout = Instance.new("UIListLayout")
+InfoListLayout.Padding = UDim.new(0, 10)
+InfoListLayout.Parent = InfoScroll
+
+-- Thông tin tài khoản
+local AccountInfo = Instance.new("Frame")
+AccountInfo.Size = UDim2.new(1, 0, 0, 150)
+AccountInfo.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+AccountInfo.Parent = InfoScroll
+
+local AccountInfoCorner = Instance.new("UICorner")
+AccountInfoCorner.CornerRadius = UDim.new(0, 8)
+AccountInfoCorner.Parent = AccountInfo
+
+local AccountInfoStroke = Instance.new("UIStroke")
+AccountInfoStroke.Color = Color3.fromRGB(255, 182, 193)
+AccountInfoStroke.Thickness = 1
+AccountInfoStroke.Parent = AccountInfo
+
+local AccountTitle = Instance.new("TextLabel")
+AccountTitle.Text = "Thông tin tài khoản"
+AccountTitle.Font = Enum.Font.GothamBold
+AccountTitle.TextSize = 16
+AccountTitle.TextColor3 = Color3.fromRGB(255, 105, 180)
+AccountTitle.BackgroundTransparency = 1
+AccountTitle.Size = UDim2.new(1, -10, 0, 25)
+AccountTitle.Position = UDim2.new(0, 5, 0, 5)
+AccountTitle.TextXAlignment = Enum.TextXAlignment.Left
+AccountTitle.Parent = AccountInfo
+
+-- User
+local UserLabel = Instance.new("TextLabel")
+UserLabel.Text = "User: " .. player.Name
+UserLabel.Font = Enum.Font.Gotham
+UserLabel.TextSize = 14
+UserLabel.TextColor3 = Color3.fromRGB(80, 30, 60)
+UserLabel.BackgroundTransparency = 1
+UserLabel.Size = UDim2.new(1, -10, 0, 20)
+UserLabel.Position = UDim2.new(0, 5, 0, 35)
+UserLabel.TextXAlignment = Enum.TextXAlignment.Left
+UserLabel.Parent = AccountInfo
+
+-- Level
+local LevelLabel = Instance.new("TextLabel")
+LevelLabel.Text = "Level: Đang tải..."
+LevelLabel.Font = Enum.Font.Gotham
+LevelLabel.TextSize = 14
+LevelLabel.TextColor3 = Color3.fromRGB(80, 30, 60)
+LevelLabel.BackgroundTransparency = 1
+LevelLabel.Size = UDim2.new(1, -10, 0, 20)
+LevelLabel.Position = UDim2.new(0, 5, 0, 60)
+LevelLabel.TextXAlignment = Enum.TextXAlignment.Left
+LevelLabel.Parent = AccountInfo
+
+-- Beli
+local BeliLabel = Instance.new("TextLabel")
+BeliLabel.Text = "Beli: Đang tải..."
+BeliLabel.Font = Enum.Font.Gotham
+BeliLabel.TextSize = 14
+BeliLabel.TextColor3 = Color3.fromRGB(80, 30, 60)
+BeliLabel.BackgroundTransparency = 1
+BeliLabel.Size = UDim2.new(1, -10, 0, 20)
+BeliLabel.Position = UDim2.new(0, 5, 0, 85)
+BeliLabel.TextXAlignment = Enum.TextXAlignment.Left
+BeliLabel.Parent = AccountInfo
+
+-- Điểm F
+local FPointLabel = Instance.new("TextLabel")
+FPointLabel.Text = "Điểm F: Đang tải..."
+FPointLabel.Font = Enum.Font.Gotham
+FPointLabel.TextSize = 14
+FPointLabel.TextColor3 = Color3.fromRGB(80, 30, 60)
+FPointLabel.BackgroundTransparency = 1
+FPointLabel.Size = UDim2.new(1, -10, 0, 20)
+FPointLabel.Position = UDim2.new(0, 5, 0, 110)
+FPointLabel.TextXAlignment = Enum.TextXAlignment.Left
+FPointLabel.Parent = AccountInfo
+
 -- Tạo frame cảnh báo (sử dụng Scale thay vì Offset)
 local WarningFrame = Instance.new("Frame")
 WarningFrame.Name = "WarningFrame"
@@ -185,18 +341,6 @@ CloseBtn.MouseLeave:Connect(function()
     TweenService:Create(CloseBtn, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 end)
 
--- Nội dung trống
-local Content = Instance.new("Frame")
-Content.Size = UDim2.new(1, -20, 1, -56)
-Content.Position = UDim2.new(0, 10, 0, 46)
-Content.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
-Content.BorderSizePixel = 0
-Content.Parent = Main
-
-local ContentCorner = Instance.new("UICorner")
-ContentCorner.CornerRadius = UDim.new(0, 8)
-ContentCorner.Parent = Content
-
 -- Chức năng khi nhấn nút X
 CloseBtn.MouseButton1Click:Connect(function()
     WarningFrame.Visible = true
@@ -227,6 +371,46 @@ NoBtn.MouseEnter:Connect(function()
 end)
 NoBtn.MouseLeave:Connect(function()
     TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
+end)
+
+-- Chức năng chuyển tab
+MainTab.MouseButton1Click:Connect(function()
+    MainContent.Visible = true
+    InfoContent.Visible = false
+    MainTab.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+    InfoTab.BackgroundColor3 = Color3.fromRGB(255, 200, 210)
+end)
+
+InfoTab.MouseButton1Click:Connect(function()
+    MainContent.Visible = false
+    InfoContent.Visible = true
+    MainTab.BackgroundColor3 = Color3.fromRGB(255, 200, 210)
+    InfoTab.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+end)
+
+-- Hiệu ứng hover cho tab
+MainTab.MouseEnter:Connect(function()
+    if MainContent.Visible == false then
+        TweenService:Create(MainTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
+    end
+end)
+
+MainTab.MouseLeave:Connect(function()
+    if MainContent.Visible == false then
+        TweenService:Create(MainTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 200, 210)}):Play()
+    end
+end)
+
+InfoTab.MouseEnter:Connect(function()
+    if InfoContent.Visible == false then
+        TweenService:Create(InfoTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
+    end
+end)
+
+InfoTab.MouseLeave:Connect(function()
+    if InfoContent.Visible == false then
+        TweenService:Create(InfoTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 200, 210)}):Play()
+    end
 end)
 
 -- Chức năng toggle menu (tốc độ nhanh hơn)
@@ -263,3 +447,37 @@ ToggleBtn.MouseLeave:Connect(function()
     TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 240, 245)}):Play()
     TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 182, 193)}):Play()
 end)
+
+-- Cập nhật thông tin người dùng (cần thay đổi theo game cụ thể)
+local function updatePlayerInfo()
+    -- Đây là phần cần chỉnh sửa theo game của bạn
+    -- Ví dụ: nếu game có leaderstats
+    local leaderstats = player:FindFirstChild("leaderstats")
+    if leaderstats then
+        local level = leaderstats:FindFirstChild("Level") or leaderstats:FindFirstChild("Lvl")
+        local beli = leaderstats:FindFirstChild("Beli") or leaderstats:FindFirstChild("Money")
+        local fpoint = leaderstats:FindFirstChild("FPoint") or leaderstats:FindFirstChild("F Points")
+        
+        if level then
+            LevelLabel.Text = "Level: " .. tostring(level.Value)
+        end
+        
+        if beli then
+            BeliLabel.Text = "Beli: " .. tostring(beli.Value)
+        end
+        
+        if fpoint then
+            FPointLabel.Text = "Điểm F: " .. tostring(fpoint.Value)
+        end
+    else
+        LevelLabel.Text = "Level: Không tìm thấy"
+        BeliLabel.Text = "Beli: Không tìm thấy"
+        FPointLabel.Text = "Điểm F: Không tìm thấy"
+    end
+end
+
+-- Cập nhật thông tin mỗi 5 giây
+while true do
+    updatePlayerInfo()
+    wait(5)
+end
