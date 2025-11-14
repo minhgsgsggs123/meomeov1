@@ -22,30 +22,20 @@ ToggleStroke.Color = Color3.fromRGB(255, 182, 193)
 ToggleStroke.Thickness = 2
 ToggleStroke.Parent = ToggleBtn
 
--- Bo tròn nút toggle (FIXED)
+-- Bo tròn nút toggle
 local ToggleCorner = Instance.new("UICorner")
 ToggleCorner.CornerRadius = UDim.new(0, 12)
 ToggleCorner.Parent = ToggleBtn
 
--- Tạo frame con để chứa ảnh (giúp bo tròn đúng)
-local ToggleImageFrame = Instance.new("Frame")
-ToggleImageFrame.Size = UDim2.new(1, -10, 1, -10)
-ToggleImageFrame.Position = UDim2.new(0, 5, 0, 5)
-ToggleImageFrame.BackgroundTransparency = 1
-ToggleImageFrame.Parent = ToggleBtn
-
-local ToggleImageCorner = Instance.new("UICorner")
-ToggleImageCorner.CornerRadius = UDim.new(0, 8)
-ToggleImageCorner.Parent = ToggleImageFrame
-
--- Icon bên trong nút toggle với ảnh ID của bạn
+-- Icon bên trong nút toggle
 local ToggleIcon = Instance.new("ImageLabel")
 ToggleIcon.Name = "Icon"
-ToggleIcon.Size = UDim2.new(1, 0, 1, 0)
+ToggleIcon.Size = UDim2.new(0.7, 0, 0.7, 0)
+ToggleIcon.Position = UDim2.new(0.15, 0, 0.15, 0)
 ToggleIcon.BackgroundTransparency = 1
-ToggleIcon.Image = "rbxassetid://74593584475472" -- Ảnh ID của bạn
+ToggleIcon.Image = "rbxassetid://74593584475472"
 ToggleIcon.ScaleType = Enum.ScaleType.Fit
-ToggleIcon.Parent = ToggleImageFrame
+ToggleIcon.Parent = ToggleBtn
 
 ToggleBtn.Parent = gui
 
@@ -97,19 +87,19 @@ CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseBtn.BackgroundTransparency = 1
 CloseBtn.Size = UDim2.new(0, 35, 1, 0)
 CloseBtn.Position = UDim2.new(1, -35, 0, 0)
-CloseBtn.ZIndex = 10 -- Đặt ZIndex cao hơn
+CloseBtn.ZIndex = 10
 CloseBtn.Parent = Header
 
--- Tạo frame cảnh báo (sử dụng Scale thay vì Offset)
+-- Tạo frame cảnh báo
 local WarningFrame = Instance.new("Frame")
 WarningFrame.Name = "WarningFrame"
 WarningFrame.Size = UDim2.new(0, 250, 0, 120)
 WarningFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-WarningFrame.Position = UDim2.new(0.5, 0, 0.5, 0) -- Chính giữa thực sự
+WarningFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 WarningFrame.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 WarningFrame.BorderSizePixel = 0
 WarningFrame.Visible = false
-WarningFrame.ZIndex = 20 -- ZIndex cao nhất
+WarningFrame.ZIndex = 20
 WarningFrame.Parent = Main
 
 local WarningCorner = Instance.new("UICorner")
@@ -197,7 +187,7 @@ local ContentCorner = Instance.new("UICorner")
 ContentCorner.CornerRadius = UDim.new(0, 8)
 ContentCorner.Parent = Content
 
--- TẠO TAB SYSTEM GIỐNG TRONG ẢNH
+-- TẠO TAB SYSTEM
 local LeftTabs = Instance.new("Frame")
 LeftTabs.Name = "LeftTabs"
 LeftTabs.Size = UDim2.new(0, 150, 1, 0)
@@ -228,6 +218,82 @@ local tabsList = {
 
 local tabButtons = {}
 local tabFrames = {}
+
+-- Hàm tạo nút toggle
+local function createToggleButton(text, x, y, parent)
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Size = UDim2.new(0, 200, 0, 35)
+    toggleBtn.Position = UDim2.new(0, x, 0, y)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+    toggleBtn.Text = text .. ": OFF"
+    toggleBtn.Font = Enum.Font.Gotham
+    toggleBtn.TextSize = 13
+    toggleBtn.TextColor3 = Color3.fromRGB(80, 30, 60)
+    toggleBtn.Parent = parent
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = toggleBtn
+    
+    local isEnabled = false
+    
+    toggleBtn.MouseButton1Click:Connect(function()
+        isEnabled = not isEnabled
+        if isEnabled then
+            toggleBtn.Text = text .. ": ON"
+            TweenService:Create(toggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(144, 238, 144)}):Play()
+        else
+            toggleBtn.Text = text .. ": OFF"
+            TweenService:Create(toggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
+        end
+    end)
+    
+    -- Hiệu ứng hover
+    toggleBtn.MouseEnter:Connect(function()
+        TweenService:Create(toggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
+    end)
+    
+    toggleBtn.MouseLeave:Connect(function()
+        local targetColor = isEnabled and Color3.fromRGB(144, 238, 144) or Color3.fromRGB(255, 182, 193)
+        TweenService:Create(toggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = targetColor}):Play()
+    end)
+    
+    return toggleBtn
+end
+
+-- Hàm tạo nút thường
+local function createButton(text, x, y, parent)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 200, 0, 35)
+    button.Position = UDim2.new(0, x, 0, y)
+    button.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+    button.Text = text
+    button.Font = Enum.Font.Gotham
+    button.TextSize = 13
+    button.TextColor3 = Color3.fromRGB(80, 30, 60)
+    button.Parent = parent
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = button
+    
+    -- Hiệu ứng hover
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
+    end)
+    
+    button.MouseButton1Click:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 105, 180)}):Play()
+        wait(0.1)
+        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
+    end)
+    
+    return button
+end
 
 -- Tạo các nút tab bên trái
 for i, tabName in ipairs(tabsList) do
@@ -304,133 +370,57 @@ discordLabel.Parent = DiscordFrame
 
 -- Tab Farm
 local FarmFrame = tabFrames["2️⃣ Farm"]
-local autoFarmBtn = createToggleButton("Auto Farm", 20, 20, FarmFrame)
-local autoSwordBtn = createToggleButton("Auto Sword", 20, 70, FarmFrame)
-local autoMeleeBtn = createToggleButton("Auto Melee", 20, 120, FarmFrame)
+createToggleButton("Auto Farm", 20, 20, FarmFrame)
+createToggleButton("Auto Sword", 20, 70, FarmFrame)
+createToggleButton("Auto Melee", 20, 120, FarmFrame)
 
 -- Tab Sea
 local SeaFrame = tabFrames["3️⃣ Sea"]
-local autoSeaEventsBtn = createToggleButton("Auto Sea Events", 20, 20, SeaFrame)
-local autoPirateRaidBtn = createToggleButton("Auto Pirate Raid", 20, 70, SeaFrame)
+createToggleButton("Auto Sea Events", 20, 20, SeaFrame)
+createToggleButton("Auto Pirate Raid", 20, 70, SeaFrame)
 
 -- Tab Islands
 local IslandsFrame = tabFrames["4️⃣ Islands"]
-local teleportToIslandBtn = createButton("Teleport to Current Island", 20, 20, IslandsFrame)
-local unlockAllIslandsBtn = createButton("Unlock All Islands", 20, 70, IslandsFrame)
+createButton("Teleport to Current Island", 20, 20, IslandsFrame)
+createButton("Unlock All Islands", 20, 70, IslandsFrame)
 
 -- Tab Quests/Items
 local QuestsFrame = tabFrames["5️⃣ Quests/Items"]
-local autoQuestBtn = createToggleButton("Auto Quest", 20, 20, QuestsFrame)
-local autoCollectItemsBtn = createToggleButton("Auto Collect Items", 20, 70, QuestsFrame)
+createToggleButton("Auto Quest", 20, 20, QuestsFrame)
+createToggleButton("Auto Collect Items", 20, 70, QuestsFrame)
 
 -- Tab Fruit/Paid
 local FruitFrame = tabFrames["6️⃣ Fruit/Paid"]
-local autoBuyFruitsBtn = createToggleButton("Auto Buy Fruits", 20, 20, FruitFrame)
-local fruitNotifierBtn = createToggleButton("Fruit Notifier", 20, 70, FruitFrame)
+createToggleButton("Auto Buy Fruits", 20, 20, FruitFrame)
+createToggleButton("Fruit Notifier", 20, 70, FruitFrame)
 
 -- Tab Stats
 local StatsFrame = tabFrames["7️⃣ Stats"]
-local meleeStatBtn = createButton("Auto Melee Stats", 20, 20, StatsFrame)
-local defenseStatBtn = createButton("Auto Defense Stats", 20, 70, StatsFrame)
-local swordStatBtn = createButton("Auto Sword Stats", 20, 120, StatsFrame)
+createButton("Auto Melee Stats", 20, 20, StatsFrame)
+createButton("Auto Defense Stats", 20, 70, StatsFrame)
+createButton("Auto Sword Stats", 20, 120, StatsFrame)
 
 -- Tab Teleport
 local TeleportFrame = tabFrames["8️⃣ Teleport"]
-local tpToPlayerBtn = createButton("TP to Player", 20, 20, TeleportFrame)
-local tpToBossBtn = createButton("TP to Boss", 20, 70, TeleportFrame)
-local tpToSafeZoneBtn = createButton("TP to Safe Zone", 20, 120, TeleportFrame)
+createButton("TP to Player", 20, 20, TeleportFrame)
+createButton("TP to Boss", 20, 70, TeleportFrame)
+createButton("TP to Safe Zone", 20, 120, TeleportFrame)
 
 -- Tab Visual
 local VisualFrame = tabFrames["9️⃣ Visual"]
-local espToggleBtn = createToggleButton("ESP Players", 20, 20, VisualFrame)
-local espFruitsToggleBtn = createToggleButton("ESP Fruits", 20, 70, VisualFrame)
+createToggleButton("ESP Players", 20, 20, VisualFrame)
+createToggleButton("ESP Fruits", 20, 70, VisualFrame)
 
 -- Tab Shop
 local ShopFrame = tabFrames["1️⃣0️⃣ Shop"]
-local autoBuyHakiBtn = createToggleButton("Auto Buy Haki", 20, 20, ShopFrame)
-local autoBuyFightingBtn = createToggleButton("Auto Buy Fighting Style", 20, 70, ShopFrame)
+createToggleButton("Auto Buy Haki", 20, 20, ShopFrame)
+createToggleButton("Auto Buy Fighting Style", 20, 70, ShopFrame)
 
 -- Tab Misc
 local MiscFrame = tabFrames["1️⃣1️⃣ Misc"]
-local noClipBtn = createToggleButton("No Clip", 20, 20, MiscFrame)
-local flyBtn = createToggleButton("Fly", 20, 70, MiscFrame)
-local speedBtn = createToggleButton("Speed Hack", 20, 120, MiscFrame)
-
--- Hàm tạo nút toggle
-function createToggleButton(text, x, y, parent)
-    local toggleBtn = Instance.new("TextButton")
-    toggleBtn.Size = UDim2.new(0, 200, 0, 35)
-    toggleBtn.Position = UDim2.new(0, x, 0, y)
-    toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
-    toggleBtn.Text = text .. ": OFF"
-    toggleBtn.Font = Enum.Font.Gotham
-    toggleBtn.TextSize = 13
-    toggleBtn.TextColor3 = Color3.fromRGB(80, 30, 60)
-    toggleBtn.Parent = parent
-    
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 6)
-    corner.Parent = toggleBtn
-    
-    local isEnabled = false
-    
-    toggleBtn.MouseButton1Click:Connect(function()
-        isEnabled = not isEnabled
-        if isEnabled then
-            toggleBtn.Text = text .. ": ON"
-            TweenService:Create(toggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(144, 238, 144)}):Play()
-        else
-            toggleBtn.Text = text .. ": OFF"
-            TweenService:Create(toggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
-        end
-    end)
-    
-    -- Hiệu ứng hover
-    toggleBtn.MouseEnter:Connect(function()
-        TweenService:Create(toggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
-    end)
-    
-    toggleBtn.MouseLeave:Connect(function()
-        local targetColor = isEnabled and Color3.fromRGB(144, 238, 144) or Color3.fromRGB(255, 182, 193)
-        TweenService:Create(toggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = targetColor}):Play()
-    end)
-    
-    return toggleBtn
-end
-
--- Hàm tạo nút thường
-function createButton(text, x, y, parent)
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0, 200, 0, 35)
-    button.Position = UDim2.new(0, x, 0, y)
-    button.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
-    button.Text = text
-    button.Font = Enum.Font.Gotham
-    button.TextSize = 13
-    button.TextColor3 = Color3.fromRGB(80, 30, 60)
-    button.Parent = parent
-    
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 6)
-    corner.Parent = button
-    
-    -- Hiệu ứng hover
-    button.MouseEnter:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
-    end)
-    
-    button.MouseLeave:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
-    end)
-    
-    button.MouseButton1Click:Connect(function()
-        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 105, 180)}):Play()
-        wait(0.1)
-        TweenService:Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
-    end)
-    
-    return button
-end
+createToggleButton("No Clip", 20, 20, MiscFrame)
+createToggleButton("Fly", 20, 70, MiscFrame)
+createToggleButton("Speed Hack", 20, 120, MiscFrame)
 
 -- Kích hoạt tab đầu tiên
 if tabButtons["1️⃣ Discord"] then
@@ -444,7 +434,6 @@ end)
 
 -- Chức năng khi nhấn nút Có
 YesBtn.MouseButton1Click:Connect(function()
-    -- Xóa toàn bộ GUI (tắt script)
     gui:Destroy()
 end)
 
@@ -469,31 +458,38 @@ NoBtn.MouseLeave:Connect(function()
     TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
 end)
 
--- Chức năng toggle menu (tốc độ nhanh hơn)
+-- CHỨC NĂNG TOGGLE MENU (ĐÃ SỬA)
+local isMenuOpen = false
+
 ToggleBtn.MouseButton1Click:Connect(function()
-    if Main.Visible then
-        -- Đóng menu (nhanh)
-        TweenService:Create(Main, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
-        TweenService:Create(Header, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
-        TweenService:Create(Title, TweenInfo.new(0.15), {TextTransparency = 1}):Play()
-        
-        wait(0.15)
-        Main.Visible = false
-        WarningFrame.Visible = false -- Ẩn cảnh báo khi đóng menu
-    else
-        -- Mở menu (nhanh)
+    isMenuOpen = not isMenuOpen
+    
+    if isMenuOpen then
+        -- Mở menu
         Main.Visible = true
         Main.BackgroundTransparency = 1
         Header.BackgroundTransparency = 1
         Title.TextTransparency = 1
+        Content.BackgroundTransparency = 1
         
         TweenService:Create(Main, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
         TweenService:Create(Header, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
         TweenService:Create(Title, TweenInfo.new(0.2), {TextTransparency = 0}):Play()
+        TweenService:Create(Content, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
+    else
+        -- Đóng menu
+        TweenService:Create(Main, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
+        TweenService:Create(Header, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
+        TweenService:Create(Title, TweenInfo.new(0.15), {TextTransparency = 1}):Play()
+        TweenService:Create(Content, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
+        
+        wait(0.15)
+        Main.Visible = false
+        WarningFrame.Visible = false
     end
 end)
 
--- Hiệu ứng hover cho nút toggle (nhanh hơn)
+-- Hiệu ứng hover cho nút toggle
 ToggleBtn.MouseEnter:Connect(function()
     TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
     TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 105, 180)}):Play()
@@ -503,3 +499,5 @@ ToggleBtn.MouseLeave:Connect(function()
     TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 240, 245)}):Play()
     TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 182, 193)}):Play()
 end)
+
+print("Meow Hub loaded! Click the pink button to open menu.")
