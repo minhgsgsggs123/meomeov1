@@ -88,7 +88,7 @@ Title.Size = UDim2.new(1, -50, 1, 0)
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Header
 
--- Nút tắt (sẽ tắt hoàn toàn script)
+-- Nút tắt
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Text = "✖"
 CloseBtn.Font = Enum.Font.GothamBold
@@ -99,10 +99,76 @@ CloseBtn.Size = UDim2.new(0, 35, 1, 0)
 CloseBtn.Position = UDim2.new(1, -35, 0, 0)
 CloseBtn.Parent = Header
 
-CloseBtn.MouseButton1Click:Connect(function()
-    -- Xóa toàn bộ GUI (tắt script)
-    gui:Destroy()
-end)
+-- Tạo frame cảnh báo
+local WarningFrame = Instance.new("Frame")
+WarningFrame.Name = "WarningFrame"
+WarningFrame.Size = UDim2.new(0, 300, 0, 150)
+WarningFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+WarningFrame.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+WarningFrame.BorderSizePixel = 0
+WarningFrame.Visible = false
+WarningFrame.Parent = Main
+
+local WarningCorner = Instance.new("UICorner")
+WarningCorner.CornerRadius = UDim.new(0, 10)
+WarningCorner.Parent = WarningFrame
+
+local WarningStroke = Instance.new("UIStroke")
+WarningStroke.Color = Color3.fromRGB(255, 182, 193)
+WarningStroke.Thickness = 2
+WarningStroke.Parent = WarningFrame
+
+-- Tiêu đề cảnh báo
+local WarningTitle = Instance.new("TextLabel")
+WarningTitle.Text = "Cảnh báo"
+WarningTitle.Font = Enum.Font.GothamBold
+WarningTitle.TextSize = 18
+WarningTitle.TextColor3 = Color3.fromRGB(255, 105, 180)
+WarningTitle.BackgroundTransparency = 1
+WarningTitle.Size = UDim2.new(1, 0, 0, 40)
+WarningTitle.Position = UDim2.new(0, 0, 0, 0)
+WarningTitle.Parent = WarningFrame
+
+-- Nội dung cảnh báo
+local WarningText = Instance.new("TextLabel")
+WarningText.Text = "Bạn có muốn tắt script không?"
+WarningText.Font = Enum.Font.Gotham
+WarningText.TextSize = 16
+WarningText.TextColor3 = Color3.fromRGB(80, 30, 60)
+WarningText.BackgroundTransparency = 1
+WarningText.Size = UDim2.new(1, -20, 0, 40)
+WarningText.Position = UDim2.new(0, 10, 0, 40)
+WarningText.Parent = WarningFrame
+
+-- Nút Có
+local YesBtn = Instance.new("TextButton")
+YesBtn.Text = "Có"
+YesBtn.Font = Enum.Font.GothamBold
+YesBtn.TextSize = 16
+YesBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+YesBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+YesBtn.Size = UDim2.new(0, 80, 0, 35)
+YesBtn.Position = UDim2.new(0.5, -90, 1, -50)
+YesBtn.Parent = WarningFrame
+
+local YesCorner = Instance.new("UICorner")
+YesCorner.CornerRadius = UDim.new(0, 8)
+YesCorner.Parent = YesBtn
+
+-- Nút Không
+local NoBtn = Instance.new("TextButton")
+NoBtn.Text = "Không"
+NoBtn.Font = Enum.Font.GothamBold
+NoBtn.TextSize = 16
+NoBtn.TextColor3 = Color3.fromRGB(80, 30, 60)
+NoBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+NoBtn.Size = UDim2.new(0, 80, 0, 35)
+NoBtn.Position = UDim2.new(0.5, 10, 1, -50)
+NoBtn.Parent = WarningFrame
+
+local NoCorner = Instance.new("UICorner")
+NoCorner.CornerRadius = UDim.new(0, 8)
+NoCorner.Parent = NoBtn
 
 -- Hiệu ứng hover nút tắt
 CloseBtn.MouseEnter:Connect(function()
@@ -123,6 +189,38 @@ Content.Parent = Main
 local ContentCorner = Instance.new("UICorner")
 ContentCorner.CornerRadius = UDim.new(0, 8)
 ContentCorner.Parent = Content
+
+-- Chức năng khi nhấn nút X
+CloseBtn.MouseButton1Click:Connect(function()
+    WarningFrame.Visible = true
+end)
+
+-- Chức năng khi nhấn nút Có
+YesBtn.MouseButton1Click:Connect(function()
+    -- Xóa toàn bộ GUI (tắt script)
+    gui:Destroy()
+end)
+
+-- Chức năng khi nhấn nút Không
+NoBtn.MouseButton1Click:Connect(function()
+    WarningFrame.Visible = false
+end)
+
+-- Hiệu ứng hover cho nút Có
+YesBtn.MouseEnter:Connect(function()
+    TweenService:Create(YesBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 65, 140)}):Play()
+end)
+YesBtn.MouseLeave:Connect(function()
+    TweenService:Create(YesBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 105, 180)}):Play()
+end)
+
+-- Hiệu ứng hover cho nút Không
+NoBtn.MouseEnter:Connect(function()
+    TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
+end)
+NoBtn.MouseLeave:Connect(function()
+    TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
+end)
 
 -- Chức năng toggle menu (tốc độ nhanh hơn)
 ToggleBtn.MouseButton1Click:Connect(function()
