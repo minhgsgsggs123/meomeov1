@@ -100,11 +100,11 @@ CloseBtn.Position = UDim2.new(1, -35, 0, 0)
 CloseBtn.ZIndex = 10 -- Đặt ZIndex cao hơn
 CloseBtn.Parent = Header
 
--- Tạo frame cảnh báo (đặt trong Main nhưng với ZIndex cao)
+-- Tạo frame cảnh báo (nhỏ hơn và đẹp hơn)
 local WarningFrame = Instance.new("Frame")
 WarningFrame.Name = "WarningFrame"
-WarningFrame.Size = UDim2.new(0, 300, 0, 150)
-WarningFrame.Position = UDim2.new(0.5, -150, 0.5, -75) -- Luôn ở giữa Main
+WarningFrame.Size = UDim2.new(0, 250, 0, 120) -- Nhỏ hơn
+WarningFrame.Position = UDim2.new(0.5, -125, 0.5, -60) -- Căn giữa chính xác
 WarningFrame.AnchorPoint = Vector2.new(0.5, 0.5) -- Neo giữa
 WarningFrame.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 WarningFrame.BorderSizePixel = 0
@@ -125,11 +125,11 @@ WarningStroke.Parent = WarningFrame
 local WarningTitle = Instance.new("TextLabel")
 WarningTitle.Text = "Cảnh báo"
 WarningTitle.Font = Enum.Font.GothamBold
-WarningTitle.TextSize = 18
+WarningTitle.TextSize = 16
 WarningTitle.TextColor3 = Color3.fromRGB(255, 105, 180)
 WarningTitle.BackgroundTransparency = 1
-WarningTitle.Size = UDim2.new(1, 0, 0, 40)
-WarningTitle.Position = UDim2.new(0, 0, 0, 0)
+WarningTitle.Size = UDim2.new(1, 0, 0, 30)
+WarningTitle.Position = UDim2.new(0, 0, 0, 5)
 WarningTitle.ZIndex = 21
 WarningTitle.Parent = WarningFrame
 
@@ -137,11 +137,11 @@ WarningTitle.Parent = WarningFrame
 local WarningText = Instance.new("TextLabel")
 WarningText.Text = "Bạn có muốn tắt script không?"
 WarningText.Font = Enum.Font.Gotham
-WarningText.TextSize = 16
+WarningText.TextSize = 14
 WarningText.TextColor3 = Color3.fromRGB(80, 30, 60)
 WarningText.BackgroundTransparency = 1
-WarningText.Size = UDim2.new(1, -20, 0, 40)
-WarningText.Position = UDim2.new(0, 10, 0, 40)
+WarningText.Size = UDim2.new(1, -20, 0, 30)
+WarningText.Position = UDim2.new(0, 10, 0, 35)
 WarningText.ZIndex = 21
 WarningText.Parent = WarningFrame
 
@@ -149,32 +149,32 @@ WarningText.Parent = WarningFrame
 local YesBtn = Instance.new("TextButton")
 YesBtn.Text = "Có"
 YesBtn.Font = Enum.Font.GothamBold
-YesBtn.TextSize = 16
+YesBtn.TextSize = 14
 YesBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 YesBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
-YesBtn.Size = UDim2.new(0, 80, 0, 35)
-YesBtn.Position = UDim2.new(0.5, -90, 1, -50)
+YesBtn.Size = UDim2.new(0, 60, 0, 30) -- Nhỏ hơn
+YesBtn.Position = UDim2.new(0.5, -70, 1, -40)
 YesBtn.ZIndex = 21
 YesBtn.Parent = WarningFrame
 
 local YesCorner = Instance.new("UICorner")
-YesCorner.CornerRadius = UDim.new(0, 8)
+YesCorner.CornerRadius = UDim.new(0, 6)
 YesCorner.Parent = YesBtn
 
 -- Nút Không
 local NoBtn = Instance.new("TextButton")
 NoBtn.Text = "Không"
 NoBtn.Font = Enum.Font.GothamBold
-NoBtn.TextSize = 16
+NoBtn.TextSize = 14
 NoBtn.TextColor3 = Color3.fromRGB(80, 30, 60)
 NoBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
-NoBtn.Size = UDim2.new(0, 80, 0, 35)
-NoBtn.Position = UDim2.new(0.5, 10, 1, -50)
+NoBtn.Size = UDim2.new(0, 60, 0, 30) -- Nhỏ hơn
+NoBtn.Position = UDim2.new(0.5, 10, 1, -40)
 NoBtn.ZIndex = 21
 NoBtn.Parent = WarningFrame
 
 local NoCorner = Instance.new("UICorner")
-NoCorner.CornerRadius = UDim.new(0, 8)
+NoCorner.CornerRadius = UDim.new(0, 6)
 NoCorner.Parent = NoBtn
 
 -- Hiệu ứng hover nút tắt
