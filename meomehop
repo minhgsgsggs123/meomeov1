@@ -97,9 +97,10 @@ CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseBtn.BackgroundTransparency = 1
 CloseBtn.Size = UDim2.new(0, 35, 1, 0)
 CloseBtn.Position = UDim2.new(1, -35, 0, 0)
+CloseBtn.ZIndex = 10 -- Đặt ZIndex cao hơn
 CloseBtn.Parent = Header
 
--- Tạo frame cảnh báo
+-- Tạo frame cảnh báo (đặt trực tiếp trong ScreenGui, không phải trong Main)
 local WarningFrame = Instance.new("Frame")
 WarningFrame.Name = "WarningFrame"
 WarningFrame.Size = UDim2.new(0, 300, 0, 150)
@@ -107,7 +108,8 @@ WarningFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
 WarningFrame.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 WarningFrame.BorderSizePixel = 0
 WarningFrame.Visible = false
-WarningFrame.Parent = Main
+WarningFrame.ZIndex = 20 -- ZIndex cao nhất
+WarningFrame.Parent = gui
 
 local WarningCorner = Instance.new("UICorner")
 WarningCorner.CornerRadius = UDim.new(0, 10)
@@ -127,6 +129,7 @@ WarningTitle.TextColor3 = Color3.fromRGB(255, 105, 180)
 WarningTitle.BackgroundTransparency = 1
 WarningTitle.Size = UDim2.new(1, 0, 0, 40)
 WarningTitle.Position = UDim2.new(0, 0, 0, 0)
+WarningTitle.ZIndex = 21
 WarningTitle.Parent = WarningFrame
 
 -- Nội dung cảnh báo
@@ -138,6 +141,7 @@ WarningText.TextColor3 = Color3.fromRGB(80, 30, 60)
 WarningText.BackgroundTransparency = 1
 WarningText.Size = UDim2.new(1, -20, 0, 40)
 WarningText.Position = UDim2.new(0, 10, 0, 40)
+WarningText.ZIndex = 21
 WarningText.Parent = WarningFrame
 
 -- Nút Có
@@ -149,6 +153,7 @@ YesBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 YesBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
 YesBtn.Size = UDim2.new(0, 80, 0, 35)
 YesBtn.Position = UDim2.new(0.5, -90, 1, -50)
+YesBtn.ZIndex = 21
 YesBtn.Parent = WarningFrame
 
 local YesCorner = Instance.new("UICorner")
@@ -164,6 +169,7 @@ NoBtn.TextColor3 = Color3.fromRGB(80, 30, 60)
 NoBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
 NoBtn.Size = UDim2.new(0, 80, 0, 35)
 NoBtn.Position = UDim2.new(0.5, 10, 1, -50)
+NoBtn.ZIndex = 21
 NoBtn.Parent = WarningFrame
 
 local NoCorner = Instance.new("UICorner")
@@ -232,6 +238,7 @@ ToggleBtn.MouseButton1Click:Connect(function()
         
         wait(0.15)
         Main.Visible = false
+        WarningFrame.Visible = false -- Ẩn cảnh báo khi đóng menu
     else
         -- Mở menu (nhanh)
         Main.Visible = true
