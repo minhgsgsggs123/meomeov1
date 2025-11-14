@@ -1,6 +1,4 @@
 local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
 
 -- Tạo ScreenGui
 local gui = Instance.new("ScreenGui")
@@ -54,8 +52,8 @@ ToggleBtn.Parent = gui
 -- Frame chính
 local Main = Instance.new("Frame")
 Main.Name = "MainFrame"
-Main.Size = UDim2.new(0, 500, 0, 300)
-Main.Position = UDim2.new(0.5, -250, 0.5, -150)
+Main.Size = UDim2.new(0, 650, 0, 380)
+Main.Position = UDim2.new(0.5, -325, 0.5, -190)
 Main.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 Main.BorderSizePixel = 0
 Main.Active = true
@@ -102,104 +100,16 @@ CloseBtn.Position = UDim2.new(1, -35, 0, 0)
 CloseBtn.ZIndex = 10 -- Đặt ZIndex cao hơn
 CloseBtn.Parent = Header
 
--- Nội dung thông tin (không có tab, chỉ hiển thị thẳng)
-local InfoContent = Instance.new("Frame")
-InfoContent.Name = "InfoContent"
-InfoContent.Size = UDim2.new(1, -20, 1, -56)
-InfoContent.Position = UDim2.new(0, 10, 0, 46)
-InfoContent.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
-InfoContent.BorderSizePixel = 0
-InfoContent.Parent = Main
-
-local InfoContentCorner = Instance.new("UICorner")
-InfoContentCorner.CornerRadius = UDim.new(0, 8)
-InfoContentCorner.Parent = InfoContent
-
--- Thông tin tài khoản
-local AccountInfo = Instance.new("Frame")
-AccountInfo.Size = UDim2.new(1, -10, 0, 150)
-AccountInfo.Position = UDim2.new(0, 5, 0, 10)
-AccountInfo.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
-AccountInfo.Parent = InfoContent
-
-local AccountInfoCorner = Instance.new("UICorner")
-AccountInfoCorner.CornerRadius = UDim.new(0, 8)
-AccountInfoCorner.Parent = AccountInfo
-
-local AccountInfoStroke = Instance.new("UIStroke")
-AccountInfoStroke.Color = Color3.fromRGB(255, 182, 193)
-AccountInfoStroke.Thickness = 1
-AccountInfoStroke.Parent = AccountInfo
-
-local AccountTitle = Instance.new("TextLabel")
-AccountTitle.Text = "Thông tin tài khoản"
-AccountTitle.Font = Enum.Font.GothamBold
-AccountTitle.TextSize = 16
-AccountTitle.TextColor3 = Color3.fromRGB(255, 105, 180)
-AccountTitle.BackgroundTransparency = 1
-AccountTitle.Size = UDim2.new(1, -10, 0, 25)
-AccountTitle.Position = UDim2.new(0, 5, 0, 5)
-AccountTitle.TextXAlignment = Enum.TextXAlignment.Left
-AccountTitle.Parent = AccountInfo
-
--- User
-local UserLabel = Instance.new("TextLabel")
-UserLabel.Text = "User: " .. player.Name
-UserLabel.Font = Enum.Font.Gotham
-UserLabel.TextSize = 14
-UserLabel.TextColor3 = Color3.fromRGB(80, 30, 60)
-UserLabel.BackgroundTransparency = 1
-UserLabel.Size = UDim2.new(1, -10, 0, 20)
-UserLabel.Position = UDim2.new(0, 5, 0, 35)
-UserLabel.TextXAlignment = Enum.TextXAlignment.Left
-UserLabel.Parent = AccountInfo
-
--- Level
-local LevelLabel = Instance.new("TextLabel")
-LevelLabel.Text = "Level: 0"
-LevelLabel.Font = Enum.Font.Gotham
-LevelLabel.TextSize = 14
-LevelLabel.TextColor3 = Color3.fromRGB(80, 30, 60)
-LevelLabel.BackgroundTransparency = 1
-LevelLabel.Size = UDim2.new(1, -10, 0, 20)
-LevelLabel.Position = UDim2.new(0, 5, 0, 60)
-LevelLabel.TextXAlignment = Enum.TextXAlignment.Left
-LevelLabel.Parent = AccountInfo
-
--- Beli
-local BeliLabel = Instance.new("TextLabel")
-BeliLabel.Text = "Beli: 0"
-BeliLabel.Font = Enum.Font.Gotham
-BeliLabel.TextSize = 14
-BeliLabel.TextColor3 = Color3.fromRGB(80, 30, 60)
-BeliLabel.BackgroundTransparency = 1
-BeliLabel.Size = UDim2.new(1, -10, 0, 20)
-BeliLabel.Position = UDim2.new(0, 5, 0, 85)
-BeliLabel.TextXAlignment = Enum.TextXAlignment.Left
-BeliLabel.Parent = AccountInfo
-
--- Fragments
-local FragmentsLabel = Instance.new("TextLabel")
-FragmentsLabel.Text = "Fragments: 0"
-FragmentsLabel.Font = Enum.Font.Gotham
-FragmentsLabel.TextSize = 14
-FragmentsLabel.TextColor3 = Color3.fromRGB(80, 30, 60)
-FragmentsLabel.BackgroundTransparency = 1
-FragmentsLabel.Size = UDim2.new(1, -10, 0, 20)
-FragmentsLabel.Position = UDim2.new(0, 5, 0, 110)
-FragmentsLabel.TextXAlignment = Enum.TextXAlignment.Left
-FragmentsLabel.Parent = AccountInfo
-
--- Tạo frame cảnh báo
+-- Tạo frame cảnh báo (sử dụng Scale thay vì Offset)
 local WarningFrame = Instance.new("Frame")
 WarningFrame.Name = "WarningFrame"
 WarningFrame.Size = UDim2.new(0, 250, 0, 120)
 WarningFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-WarningFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+WarningFrame.Position = UDim2.new(0.5, 0, 0.5, 0) -- Chính giữa thực sự
 WarningFrame.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 WarningFrame.BorderSizePixel = 0
 WarningFrame.Visible = false
-WarningFrame.ZIndex = 20
+WarningFrame.ZIndex = 20 -- ZIndex cao nhất
 WarningFrame.Parent = Main
 
 local WarningCorner = Instance.new("UICorner")
@@ -211,6 +121,7 @@ WarningStroke.Color = Color3.fromRGB(255, 182, 193)
 WarningStroke.Thickness = 2
 WarningStroke.Parent = WarningFrame
 
+-- Tiêu đề cảnh báo
 local WarningTitle = Instance.new("TextLabel")
 WarningTitle.Text = "Cảnh báo"
 WarningTitle.Font = Enum.Font.GothamBold
@@ -222,6 +133,7 @@ WarningTitle.Position = UDim2.new(0, 0, 0, 5)
 WarningTitle.ZIndex = 21
 WarningTitle.Parent = WarningFrame
 
+-- Nội dung cảnh báo
 local WarningText = Instance.new("TextLabel")
 WarningText.Text = "Bạn có muốn tắt script không?"
 WarningText.Font = Enum.Font.Gotham
@@ -233,6 +145,7 @@ WarningText.Position = UDim2.new(0, 10, 0, 35)
 WarningText.ZIndex = 21
 WarningText.Parent = WarningFrame
 
+-- Nút Có
 local YesBtn = Instance.new("TextButton")
 YesBtn.Text = "Có"
 YesBtn.Font = Enum.Font.GothamBold
@@ -248,6 +161,7 @@ local YesCorner = Instance.new("UICorner")
 YesCorner.CornerRadius = UDim.new(0, 6)
 YesCorner.Parent = YesBtn
 
+-- Nút Không
 local NoBtn = Instance.new("TextButton")
 NoBtn.Text = "Không"
 NoBtn.Font = Enum.Font.GothamBold
@@ -271,6 +185,18 @@ CloseBtn.MouseLeave:Connect(function()
     TweenService:Create(CloseBtn, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 end)
 
+-- Nội dung trống
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1, -20, 1, -56)
+Content.Position = UDim2.new(0, 10, 0, 46)
+Content.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
+Content.BorderSizePixel = 0
+Content.Parent = Main
+
+local ContentCorner = Instance.new("UICorner")
+ContentCorner.CornerRadius = UDim.new(0, 8)
+ContentCorner.Parent = Content
+
 -- Chức năng khi nhấn nút X
 CloseBtn.MouseButton1Click:Connect(function()
     WarningFrame.Visible = true
@@ -278,6 +204,7 @@ end)
 
 -- Chức năng khi nhấn nút Có
 YesBtn.MouseButton1Click:Connect(function()
+    -- Xóa toàn bộ GUI (tắt script)
     gui:Destroy()
 end)
 
@@ -302,17 +229,19 @@ NoBtn.MouseLeave:Connect(function()
     TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
 end)
 
--- Chức năng toggle menu
+-- Chức năng toggle menu (tốc độ nhanh hơn)
 ToggleBtn.MouseButton1Click:Connect(function()
     if Main.Visible then
+        -- Đóng menu (nhanh)
         TweenService:Create(Main, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
         TweenService:Create(Header, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
         TweenService:Create(Title, TweenInfo.new(0.15), {TextTransparency = 1}):Play()
         
         wait(0.15)
         Main.Visible = false
-        WarningFrame.Visible = false
+        WarningFrame.Visible = false -- Ẩn cảnh báo khi đóng menu
     else
+        -- Mở menu (nhanh)
         Main.Visible = true
         Main.BackgroundTransparency = 1
         Header.BackgroundTransparency = 1
@@ -324,7 +253,7 @@ ToggleBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Hiệu ứng hover cho nút toggle
+-- Hiệu ứng hover cho nút toggle (nhanh hơn)
 ToggleBtn.MouseEnter:Connect(function()
     TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
     TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 105, 180)}):Play()
@@ -333,67 +262,4 @@ end)
 ToggleBtn.MouseLeave:Connect(function()
     TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 240, 245)}):Play()
     TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 182, 193)}):Play()
-end)
-
--- Cập nhật thông tin Blox Fruits (FIXED)
-local function updatePlayerInfo()
-    -- Tìm leaderstats
-    local leaderstats = player:FindFirstChild("leaderstats")
-    if leaderstats then
-        -- Level
-        local level = leaderstats:FindFirstChild("Level") or leaderstats:FindFirstChild("Lvl")
-        if level then
-            LevelLabel.Text = "Level: " .. tostring(level.Value)
-        else
-            LevelLabel.Text = "Level: 0"
-        end
-        
-        -- Beli
-        local beli = leaderstats:FindFirstChild("Beli") or leaderstats:FindFirstChild("Money") or leaderstats:FindFirstChild("$")
-        if beli then
-            BeliLabel.Text = "Beli: " .. tostring(beli.Value)
-        else
-            BeliLabel.Text = "Beli: 0"
-        end
-        
-        -- Fragments
-        local fragments = leaderstats:FindFirstChild("Fragments") or leaderstats:FindFirstChild("Frag") or leaderstats:FindFirstChild("Fragment")
-        if fragments then
-            FragmentsLabel.Text = "Fragments: " .. tostring(fragments.Value)
-        else
-            FragmentsLabel.Text = "Fragments: 0"
-        end
-    else
-        -- Nếu không có leaderstats, thử tìm trong Data
-        local data = player:FindFirstChild("Data")
-        if data then
-            local level = data:FindFirstChild("Level") or data:FindFirstChild("Lvl")
-            local beli = data:FindFirstChild("Beli") or data:FindFirstChild("Money")
-            local fragments = data:FindFirstChild("Fragments") or data:FindFirstChild("Frag")
-            
-            if level then LevelLabel.Text = "Level: " .. tostring(level.Value) end
-            if beli then BeliLabel.Text = "Beli: " .. tostring(beli.Value) end
-            if fragments then FragmentsLabel.Text = "Fragments: " .. tostring(fragments.Value) end
-        else
-            LevelLabel.Text = "Level: 0"
-            BeliLabel.Text = "Beli: 0"
-            FragmentsLabel.Text = "Fragments: 0"
-        end
-    end
-end
-
--- Cập nhật thông tin liên tục
-spawn(function()
-    while wait(0.5) do -- Cập nhật nhanh hơn
-        if Main.Visible then
-            updatePlayerInfo()
-        end
-    end
-end)
-
--- Cập nhật ngay khi mở menu
-Main:GetPropertyChangedSignal("Visible"):Connect(function()
-    if Main.Visible then
-        updatePlayerInfo()
-    end
 end)
