@@ -196,7 +196,187 @@ Content.Parent = Main
 local ContentCorner = Instance.new("UICorner")
 ContentCorner.CornerRadius = UDim.new(0, 8)
 ContentCorner.Parent = Content
+-- Thêm phần này sau khi tạo Content frame
 
+-- Tạo tab system với layout ngang như trong ảnh
+local TabsContainer = Instance.new("Frame")
+TabsContainer.Name = "TabsContainer"
+TabsContainer.Size = UDim2.new(1, -20, 0, 40)
+TabsContainer.Position = UDim2.new(0, 10, 0, 10)
+TabsContainer.BackgroundTransparency = 1
+TabsContainer.Parent = Content
+
+-- Frame chứa nội dung tab
+local TabContent = Instance.new("Frame")
+TabContent.Name = "TabContent"
+TabContent.Size = UDim2.new(1, -20, 1, -60)
+TabContent.Position = UDim2.new(0, 10, 0, 50)
+TabContent.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
+TabContent.BorderSizePixel = 0
+TabContent.Parent = Content
+
+local TabContentCorner = Instance.new("UICorner")
+TabContentCorner.CornerRadius = UDim.new(0, 8)
+TabContentCorner.Parent = TabContent
+
+-- Các tab buttons
+local tabs = {
+    "Thông tin",
+    "Main", 
+    "Nhiệm vụ"
+}
+
+local currentTab = "Thông tin"
+
+-- Hàm tạo tab button
+local function CreateTabButton(tabName, index)
+    local TabBtn = Instance.new("TextButton")
+    TabBtn.Name = tabName
+    TabBtn.Text = tabName
+    TabBtn.Font = Enum.Font.GothamSemibold
+    TabBtn.TextSize = 13
+    TabBtn.TextColor3 = Color3.fromRGB(80, 30, 60)
+    TabBtn.BackgroundColor3 = Color3.fromRGB(255, 245, 248)
+    TabBtn.Size = UDim2.new(0.33, -5, 1, 0)
+    TabBtn.Position = UDim2.new((index-1) * 0.33, 0, 0, 0)
+    TabBtn.Parent = TabsContainer
+    
+    local TabCorner = Instance.new("UICorner")
+    TabCorner.CornerRadius = UDim.new(0, 6)
+    TabCorner.Parent = TabBtn
+    
+    local TabStroke = Instance.new("UIStroke")
+    TabStroke.Color = Color3.fromRGB(255, 182, 193)
+    TabStroke.Thickness = 1
+    TabStroke.Parent = TabBtn
+    
+    -- Hiệu ứng hover
+    TabBtn.MouseEnter:Connect(function()
+        if currentTab ~= tabName then
+            TweenService:Create(TabBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 230, 235)}):Play()
+        end
+    end)
+    
+    TabBtn.MouseLeave:Connect(function()
+        if currentTab ~= tabName then
+            TweenService:Create(TabBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 245, 248)}):Play()
+        end
+    end)
+    
+    TabBtn.MouseButton1Click:Connect(function()
+        -- Cập nhật tab hiện tại
+        currentTab = tabName
+        UpdateTabContent(tabName)
+        
+        -- Reset tất cả tab về màu mặc định
+        for _, tab in pairs(TabsContainer:GetChildren()) do
+            if tab:IsA("TextButton") then
+                TweenService:Create(tab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 245, 248)}):Play()
+                TweenService:Create(tab, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(80, 30, 60)}):Play()
+            end
+        end
+        
+        -- Highlight tab đang chọn
+        TweenService:Create(TabBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
+        TweenService:Create(TabBtn, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+    end)
+    
+    return TabBtn
+end
+
+-- Hàm cập nhật nội dung tab
+local function UpdateTabContent(tabName)
+    -- Xóa nội dung cũ
+    for _, child in pairs(TabContent:GetChildren()) do
+        child:Destroy()
+    end
+    
+    -- Title cho tab
+    local Title = Instance.new("TextLabel")
+    Title.Text = tabName
+    Title.Font = Enum.Font.GothamBold
+    Title.TextSize = 16
+    Title.TextColor3 = Color3.fromRGB(255, 105, 180)
+    Title.BackgroundTransparency = 1
+    Title.Size = UDim2.new(1, 0, 0, 30)
+    Title.Position = UDim2.new(0, 15, 0, 10)
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = TabContent
+    
+    if tabName == "Thông tin" then
+        CreateInfoTab()
+    elseif tabName == "Main" then
+        CreateMainTab()
+    elseif tabName == "Nhiệm vụ" then
+        CreateQuestTab()
+    end
+end
+
+-- Tab Thông tin (trống)
+local function CreateInfoTab()
+    local Description = Instance.new("TextLabel")
+    Description.Text = "Thông tin về script và người chơi"
+    Description.Font = Enum.Font.Gotham
+    Description.TextSize = 14
+    Description.TextColor3 = Color3.fromRGB(120, 80, 100)
+    Description.BackgroundTransparency = 1
+    Description.Size = UDim2.new(1, -30, 0, 25)
+    Description.Position = UDim2.new(0, 15, 0, 50)
+    Description.TextXAlignment = Enum.TextXAlignment.Left
+    Description.Parent = TabContent
+    
+    -- Ở đây bạn có thể thêm các thông tin như:
+    -- Level hiện tại, Beli, Frags, Username, v.v.
+end
+
+-- Tab Main (trống)
+local function CreateMainTab()
+    local Description = Instance.new("TextLabel")
+    Description.Text = "Các tính năng chính của script"
+    Description.Font = Enum.Font.Gotham
+    Description.TextSize = 14
+    Description.TextColor3 = Color3.fromRGB(120, 80, 100)
+    Description.BackgroundTransparency = 1
+    Description.Size = UDim2.new(1, -30, 0, 25)
+    Description.Position = UDim2.new(0, 15, 0, 50)
+    Description.TextXAlignment = Enum.TextXAlignment.Left
+    Description.Parent = TabContent
+    
+    -- Ở đây bạn có thể thêm:
+    -- Auto Farm, Auto Collect, Auto Click, v.v.
+end
+
+-- Tab Nhiệm vụ (trống)
+local function CreateQuestTab()
+    local Description = Instance.new("TextLabel")
+    Description.Text = "Quản lý và tự động làm nhiệm vụ"
+    Description.Font = Enum.Font.Gotham
+    Description.TextSize = 14
+    Description.TextColor3 = Color3.fromRGB(120, 80, 100)
+    Description.BackgroundTransparency = 1
+    Description.Size = UDim2.new(1, -30, 0, 25)
+    Description.Position = UDim2.new(0, 15, 0, 50)
+    Description.TextXAlignment = Enum.TextXAlignment.Left
+    Description.Parent = TabContent
+    
+    -- Ở đây bạn có thể thêm:
+    -- Auto Quest, Danh sách quest, Teleport đến NPC, v.v.
+end
+
+-- Tạo các tab
+for i, tabName in ipairs(tabs) do
+    CreateTabButton(tabName, i)
+end
+
+-- Mặc định hiển thị tab Thông tin
+UpdateTabContent("Thông tin")
+
+-- Highlight tab đầu tiên
+local firstTab = TabsContainer:FindFirstChild("Thông tin")
+if firstTab then
+    TweenService:Create(firstTab, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
+    TweenService:Create(firstTab, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+end
 -- Chức năng khi nhấn nút X
 CloseBtn.MouseButton1Click:Connect(function()
     WarningFrame.Visible = true
