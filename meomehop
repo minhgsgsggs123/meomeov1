@@ -1,5 +1,18 @@
 local TweenService = game:GetService("TweenService")
 
+-- Định nghĩa bảng màu (dựa trên tông hồng pastel)
+local Palette = {
+    Primary = Color3.fromRGB(255, 105, 180),   -- Hồng đậm/Hồng cánh sen (Pink)
+    Secondary = Color3.fromRGB(255, 182, 193), -- Hồng nhạt (Light Pink/Baby Pink)
+    Background = Color3.fromRGB(255, 240, 245), -- Nền sáng (Very Light Pink/Lavender Blush)
+    Content = Color3.fromRGB(255, 250, 252),   -- Nền nội dung (Off-White)
+    TextPrimary = Color3.fromRGB(80, 30, 60),  -- Chữ đậm (Dark Magenta/Plum)
+    TextSecondary = Color3.fromRGB(160, 160, 165), -- Chữ phụ (Grayish)
+    SelectedTab = Color3.fromRGB(255, 105, 180), -- Màu tab được chọn (Primary Pink)
+    UnselectedTab = Color3.fromRGB(240, 240, 245), -- Màu tab không được chọn (Very Light Gray)
+    HoverTab = Color3.fromRGB(230, 230, 235), -- Màu tab hover (Slightly Darker Light Gray)
+}
+
 -- Tạo ScreenGui
 local gui = Instance.new("ScreenGui")
 gui.Name = "meowhub"
@@ -11,13 +24,14 @@ local ToggleBtn = Instance.new("ImageButton")
 ToggleBtn.Name = "MenuToggle"
 ToggleBtn.Size = UDim2.new(0, 50, 0, 50)
 ToggleBtn.Position = UDim2.new(0, 20, 0, 20)
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+ToggleBtn.BackgroundColor3 = Palette.Background
 ToggleBtn.BorderSizePixel = 0
 ToggleBtn.Active = true
 ToggleBtn.Draggable = true
+ToggleBtn.ZIndex = 5 -- Đảm bảo luôn nằm trên các thành phần game
 
 local ToggleStroke = Instance.new("UIStroke")
-ToggleStroke.Color = Color3.fromRGB(255, 182, 193)
+ToggleStroke.Color = Palette.Secondary
 ToggleStroke.Thickness = 2
 ToggleStroke.Parent = ToggleBtn
 
@@ -39,7 +53,8 @@ local ToggleIcon = Instance.new("ImageLabel")
 ToggleIcon.Name = "Icon"
 ToggleIcon.Size = UDim2.new(1, 0, 1, 0)
 ToggleIcon.BackgroundTransparency = 1
-ToggleIcon.Image = "rbxassetid://74593584475472"
+-- Đặt icon là hình ảnh có sẵn, có thể thay thế bằng icon menu 3 sọc/vuông
+ToggleIcon.Image = "rbxassetid://74593584475472" 
 ToggleIcon.ScaleType = Enum.ScaleType.Fit
 ToggleIcon.Parent = ToggleImageFrame
 
@@ -50,11 +65,11 @@ local Main = Instance.new("Frame")
 Main.Name = "MainFrame"
 Main.Size = UDim2.new(0, 650, 0, 380)
 Main.Position = UDim2.new(0.5, -325, 0.5, -190)
-Main.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+Main.BackgroundColor3 = Palette.Background
 Main.BorderSizePixel = 0
 Main.Active = true
 Main.Draggable = true
-Main.Visible = false -- Bắt đầu với menu ẩn
+Main.Visible = true
 Main.Parent = gui
 
 local UICorner = Instance.new("UICorner")
@@ -64,7 +79,7 @@ UICorner.Parent = Main
 -- Header
 local Header = Instance.new("Frame")
 Header.Size = UDim2.new(1, 0, 0, 36)
-Header.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+Header.BackgroundColor3 = Palette.Secondary
 Header.BorderSizePixel = 0
 Header.Parent = Main
 
@@ -73,10 +88,10 @@ HeaderCorner.CornerRadius = UDim.new(0, 10)
 HeaderCorner.Parent = Header
 
 local Title = Instance.new("TextLabel")
-Title.Text = "meow hub - lq cùng bóp bóp"
+Title.Text = "meow hub - lọ cùng bốp bốp "
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
-Title.TextColor3 = Color3.fromRGB(80, 30, 60)
+Title.TextColor3 = Palette.TextPrimary
 Title.BackgroundTransparency = 1
 Title.Position = UDim2.new(0, 12, 0, 0)
 Title.Size = UDim2.new(1, -50, 1, 0)
@@ -92,7 +107,7 @@ CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseBtn.BackgroundTransparency = 1
 CloseBtn.Size = UDim2.new(0, 35, 1, 0)
 CloseBtn.Position = UDim2.new(1, -35, 0, 0)
-CloseBtn.ZIndex = 10
+CloseBtn.ZIndex = 3 -- Đặt ZIndex thấp hơn WarningFrame (20) nhưng cao hơn Header (thường là 1)
 CloseBtn.Parent = Header
 
 -- Frame cảnh báo
@@ -101,7 +116,7 @@ WarningFrame.Name = "WarningFrame"
 WarningFrame.Size = UDim2.new(0, 250, 0, 120)
 WarningFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 WarningFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-WarningFrame.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+WarningFrame.BackgroundColor3 = Palette.Background
 WarningFrame.BorderSizePixel = 0
 WarningFrame.Visible = false
 WarningFrame.ZIndex = 20
@@ -112,7 +127,7 @@ WarningCorner.CornerRadius = UDim.new(0, 10)
 WarningCorner.Parent = WarningFrame
 
 local WarningStroke = Instance.new("UIStroke")
-WarningStroke.Color = Color3.fromRGB(255, 182, 193)
+WarningStroke.Color = Palette.Secondary
 WarningStroke.Thickness = 2
 WarningStroke.Parent = WarningFrame
 
@@ -120,7 +135,7 @@ local WarningTitle = Instance.new("TextLabel")
 WarningTitle.Text = "Cảnh báo"
 WarningTitle.Font = Enum.Font.GothamBold
 WarningTitle.TextSize = 16
-WarningTitle.TextColor3 = Color3.fromRGB(255, 105, 180)
+WarningTitle.TextColor3 = Palette.Primary
 WarningTitle.BackgroundTransparency = 1
 WarningTitle.Size = UDim2.new(1, 0, 0, 30)
 WarningTitle.Position = UDim2.new(0, 0, 0, 5)
@@ -131,7 +146,7 @@ local WarningText = Instance.new("TextLabel")
 WarningText.Text = "Bạn có muốn tắt script không?"
 WarningText.Font = Enum.Font.Gotham
 WarningText.TextSize = 14
-WarningText.TextColor3 = Color3.fromRGB(80, 30, 60)
+WarningText.TextColor3 = Palette.TextPrimary
 WarningText.BackgroundTransparency = 1
 WarningText.Size = UDim2.new(1, -20, 0, 30)
 WarningText.Position = UDim2.new(0, 10, 0, 35)
@@ -143,7 +158,7 @@ YesBtn.Text = "Có"
 YesBtn.Font = Enum.Font.GothamBold
 YesBtn.TextSize = 14
 YesBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-YesBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+YesBtn.BackgroundColor3 = Palette.Primary
 YesBtn.Size = UDim2.new(0, 60, 0, 30)
 YesBtn.Position = UDim2.new(0.5, -70, 1, -40)
 YesBtn.ZIndex = 21
@@ -157,8 +172,8 @@ local NoBtn = Instance.new("TextButton")
 NoBtn.Text = "Không"
 NoBtn.Font = Enum.Font.GothamBold
 NoBtn.TextSize = 14
-NoBtn.TextColor3 = Color3.fromRGB(80, 30, 60)
-NoBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+NoBtn.TextColor3 = Palette.TextPrimary
+NoBtn.BackgroundColor3 = Palette.Secondary
 NoBtn.Size = UDim2.new(0, 60, 0, 30)
 NoBtn.Position = UDim2.new(0.5, 10, 1, -40)
 NoBtn.ZIndex = 21
@@ -172,7 +187,7 @@ NoCorner.Parent = NoBtn
 local Content = Instance.new("Frame")
 Content.Size = UDim2.new(1, -20, 1, -56)
 Content.Position = UDim2.new(0, 10, 0, 46)
-Content.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
+Content.BackgroundColor3 = Palette.Content
 Content.BorderSizePixel = 0
 Content.Parent = Main
 
@@ -180,12 +195,12 @@ local ContentCorner = Instance.new("UICorner")
 ContentCorner.CornerRadius = UDim.new(0, 8)
 ContentCorner.Parent = Content
 
--- Sidebar (thanh menu bên trái) - màu hồng nhạt như UI chính
+-- Sidebar (thanh menu bên trái)
 local Sidebar = Instance.new("Frame")
 Sidebar.Name = "Sidebar"
 Sidebar.Size = UDim2.new(0, 180, 1, 0)
 Sidebar.Position = UDim2.new(0, 0, 0, 0)
-Sidebar.BackgroundColor3 = Color3.fromRGB(255, 230, 240)
+Sidebar.BackgroundColor3 = Palette.Background -- Tông màu Background cho Sidebar
 Sidebar.BorderSizePixel = 0
 Sidebar.Parent = Content
 
@@ -200,7 +215,7 @@ TabContainer.Position = UDim2.new(0, 5, 0, 5)
 TabContainer.BackgroundTransparency = 1
 TabContainer.BorderSizePixel = 0
 TabContainer.ScrollBarThickness = 4
-TabContainer.ScrollBarImageColor3 = Color3.fromRGB(255, 105, 180)
+TabContainer.ScrollBarImageColor3 = Palette.Primary
 TabContainer.Parent = Sidebar
 
 local TabLayout = Instance.new("UIListLayout")
@@ -234,12 +249,68 @@ local tabs = {
 local currentTab = nil
 local tabFrames = {}
 
--- Hàm tạo tab button với màu sắc hài hòa
+-- Hàm chọn tab (bao gồm việc cập nhật màu)
+local function selectTab(tabName, tabButton)
+    -- Bỏ chọn tab cũ
+    if currentTab and currentTab ~= tabName then
+        local oldTabBtn = TabContainer:FindFirstChild(currentTab)
+        if oldTabBtn then
+            -- Màu tab cũ: không chọn
+            TweenService:Create(oldTabBtn, TweenInfo.new(0.15), {
+                BackgroundColor3 = Palette.UnselectedTab
+            }):Play()
+
+            local oldIcon = oldTabBtn:FindFirstChild("Icon")
+            local oldText = oldTabBtn:FindFirstChildWhichIsA("TextLabel", true)
+            if oldIcon and oldText then
+                -- Màu chữ/icon tab cũ: TextPrimary
+                TweenService:Create(oldIcon, TweenInfo.new(0.15), {
+                    TextColor3 = Palette.TextPrimary
+                }):Play()
+                TweenService:Create(oldText, TweenInfo.new(0.15), {
+                    TextColor3 = Palette.TextPrimary
+                }):Play()
+            end
+        end
+
+        if tabFrames[currentTab] then
+            tabFrames[currentTab].Visible = false
+        end
+    end
+
+    -- Chọn tab mới
+    currentTab = tabName
+    
+    -- Màu tab mới: SelectedTab (Primary Pink)
+    TweenService:Create(tabButton, TweenInfo.new(0.15), {
+        BackgroundColor3 = Palette.SelectedTab
+    }):Play()
+    
+    local newIcon = tabButton:FindFirstChild("Icon")
+    local newText = tabButton:FindFirstChildWhichIsA("TextLabel", true)
+    if newIcon and newText then
+        -- Màu chữ/icon tab mới: Trắng
+        TweenService:Create(newIcon, TweenInfo.new(0.15), {
+            TextColor3 = Color3.fromRGB(255, 255, 255)
+        }):Play()
+        TweenService:Create(newText, TweenInfo.new(0.15), {
+            TextColor3 = Color3.fromRGB(255, 255, 255)
+        }):Play()
+    end
+
+    -- Hiển thị nội dung tab
+    if tabFrames[tabName] then
+        tabFrames[tabName].Visible = true
+    end
+end
+
+-- Hàm tạo tab button
 local function createTabButton(tabInfo)
     local TabBtn = Instance.new("TextButton")
     TabBtn.Name = tabInfo.name
     TabBtn.Size = UDim2.new(1, 0, 0, 38)
-    TabBtn.BackgroundColor3 = Color3.fromRGB(255, 215, 230) -- Màu hồng nhạt hài hòa
+    -- Màu nền mặc định của tab: UnselectedTab
+    TabBtn.BackgroundColor3 = Palette.UnselectedTab 
     TabBtn.BorderSizePixel = 0
     TabBtn.AutoButtonColor = false
     TabBtn.Text = ""
@@ -252,13 +323,15 @@ local function createTabButton(tabInfo)
     
     -- Icon
     local Icon = Instance.new("TextLabel")
+    Icon.Name = "Icon"
     Icon.Size = UDim2.new(0, 24, 1, 0)
     Icon.Position = UDim2.new(0, 12, 0, 0)
     Icon.BackgroundTransparency = 1
     Icon.Text = tabInfo.icon
     Icon.TextSize = 16
     Icon.Font = Enum.Font.Gotham
-    Icon.TextColor3 = Color3.fromRGB(120, 60, 90) -- Màu chữ hồng đậm
+    -- Màu chữ/icon mặc định: TextPrimary
+    Icon.TextColor3 = Palette.TextPrimary 
     Icon.TextXAlignment = Enum.TextXAlignment.Center
     Icon.Parent = TabBtn
     
@@ -270,7 +343,8 @@ local function createTabButton(tabInfo)
     TabText.Text = tabInfo.name
     TabText.TextSize = 13
     TabText.Font = Enum.Font.Gotham
-    TabText.TextColor3 = Color3.fromRGB(120, 60, 90) -- Màu chữ hồng đậm
+    -- Màu chữ/icon mặc định: TextPrimary
+    TabText.TextColor3 = Palette.TextPrimary
     TabText.TextXAlignment = Enum.TextXAlignment.Left
     TabText.Parent = TabBtn
     
@@ -281,7 +355,7 @@ local function createTabButton(tabInfo)
     Frame.BackgroundTransparency = 1
     Frame.BorderSizePixel = 0
     Frame.ScrollBarThickness = 4
-    Frame.ScrollBarImageColor3 = Color3.fromRGB(255, 105, 180)
+    Frame.ScrollBarImageColor3 = Palette.Primary
     Frame.Visible = false
     Frame.Parent = TabContent
     
@@ -293,7 +367,7 @@ local function createTabButton(tabInfo)
     PlaceholderText.Text = "Chức năng " .. tabInfo.name .. " đang được phát triển..."
     PlaceholderText.TextSize = 16
     PlaceholderText.Font = Enum.Font.Gotham
-    PlaceholderText.TextColor3 = Color3.fromRGB(120, 60, 90)
+    PlaceholderText.TextColor3 = Palette.TextPrimary
     PlaceholderText.TextWrapped = true
     PlaceholderText.Parent = Frame
     
@@ -303,13 +377,7 @@ local function createTabButton(tabInfo)
     TabBtn.MouseEnter:Connect(function()
         if currentTab ~= tabInfo.name then
             TweenService:Create(TabBtn, TweenInfo.new(0.15), {
-                BackgroundColor3 = Color3.fromRGB(255, 200, 220)
-            }):Play()
-            TweenService:Create(Icon, TweenInfo.new(0.15), {
-                TextColor3 = Color3.fromRGB(100, 40, 70)
-            }):Play()
-            TweenService:Create(TabText, TweenInfo.new(0.15), {
-                TextColor3 = Color3.fromRGB(100, 40, 70)
+                BackgroundColor3 = Palette.HoverTab -- Màu hover nhẹ
             }):Play()
         end
     end)
@@ -317,63 +385,14 @@ local function createTabButton(tabInfo)
     TabBtn.MouseLeave:Connect(function()
         if currentTab ~= tabInfo.name then
             TweenService:Create(TabBtn, TweenInfo.new(0.15), {
-                BackgroundColor3 = Color3.fromRGB(255, 215, 230)
-            }):Play()
-            TweenService:Create(Icon, TweenInfo.new(0.15), {
-                TextColor3 = Color3.fromRGB(120, 60, 90)
-            }):Play()
-            TweenService:Create(TabText, TweenInfo.new(0.15), {
-                TextColor3 = Color3.fromRGB(120, 60, 90)
+                BackgroundColor3 = Palette.UnselectedTab -- Quay lại màu Unselected
             }):Play()
         end
     end)
     
     -- Chức năng click
     TabBtn.MouseButton1Click:Connect(function()
-        -- Bỏ chọn tab cũ
-        if currentTab then
-            for _, child in pairs(TabContainer:GetChildren()) do
-                if child:IsA("TextButton") and child.Name == currentTab then
-                    TweenService:Create(child, TweenInfo.new(0.15), {
-                        BackgroundColor3 = Color3.fromRGB(255, 215, 230)
-                    }):Play()
-                    local oldIcon = child:FindFirstChild("TextLabel")
-                    local oldText = child:FindFirstChildWhichIsA("TextLabel", true)
-                    if oldIcon then
-                        TweenService:Create(oldIcon, TweenInfo.new(0.15), {
-                            TextColor3 = Color3.fromRGB(120, 60, 90)
-                        }):Play()
-                    end
-                    for _, label in pairs(child:GetChildren()) do
-                        if label:IsA("TextLabel") and label ~= oldIcon then
-                            TweenService:Create(label, TweenInfo.new(0.15), {
-                                TextColor3 = Color3.fromRGB(120, 60, 90)
-                            }):Play()
-                        end
-                    end
-                end
-            end
-            if tabFrames[currentTab] then
-                tabFrames[currentTab].Visible = false
-            end
-        end
-        
-        -- Chọn tab mới
-        currentTab = tabInfo.name
-        TweenService:Create(TabBtn, TweenInfo.new(0.15), {
-            BackgroundColor3 = Color3.fromRGB(255, 182, 193) -- Màu hồng đậm khi được chọn
-        }):Play()
-        TweenService:Create(Icon, TweenInfo.new(0.15), {
-            TextColor3 = Color3.fromRGB(80, 30, 60) -- Màu chữ đậm hơn khi được chọn
-        }):Play()
-        TweenService:Create(TabText, TweenInfo.new(0.15), {
-            TextColor3 = Color3.fromRGB(80, 30, 60) -- Màu chữ đậm hơn khi được chọn
-        }):Play()
-        
-        -- Hiển thị nội dung tab
-        if tabFrames[tabInfo.name] then
-            tabFrames[tabInfo.name].Visible = true
-        end
+        selectTab(tabInfo.name, TabBtn)
     end)
     
     return TabBtn
@@ -386,9 +405,18 @@ end
 
 -- Chọn tab đầu tiên mặc định
 wait(0.1)
-local firstTab = TabContainer:GetChildren()[2]
-if firstTab and firstTab:IsA("TextButton") then
-    firstTab.MouseButton1Click:Fire()
+-- Tìm TextButton đầu tiên trong TabContainer
+local firstTab = nil
+for _, child in ipairs(TabContainer:GetChildren()) do
+    if child:IsA("TextButton") then
+        firstTab = child
+        break
+    end
+end
+
+if firstTab then
+    -- Gọi hàm selectTab thay vì Fire() để đảm bảo hiệu ứng màu được áp dụng
+    selectTab(firstTab.Name, firstTab) 
 end
 
 -- Cập nhật kích thước canvas của TabContainer
@@ -399,13 +427,13 @@ end)
 
 -- Hiệu ứng hover nút tắt
 CloseBtn.MouseEnter:Connect(function()
-    TweenService:Create(CloseBtn, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 105, 180)}):Play()
+    TweenService:Create(CloseBtn, TweenInfo.new(0.1), {TextColor3 = Palette.Primary}):Play()
 end)
 CloseBtn.MouseLeave:Connect(function()
     TweenService:Create(CloseBtn, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
 end)
 
--- Chức năng khi nhấn nút X - SỬA LỖI
+-- Chức năng khi nhấn nút X
 CloseBtn.MouseButton1Click:Connect(function()
     WarningFrame.Visible = true
 end)
@@ -425,7 +453,7 @@ YesBtn.MouseEnter:Connect(function()
     TweenService:Create(YesBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 65, 140)}):Play()
 end)
 YesBtn.MouseLeave:Connect(function()
-    TweenService:Create(YesBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 105, 180)}):Play()
+    TweenService:Create(YesBtn, TweenInfo.new(0.1), {BackgroundColor3 = Palette.Primary}):Play()
 end)
 
 -- Hiệu ứng hover cho nút Không
@@ -433,31 +461,24 @@ NoBtn.MouseEnter:Connect(function()
     TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
 end)
 NoBtn.MouseLeave:Connect(function()
-    TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
+    TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Palette.Secondary}):Play()
 end)
 
--- Chức năng toggle menu - SỬA LỖI
-local isMenuOpen = false
+-- Chức năng toggle menu
 ToggleBtn.MouseButton1Click:Connect(function()
-    isMenuOpen = not isMenuOpen
-    Main.Visible = isMenuOpen
-    WarningFrame.Visible = false
-    
-    -- Hiệu ứng toggle icon (tùy chọn)
-    if isMenuOpen then
-        TweenService:Create(ToggleIcon, TweenInfo.new(0.2), {Rotation = 180}):Play()
-    else
-        TweenService:Create(ToggleIcon, TweenInfo.new(0.2), {Rotation = 0}):Play()
-    end
+    -- Đảo ngược trạng thái hiển thị của MainFrame
+    Main.Visible = not Main.Visible 
+    -- Ẩn WarningFrame khi đóng menu để tránh lỗi
+    WarningFrame.Visible = false 
 end)
 
 -- Hiệu ứng hover cho nút toggle
 ToggleBtn.MouseEnter:Connect(function()
-    TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
-    TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 105, 180)}):Play()
+    TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Palette.Content}):Play()
+    TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Palette.Primary}):Play()
 end)
 
 ToggleBtn.MouseLeave:Connect(function()
-    TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 240, 245)}):Play()
-    TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 182, 193)}):Play()
+    TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Palette.Background}):Play()
+    TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Palette.Secondary}):Play()
 end)
