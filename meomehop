@@ -54,7 +54,7 @@ Main.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 Main.BorderSizePixel = 0
 Main.Active = true
 Main.Draggable = true
-Main.Visible = false
+Main.Visible = true
 Main.Parent = gui
 
 local UICorner = Instance.new("UICorner")
@@ -252,25 +252,25 @@ local function createTabButton(tabInfo)
     
     -- Icon
     local Icon = Instance.new("TextLabel")
-    Icon.Size = UDim2.new(0, 30, 1, 0)
-    Icon.Position = UDim2.new(0, 8, 0, 0)
+    Icon.Size = UDim2.new(0, 24, 1, 0)
+    Icon.Position = UDim2.new(0, 12, 0, 0)
     Icon.BackgroundTransparency = 1
     Icon.Text = tabInfo.icon
-    Icon.TextSize = 18
-    Icon.Font = Enum.Font.GothamBold
-    Icon.TextColor3 = Color3.fromRGB(180, 180, 185)
-    Icon.TextXAlignment = Enum.TextXAlignment.Left
+    Icon.TextSize = 16
+    Icon.Font = Enum.Font.Gotham
+    Icon.TextColor3 = Color3.fromRGB(160, 160, 165)
+    Icon.TextXAlignment = Enum.TextXAlignment.Center
     Icon.Parent = TabBtn
     
     -- Text
     local TabText = Instance.new("TextLabel")
-    TabText.Size = UDim2.new(1, -45, 1, 0)
-    TabText.Position = UDim2.new(0, 40, 0, 0)
+    TabText.Size = UDim2.new(1, -48, 1, 0)
+    TabText.Position = UDim2.new(0, 44, 0, 0)
     TabText.BackgroundTransparency = 1
     TabText.Text = tabInfo.name
-    TabText.TextSize = 14
+    TabText.TextSize = 13
     TabText.Font = Enum.Font.Gotham
-    TabText.TextColor3 = Color3.fromRGB(180, 180, 185)
+    TabText.TextColor3 = Color3.fromRGB(160, 160, 165)
     TabText.TextXAlignment = Enum.TextXAlignment.Left
     TabText.Parent = TabBtn
     
@@ -349,7 +349,7 @@ local function createTabButton(tabInfo)
         -- Chọn tab mới
         currentTab = tabInfo.name
         TweenService:Create(TabBtn, TweenInfo.new(0.15), {
-            BackgroundColor3 = Color3.fromRGB(100, 60, 140)
+            BackgroundColor3 = Color3.fromRGB(70, 90, 200)
         }):Play()
         TweenService:Create(Icon, TweenInfo.new(0.15), {
             TextColor3 = Color3.fromRGB(255, 255, 255)
