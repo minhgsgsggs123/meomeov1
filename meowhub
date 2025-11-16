@@ -1,0 +1,442 @@
+local TweenService = game:GetService("TweenService")
+
+-- Tạo ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "meowhub"
+gui.ResetOnSpawn = false
+gui.Parent = game.CoreGui
+
+-- Tạo nút toggle menu (ô vuông bo tròn nhỏ)
+local ToggleBtn = Instance.new("ImageButton")
+ToggleBtn.Name = "MenuToggle"
+ToggleBtn.Size = UDim2.new(0, 50, 0, 50)
+ToggleBtn.Position = UDim2.new(0, 20, 0, 20)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+ToggleBtn.BorderSizePixel = 0
+ToggleBtn.Active = true
+ToggleBtn.Draggable = true
+
+local ToggleStroke = Instance.new("UIStroke")
+ToggleStroke.Color = Color3.fromRGB(255, 182, 193)
+ToggleStroke.Thickness = 2
+ToggleStroke.Parent = ToggleBtn
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 12)
+ToggleCorner.Parent = ToggleBtn
+
+local ToggleImageFrame = Instance.new("Frame")
+ToggleImageFrame.Size = UDim2.new(1, -10, 1, -10)
+ToggleImageFrame.Position = UDim2.new(0, 5, 0, 5)
+ToggleImageFrame.BackgroundTransparency = 1
+ToggleImageFrame.Parent = ToggleBtn
+
+local ToggleImageCorner = Instance.new("UICorner")
+ToggleImageCorner.CornerRadius = UDim.new(0, 8)
+ToggleImageCorner.Parent = ToggleImageFrame
+
+local ToggleIcon = Instance.new("ImageLabel")
+ToggleIcon.Name = "Icon"
+ToggleIcon.Size = UDim2.new(1, 0, 1, 0)
+ToggleIcon.BackgroundTransparency = 1
+ToggleIcon.Image = "rbxassetid://74593584475472"
+ToggleIcon.ScaleType = Enum.ScaleType.Fit
+ToggleIcon.Parent = ToggleImageFrame
+
+ToggleBtn.Parent = gui
+
+-- Frame chính
+local Main = Instance.new("Frame")
+Main.Name = "MainFrame"
+Main.Size = UDim2.new(0, 650, 0, 380)
+Main.Position = UDim2.new(0.5, -325, 0.5, -190)
+Main.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.Draggable = true
+Main.Visible = true
+Main.Parent = gui
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = Main
+
+-- Header
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 36)
+Header.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+Header.BorderSizePixel = 0
+Header.Parent = Main
+
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 10)
+HeaderCorner.Parent = Header
+
+local Title = Instance.new("TextLabel")
+Title.Text = "meow hub - lọ cùng bốp bốp "
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+Title.TextColor3 = Color3.fromRGB(80, 30, 60)
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 12, 0, 0)
+Title.Size = UDim2.new(1, -50, 1, 0)
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
+
+-- Nút tắt
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Text = "✖"
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 20
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.BackgroundTransparency = 1
+CloseBtn.Size = UDim2.new(0, 35, 1, 0)
+CloseBtn.Position = UDim2.new(1, -35, 0, 0)
+CloseBtn.ZIndex = 10
+CloseBtn.Parent = Header
+
+-- Frame cảnh báo
+local WarningFrame = Instance.new("Frame")
+WarningFrame.Name = "WarningFrame"
+WarningFrame.Size = UDim2.new(0, 250, 0, 120)
+WarningFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+WarningFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+WarningFrame.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+WarningFrame.BorderSizePixel = 0
+WarningFrame.Visible = false
+WarningFrame.ZIndex = 20
+WarningFrame.Parent = Main
+
+local WarningCorner = Instance.new("UICorner")
+WarningCorner.CornerRadius = UDim.new(0, 10)
+WarningCorner.Parent = WarningFrame
+
+local WarningStroke = Instance.new("UIStroke")
+WarningStroke.Color = Color3.fromRGB(255, 182, 193)
+WarningStroke.Thickness = 2
+WarningStroke.Parent = WarningFrame
+
+local WarningTitle = Instance.new("TextLabel")
+WarningTitle.Text = "Cảnh báo"
+WarningTitle.Font = Enum.Font.GothamBold
+WarningTitle.TextSize = 16
+WarningTitle.TextColor3 = Color3.fromRGB(255, 105, 180)
+WarningTitle.BackgroundTransparency = 1
+WarningTitle.Size = UDim2.new(1, 0, 0, 30)
+WarningTitle.Position = UDim2.new(0, 0, 0, 5)
+WarningTitle.ZIndex = 21
+WarningTitle.Parent = WarningFrame
+
+local WarningText = Instance.new("TextLabel")
+WarningText.Text = "Bạn có muốn tắt script không?"
+WarningText.Font = Enum.Font.Gotham
+WarningText.TextSize = 14
+WarningText.TextColor3 = Color3.fromRGB(80, 30, 60)
+WarningText.BackgroundTransparency = 1
+WarningText.Size = UDim2.new(1, -20, 0, 30)
+WarningText.Position = UDim2.new(0, 10, 0, 35)
+WarningText.ZIndex = 21
+WarningText.Parent = WarningFrame
+
+local YesBtn = Instance.new("TextButton")
+YesBtn.Text = "Có"
+YesBtn.Font = Enum.Font.GothamBold
+YesBtn.TextSize = 14
+YesBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+YesBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+YesBtn.Size = UDim2.new(0, 60, 0, 30)
+YesBtn.Position = UDim2.new(0.5, -70, 1, -40)
+YesBtn.ZIndex = 21
+YesBtn.Parent = WarningFrame
+
+local YesCorner = Instance.new("UICorner")
+YesCorner.CornerRadius = UDim.new(0, 6)
+YesCorner.Parent = YesBtn
+
+local NoBtn = Instance.new("TextButton")
+NoBtn.Text = "Không"
+NoBtn.Font = Enum.Font.GothamBold
+NoBtn.TextSize = 14
+NoBtn.TextColor3 = Color3.fromRGB(80, 30, 60)
+NoBtn.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
+NoBtn.Size = UDim2.new(0, 60, 0, 30)
+NoBtn.Position = UDim2.new(0.5, 10, 1, -40)
+NoBtn.ZIndex = 21
+NoBtn.Parent = WarningFrame
+
+local NoCorner = Instance.new("UICorner")
+NoCorner.CornerRadius = UDim.new(0, 6)
+NoCorner.Parent = NoBtn
+
+-- Content chính (chứa sidebar và nội dung)
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1, -20, 1, -56)
+Content.Position = UDim2.new(0, 10, 0, 46)
+Content.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
+Content.BorderSizePixel = 0
+Content.Parent = Main
+
+local ContentCorner = Instance.new("UICorner")
+ContentCorner.CornerRadius = UDim.new(0, 8)
+ContentCorner.Parent = Content
+
+-- Sidebar (thanh menu bên trái) - màu hồng nhạt như UI chính
+local Sidebar = Instance.new("Frame")
+Sidebar.Name = "Sidebar"
+Sidebar.Size = UDim2.new(0, 180, 1, 0)
+Sidebar.Position = UDim2.new(0, 0, 0, 0)
+Sidebar.BackgroundColor3 = Color3.fromRGB(255, 230, 240)
+Sidebar.BorderSizePixel = 0
+Sidebar.Parent = Content
+
+local SidebarCorner = Instance.new("UICorner")
+SidebarCorner.CornerRadius = UDim.new(0, 8)
+SidebarCorner.Parent = Sidebar
+
+-- Container cho các tab buttons
+local TabContainer = Instance.new("ScrollingFrame")
+TabContainer.Size = UDim2.new(1, -10, 1, -10)
+TabContainer.Position = UDim2.new(0, 5, 0, 5)
+TabContainer.BackgroundTransparency = 1
+TabContainer.BorderSizePixel = 0
+TabContainer.ScrollBarThickness = 4
+TabContainer.ScrollBarImageColor3 = Color3.fromRGB(255, 105, 180)
+TabContainer.Parent = Sidebar
+
+local TabLayout = Instance.new("UIListLayout")
+TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+TabLayout.Padding = UDim.new(0, 3)
+TabLayout.Parent = TabContainer
+
+-- Nội dung bên phải (hiển thị khi chọn tab)
+local TabContent = Instance.new("Frame")
+TabContent.Name = "TabContent"
+TabContent.Size = UDim2.new(1, -190, 1, -10)
+TabContent.Position = UDim2.new(0, 185, 0, 5)
+TabContent.BackgroundTransparency = 1
+TabContent.Parent = Content
+
+-- Danh sách các tab với icon (giống y hệt redz Hub)
+local tabs = {
+    {name = "Discord", icon = "ℹ", order = 1},
+    {name = "Farm", icon = "🏠", order = 2},
+    {name = "Sea", icon = "🌊", order = 3},
+    {name = "Islands", icon = "🏝", order = 4},
+    {name = "Quests/Items", icon = "⚔", order = 5},
+    {name = "Fruit/Raid", icon = "🍎", order = 6},
+    {name = "Stats", icon = "📊", order = 7},
+    {name = "Teleport", icon = "💎", order = 8},
+    {name = "Visual", icon = "👤", order = 9},
+    {name = "Shop", icon = "🛒", order = 10},
+    {name = "Misc", icon = "⚙", order = 11}
+}
+
+local currentTab = nil
+local tabFrames = {}
+
+-- Hàm tạo tab button
+local function createTabButton(tabInfo)
+    local TabBtn = Instance.new("TextButton")
+    TabBtn.Name = tabInfo.name
+    TabBtn.Size = UDim2.new(1, 0, 0, 38)
+    TabBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+    TabBtn.BorderSizePixel = 0
+    TabBtn.AutoButtonColor = false
+    TabBtn.Text = ""
+    TabBtn.LayoutOrder = tabInfo.order
+    TabBtn.Parent = TabContainer
+    
+    local TabCorner = Instance.new("UICorner")
+    TabCorner.CornerRadius = UDim.new(0, 6)
+    TabCorner.Parent = TabBtn
+    
+    -- Icon
+    local Icon = Instance.new("TextLabel")
+    Icon.Size = UDim2.new(0, 24, 1, 0)
+    Icon.Position = UDim2.new(0, 12, 0, 0)
+    Icon.BackgroundTransparency = 1
+    Icon.Text = tabInfo.icon
+    Icon.TextSize = 16
+    Icon.Font = Enum.Font.Gotham
+    Icon.TextColor3 = Color3.fromRGB(160, 160, 165)
+    Icon.TextXAlignment = Enum.TextXAlignment.Center
+    Icon.Parent = TabBtn
+    
+    -- Text
+    local TabText = Instance.new("TextLabel")
+    TabText.Size = UDim2.new(1, -48, 1, 0)
+    TabText.Position = UDim2.new(0, 44, 0, 0)
+    TabText.BackgroundTransparency = 1
+    TabText.Text = tabInfo.name
+    TabText.TextSize = 13
+    TabText.Font = Enum.Font.Gotham
+    TabText.TextColor3 = Color3.fromRGB(160, 160, 165)
+    TabText.TextXAlignment = Enum.TextXAlignment.Left
+    TabText.Parent = TabBtn
+    
+    -- Tạo frame nội dung cho tab này
+    local Frame = Instance.new("ScrollingFrame")
+    Frame.Name = tabInfo.name .. "Frame"
+    Frame.Size = UDim2.new(1, 0, 1, 0)
+    Frame.BackgroundTransparency = 1
+    Frame.BorderSizePixel = 0
+    Frame.ScrollBarThickness = 4
+    Frame.ScrollBarImageColor3 = Color3.fromRGB(255, 105, 180)
+    Frame.Visible = false
+    Frame.Parent = TabContent
+    
+    -- Placeholder text
+    local PlaceholderText = Instance.new("TextLabel")
+    PlaceholderText.Size = UDim2.new(1, -20, 0, 50)
+    PlaceholderText.Position = UDim2.new(0, 10, 0, 10)
+    PlaceholderText.BackgroundTransparency = 1
+    PlaceholderText.Text = "Chức năng " .. tabInfo.name .. " đang được phát triển..."
+    PlaceholderText.TextSize = 16
+    PlaceholderText.Font = Enum.Font.Gotham
+    PlaceholderText.TextColor3 = Color3.fromRGB(100, 100, 105)
+    PlaceholderText.TextWrapped = true
+    PlaceholderText.Parent = Frame
+    
+    tabFrames[tabInfo.name] = Frame
+    
+    -- Hiệu ứng hover
+    TabBtn.MouseEnter:Connect(function()
+        if currentTab ~= tabInfo.name then
+            TweenService:Create(TabBtn, TweenInfo.new(0.15), {
+                BackgroundColor3 = Color3.fromRGB(60, 60, 65)
+            }):Play()
+        end
+    end)
+    
+    TabBtn.MouseLeave:Connect(function()
+        if currentTab ~= tabInfo.name then
+            TweenService:Create(TabBtn, TweenInfo.new(0.15), {
+                BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+            }):Play()
+        end
+    end)
+    
+    -- Chức năng click
+    TabBtn.MouseButton1Click:Connect(function()
+        -- Bỏ chọn tab cũ
+        if currentTab then
+            for _, child in pairs(TabContainer:GetChildren()) do
+                if child:IsA("TextButton") and child.Name == currentTab then
+                    TweenService:Create(child, TweenInfo.new(0.15), {
+                        BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+                    }):Play()
+                    local oldIcon = child:FindFirstChild("TextLabel")
+                    local oldText = child:FindFirstChildWhichIsA("TextLabel", true)
+                    if oldIcon then
+                        TweenService:Create(oldIcon, TweenInfo.new(0.15), {
+                            TextColor3 = Color3.fromRGB(180, 180, 185)
+                        }):Play()
+                    end
+                    for _, label in pairs(child:GetChildren()) do
+                        if label:IsA("TextLabel") and label ~= oldIcon then
+                            TweenService:Create(label, TweenInfo.new(0.15), {
+                                TextColor3 = Color3.fromRGB(180, 180, 185)
+                            }):Play()
+                        end
+                    end
+                end
+            end
+            if tabFrames[currentTab] then
+                tabFrames[currentTab].Visible = false
+            end
+        end
+        
+        -- Chọn tab mới
+        currentTab = tabInfo.name
+        TweenService:Create(TabBtn, TweenInfo.new(0.15), {
+            BackgroundColor3 = Color3.fromRGB(70, 90, 200)
+        }):Play()
+        TweenService:Create(Icon, TweenInfo.new(0.15), {
+            TextColor3 = Color3.fromRGB(255, 255, 255)
+        }):Play()
+        TweenService:Create(TabText, TweenInfo.new(0.15), {
+            TextColor3 = Color3.fromRGB(255, 255, 255)
+        }):Play()
+        
+        -- Hiển thị nội dung tab
+        if tabFrames[tabInfo.name] then
+            tabFrames[tabInfo.name].Visible = true
+        end
+    end)
+    
+    return TabBtn
+end
+
+-- Tạo tất cả các tab
+for _, tab in ipairs(tabs) do
+    createTabButton(tab)
+end
+
+-- Chọn tab đầu tiên mặc định
+wait(0.1)
+local firstTab = TabContainer:GetChildren()[2]
+if firstTab and firstTab:IsA("TextButton") then
+    firstTab.MouseButton1Click:Fire()
+end
+
+-- Cập nhật kích thước canvas của TabContainer
+TabContainer.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y + 10)
+TabLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    TabContainer.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y + 10)
+end)
+
+-- Hiệu ứng hover nút tắt
+CloseBtn.MouseEnter:Connect(function()
+    TweenService:Create(CloseBtn, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 192, 203)}):Play()
+end)
+CloseBtn.MouseLeave:Connect(function()
+    TweenService:Create(CloseBtn, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+end)
+
+-- Chức năng khi nhấn nút X
+CloseBtn.MouseButton1Click:Connect(function()
+    WarningFrame.Visible = true
+end)
+
+-- Chức năng khi nhấn nút Có
+YesBtn.MouseButton1Click:Connect(function()
+    gui:Destroy()
+end)
+
+-- Chức năng khi nhấn nút Không
+NoBtn.MouseButton1Click:Connect(function()
+    WarningFrame.Visible = false
+end)
+
+-- Hiệu ứng hover cho nút Có
+YesBtn.MouseEnter:Connect(function()
+    TweenService:Create(YesBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 65, 140)}):Play()
+end)
+YesBtn.MouseLeave:Connect(function()
+    TweenService:Create(YesBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 105, 180)}):Play()
+end)
+
+-- Hiệu ứng hover cho nút Không
+NoBtn.MouseEnter:Connect(function()
+    TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 192, 203)}):Play()
+end)
+NoBtn.MouseLeave:Connect(function()
+    TweenService:Create(NoBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
+end)
+
+-- Chức năng toggle menu
+ToggleBtn.MouseButton1Click:Connect(function()
+    Main.Visible = not Main.Visible
+    WarningFrame.Visible = false
+end)
+
+-- Hiệu ứng hover cho nút toggle
+ToggleBtn.MouseEnter:Connect(function()
+    TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
+    TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 105, 180)}):Play()
+end)
+
+ToggleBtn.MouseLeave:Connect(function()
+    TweenService:Create(ToggleBtn, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(255, 240, 245)}):Play()
+    TweenService:Create(ToggleStroke, TweenInfo.new(0.1), {Color = Color3.fromRGB(255, 182, 193)}):Play()
+end)
