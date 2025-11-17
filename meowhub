@@ -6,7 +6,7 @@ gui.Name = "meowhub"
 gui.ResetOnSpawn = false
 gui.Parent = game.CoreGui
 
--- Tạo nút toggle menu (ô vuông bo tròn nhỏ)
+-- Tạo nút toggle menu
 local ToggleBtn = Instance.new("ImageButton")
 ToggleBtn.Name = "MenuToggle"
 ToggleBtn.Size = UDim2.new(0, 50, 0, 50)
@@ -168,7 +168,7 @@ local NoCorner = Instance.new("UICorner")
 NoCorner.CornerRadius = UDim.new(0, 6)
 NoCorner.Parent = NoBtn
 
--- Content Frame (chứa Sidebar và Main Content)
+-- Content Frame
 local Content = Instance.new("Frame")
 Content.Size = UDim2.new(1, -20, 1, -56)
 Content.Position = UDim2.new(0, 10, 0, 46)
@@ -180,25 +180,45 @@ local ContentCorner = Instance.new("UICorner")
 ContentCorner.CornerRadius = UDim.new(0, 8)
 ContentCorner.Parent = Content
 
--- SIDEBAR (Thanh tab bên trái)
-local Sidebar = Instance.new("Frame")
-Sidebar.Name = "Sidebar"
-Sidebar.Size = UDim2.new(0, 160, 1, 0)
-Sidebar.Position = UDim2.new(0, 0, 0, 0)
-Sidebar.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
-Sidebar.BorderSizePixel = 0
-Sidebar.Parent = Content
+-- SIDEBAR với ScrollingFrame
+local SidebarContainer = Instance.new("Frame")
+SidebarContainer.Name = "SidebarContainer"
+SidebarContainer.Size = UDim2.new(0, 155, 1, -10)
+SidebarContainer.Position = UDim2.new(0, 5, 0, 5)
+SidebarContainer.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
+SidebarContainer.BorderSizePixel = 0
+SidebarContainer.Parent = Content
 
 local SidebarCorner = Instance.new("UICorner")
 SidebarCorner.CornerRadius = UDim.new(0, 8)
-SidebarCorner.Parent = Sidebar
+SidebarCorner.Parent = SidebarContainer
+
+-- ScrollingFrame cho Sidebar
+local Sidebar = Instance.new("ScrollingFrame")
+Sidebar.Name = "Sidebar"
+Sidebar.Size = UDim2.new(1, -4, 1, -4)
+Sidebar.Position = UDim2.new(0, 2, 0, 2)
+Sidebar.BackgroundTransparency = 1
+Sidebar.BorderSizePixel = 0
+Sidebar.ScrollBarThickness = 4
+Sidebar.ScrollBarImageColor3 = Color3.fromRGB(255, 182, 193)
+Sidebar.CanvasSize = UDim2.new(0, 0, 0, 0)
+Sidebar.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Sidebar.Parent = SidebarContainer
 
 local SidebarList = Instance.new("UIListLayout")
-SidebarList.Padding = UDim.new(0, 2)
+SidebarList.Padding = UDim.new(0, 4)
 SidebarList.SortOrder = Enum.SortOrder.LayoutOrder
 SidebarList.Parent = Sidebar
 
--- Main Content (Nội dung bên phải)
+local SidebarPadding = Instance.new("UIPadding")
+SidebarPadding.PaddingTop = UDim.new(0, 5)
+SidebarPadding.PaddingBottom = UDim.new(0, 5)
+SidebarPadding.PaddingLeft = UDim.new(0, 5)
+SidebarPadding.PaddingRight = UDim.new(0, 5)
+SidebarPadding.Parent = Sidebar
+
+-- Main Content
 local MainContent = Instance.new("Frame")
 MainContent.Name = "MainContent"
 MainContent.Size = UDim2.new(1, -170, 1, -10)
@@ -215,8 +235,8 @@ MainContentCorner.Parent = MainContent
 local function CreateTab(name, icon, order)
     local TabBtn = Instance.new("TextButton")
     TabBtn.Name = name
-    TabBtn.Size = UDim2.new(1, 0, 0, 38)
-    TabBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+    TabBtn.Size = UDim2.new(1, -10, 0, 36)
+    TabBtn.BackgroundColor3 = Color3.fromRGB(255, 250, 252)
     TabBtn.BorderSizePixel = 0
     TabBtn.Text = ""
     TabBtn.AutoButtonColor = false
@@ -229,31 +249,31 @@ local function CreateTab(name, icon, order)
     
     -- Icon
     local TabIcon = Instance.new("ImageLabel")
-    TabIcon.Size = UDim2.new(0, 20, 0, 20)
-    TabIcon.Position = UDim2.new(0, 12, 0.5, -10)
+    TabIcon.Size = UDim2.new(0, 18, 0, 18)
+    TabIcon.Position = UDim2.new(0, 10, 0.5, -9)
     TabIcon.BackgroundTransparency = 1
     TabIcon.Image = icon
-    TabIcon.ImageColor3 = Color3.fromRGB(150, 150, 155)
+    TabIcon.ImageColor3 = Color3.fromRGB(255, 140, 180)
     TabIcon.Parent = TabBtn
     
     -- Text
     local TabText = Instance.new("TextLabel")
-    TabText.Size = UDim2.new(1, -45, 1, 0)
-    TabText.Position = UDim2.new(0, 40, 0, 0)
+    TabText.Size = UDim2.new(1, -40, 1, 0)
+    TabText.Position = UDim2.new(0, 35, 0, 0)
     TabText.BackgroundTransparency = 1
     TabText.Text = name
     TabText.Font = Enum.Font.GothamMedium
-    TabText.TextSize = 14
-    TabText.TextColor3 = Color3.fromRGB(150, 150, 155)
+    TabText.TextSize = 13
+    TabText.TextColor3 = Color3.fromRGB(80, 30, 60)
     TabText.TextXAlignment = Enum.TextXAlignment.Left
     TabText.Parent = TabBtn
     
-    -- Indicator (thanh màu bên trái khi active)
+    -- Indicator
     local Indicator = Instance.new("Frame")
     Indicator.Name = "Indicator"
-    Indicator.Size = UDim2.new(0, 3, 0, 24)
-    Indicator.Position = UDim2.new(0, 0, 0.5, -12)
-    Indicator.BackgroundColor3 = Color3.fromRGB(100, 150, 255)
+    Indicator.Size = UDim2.new(0, 3, 0, 20)
+    Indicator.Position = UDim2.new(0, 0, 0.5, -10)
+    Indicator.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
     Indicator.BorderSizePixel = 0
     Indicator.Visible = false
     Indicator.Parent = TabBtn
@@ -262,7 +282,7 @@ local function CreateTab(name, icon, order)
     IndicatorCorner.CornerRadius = UDim.new(1, 0)
     IndicatorCorner.Parent = Indicator
     
-    -- Tạo Content Frame cho tab này
+    -- Tab Content
     local TabContent = Instance.new("ScrollingFrame")
     TabContent.Name = name.."Content"
     TabContent.Size = UDim2.new(1, -10, 1, -10)
@@ -284,13 +304,13 @@ local function CreateTab(name, icon, order)
     -- Hover effect
     TabBtn.MouseEnter:Connect(function()
         if not TabBtn:FindFirstChild("Active") then
-            TweenService:Create(TabBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(50, 50, 55)}):Play()
+            TweenService:Create(TabBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 220, 235)}):Play()
         end
     end)
     
     TabBtn.MouseLeave:Connect(function()
         if not TabBtn:FindFirstChild("Active") then
-            TweenService:Create(TabBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(40, 40, 45)}):Play()
+            TweenService:Create(TabBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
         end
     end)
     
@@ -300,70 +320,57 @@ end
 -- Tạo các Tab
 local tabs = {}
 
--- Discord Tab
 local DiscordTab, DiscordContent, DiscordIcon, DiscordText, DiscordIndicator = CreateTab("Discord", "rbxassetid://7733955511", 1)
 table.insert(tabs, {btn = DiscordTab, content = DiscordContent, icon = DiscordIcon, text = DiscordText, indicator = DiscordIndicator})
 
--- Farm Tab
 local FarmTab, FarmContent, FarmIcon, FarmText, FarmIndicator = CreateTab("Farm", "rbxassetid://7733920644", 2)
 table.insert(tabs, {btn = FarmTab, content = FarmContent, icon = FarmIcon, text = FarmText, indicator = FarmIndicator})
 
--- Sea Tab
 local SeaTab, SeaContent, SeaIcon, SeaText, SeaIndicator = CreateTab("Sea", "rbxassetid://7733992346", 3)
 table.insert(tabs, {btn = SeaTab, content = SeaContent, icon = SeaIcon, text = SeaText, indicator = SeaIndicator})
 
--- Islands Tab
 local IslandsTab, IslandsContent, IslandsIcon, IslandsText, IslandsIndicator = CreateTab("Islands", "rbxassetid://7733954760", 4)
 table.insert(tabs, {btn = IslandsTab, content = IslandsContent, icon = IslandsIcon, text = IslandsText, indicator = IslandsIndicator})
 
--- Quests/Items Tab
 local QuestsTab, QuestsContent, QuestsIcon, QuestsText, QuestsIndicator = CreateTab("Quests/Items", "rbxassetid://7733964370", 5)
 table.insert(tabs, {btn = QuestsTab, content = QuestsContent, icon = QuestsIcon, text = QuestsText, indicator = QuestsIndicator})
 
--- Fruit/Raid Tab
 local FruitTab, FruitContent, FruitIcon, FruitText, FruitIndicator = CreateTab("Fruit/Raid", "rbxassetid://7733779730", 6)
 table.insert(tabs, {btn = FruitTab, content = FruitContent, icon = FruitIcon, text = FruitText, indicator = FruitIndicator})
 
--- Stats Tab
 local StatsTab, StatsContent, StatsIcon, StatsText, StatsIndicator = CreateTab("Stats", "rbxassetid://7734053426", 7)
 table.insert(tabs, {btn = StatsTab, content = StatsContent, icon = StatsIcon, text = StatsText, indicator = StatsIndicator})
 
--- Teleport Tab
 local TeleportTab, TeleportContent, TeleportIcon, TeleportText, TeleportIndicator = CreateTab("Teleport", "rbxassetid://7733920644", 8)
 table.insert(tabs, {btn = TeleportTab, content = TeleportContent, icon = TeleportIcon, text = TeleportText, indicator = TeleportIndicator})
 
--- Visual Tab
 local VisualTab, VisualContent, VisualIcon, VisualText, VisualIndicator = CreateTab("Visual", "rbxassetid://7733708835", 9)
 table.insert(tabs, {btn = VisualTab, content = VisualContent, icon = VisualIcon, text = VisualText, indicator = VisualIndicator})
 
--- Shop Tab
 local ShopTab, ShopContent, ShopIcon, ShopText, ShopIndicator = CreateTab("Shop", "rbxassetid://7734068321", 10)
 table.insert(tabs, {btn = ShopTab, content = ShopContent, icon = ShopIcon, text = ShopText, indicator = ShopIndicator})
 
--- Misc Tab
 local MiscTab, MiscContent, MiscIcon, MiscText, MiscIndicator = CreateTab("Misc", "rbxassetid://7734053426", 11)
 table.insert(tabs, {btn = MiscTab, content = MiscContent, icon = MiscIcon, text = MiscText, indicator = MiscIndicator})
 
--- Hàm switch tab
+-- Switch tab function
 local currentTab = nil
 local function SwitchTab(tabData)
-    -- Tắt tab cũ
     if currentTab then
         currentTab.indicator.Visible = false
         currentTab.content.Visible = false
-        TweenService:Create(currentTab.btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(40, 40, 45)}):Play()
-        TweenService:Create(currentTab.icon, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(150, 150, 155)}):Play()
-        TweenService:Create(currentTab.text, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(150, 150, 155)}):Play()
+        TweenService:Create(currentTab.btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
+        TweenService:Create(currentTab.icon, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(255, 140, 180)}):Play()
+        TweenService:Create(currentTab.text, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(80, 30, 60)}):Play()
         if currentTab.btn:FindFirstChild("Active") then
             currentTab.btn.Active:Destroy()
         end
     end
     
-    -- Bật tab mới
     currentTab = tabData
     currentTab.indicator.Visible = true
     currentTab.content.Visible = true
-    TweenService:Create(currentTab.btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(55, 55, 65)}):Play()
+    TweenService:Create(currentTab.btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
     TweenService:Create(currentTab.icon, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(255, 255, 255)}):Play()
     TweenService:Create(currentTab.text, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
     
@@ -372,17 +379,15 @@ local function SwitchTab(tabData)
     activeMarker.Parent = currentTab.btn
 end
 
--- Gán sự kiện click cho các tab
 for _, tabData in ipairs(tabs) do
     tabData.btn.MouseButton1Click:Connect(function()
         SwitchTab(tabData)
     end)
 end
 
--- Mở tab đầu tiên mặc định
 SwitchTab(tabs[1])
 
--- Các sự kiện nút
+-- Event handlers
 CloseBtn.MouseEnter:Connect(function()
     TweenService:Create(CloseBtn, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 192, 203)}):Play()
 end)
