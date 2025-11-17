@@ -54,7 +54,7 @@ Main.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 Main.BorderSizePixel = 0
 Main.Active = true
 Main.Draggable = true
-Main.Visible = false
+Main.Visible = true -- Hiện UI ngay khi chạy script
 Main.Parent = gui
 
 local UICorner = Instance.new("UICorner")
@@ -320,24 +320,12 @@ local function CreateTab(name, icon, order)
     local lastMousePosition = nil
     
     TabBtn.MouseEnter:Connect(function()
-        isHovering = true
-        lastMousePosition = game:GetService("UserInputService"):GetMouseLocation()
-        
-        wait(0.05) -- Đợi một chút để kiểm tra xem có đang scroll không
-        
-        if isHovering and lastMousePosition then
-            local currentPos = game:GetService("UserInputService"):GetMouseLocation()
-            local distance = (currentPos - lastMousePosition).Magnitude
-            
-            -- Chỉ hover nếu chuột không di chuyển nhiều (không scroll)
-            if distance < 5 and not TabBtn:FindFirstChild("Active") then
-                TweenService:Create(TabBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 220, 235)}):Play()
-            end
+        if not isScrolling and not TabBtn:FindFirstChild("Active") then
+            TweenService:Create(TabBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 220, 235)}):Play()
         end
     end)
     
     TabBtn.MouseLeave:Connect(function()
-        isHovering = false
         if not TabBtn:FindFirstChild("Active") then
             TweenService:Create(TabBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
         end
