@@ -54,7 +54,7 @@ Main.BackgroundColor3 = Color3.fromRGB(255, 240, 245)
 Main.BorderSizePixel = 0
 Main.Active = true
 Main.Draggable = true
-Main.Visible = true -- Hiện UI ngay khi chạy script
+Main.Visible = true
 Main.Parent = gui
 
 local UICorner = Instance.new("UICorner")
@@ -255,7 +255,6 @@ local function CreateTab(name, icon, order)
     TabBtn.Text = ""
     TabBtn.AutoButtonColor = false
     TabBtn.LayoutOrder = order
-    TabBtn.ZIndex = 2
     TabBtn.Parent = Sidebar
     
     local TabCorner = Instance.new("UICorner")
@@ -377,24 +376,21 @@ local function SwitchTab(tabData)
     if currentTab then
         currentTab.indicator.Visible = false
         currentTab.content.Visible = false
-        -- Reset màu tab cũ về mặc định
         TweenService:Create(currentTab.btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
         TweenService:Create(currentTab.icon, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(255, 140, 180)}):Play()
         TweenService:Create(currentTab.text, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(80, 30, 60)}):Play()
         if currentTab.btn:FindFirstChild("Active") then
-            currentTab.btn:FindFirstChild("Active"):Destroy()
+            currentTab.btn.Active:Destroy()
         end
     end
     
     currentTab = tabData
     currentTab.indicator.Visible = true
     currentTab.content.Visible = true
-    -- Tab active sáng mãi (màu hồng đậm)
-    currentTab.btn.BackgroundColor3 = Color3.fromRGB(255, 182, 193)
-    currentTab.icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
-    currentTab.text.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TweenService:Create(currentTab.btn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 182, 193)}):Play()
+    TweenService:Create(currentTab.icon, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+    TweenService:Create(currentTab.text, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
     
-    -- Đánh dấu tab đang active
     local activeMarker = Instance.new("BoolValue")
     activeMarker.Name = "Active"
     activeMarker.Parent = currentTab.btn
