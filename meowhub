@@ -206,6 +206,20 @@ Sidebar.CanvasSize = UDim2.new(0, 0, 0, 0)
 Sidebar.AutomaticCanvasSize = Enum.AutomaticSize.Y
 Sidebar.Parent = SidebarContainer
 
+-- Biến để track scrolling
+local isScrolling = false
+local scrollDebounce = nil
+
+Sidebar:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
+    isScrolling = true
+    if scrollDebounce then
+        scrollDebounce:Cancel()
+    end
+    scrollDebounce = task.delay(0.1, function()
+        isScrolling = false
+    end)
+end)
+
 local SidebarList = Instance.new("UIListLayout")
 SidebarList.Padding = UDim.new(0, 4)
 SidebarList.SortOrder = Enum.SortOrder.LayoutOrder
@@ -301,14 +315,29 @@ local function CreateTab(name, icon, order)
     TabContentList.SortOrder = Enum.SortOrder.LayoutOrder
     TabContentList.Parent = TabContent
     
-    -- Hover effect
+    -- Hover effect (chỉ hoạt động khi không scroll)
+    local isHovering = false
+    local lastMousePosition = nil
+    
     TabBtn.MouseEnter:Connect(function()
-        if not TabBtn:FindFirstChild("Active") then
-            TweenService:Create(TabBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 220, 235)}):Play()
+        isHovering = true
+        lastMousePosition = game:GetService("UserInputService"):GetMouseLocation()
+        
+        wait(0.05) -- Đợi một chút để kiểm tra xem có đang scroll không
+        
+        if isHovering and lastMousePosition then
+            local currentPos = game:GetService("UserInputService"):GetMouseLocation()
+            local distance = (currentPos - lastMousePosition).Magnitude
+            
+            -- Chỉ hover nếu chuột không di chuyển nhiều (không scroll)
+            if distance < 5 and not TabBtn:FindFirstChild("Active") then
+                TweenService:Create(TabBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 220, 235)}):Play()
+            end
         end
     end)
     
     TabBtn.MouseLeave:Connect(function()
+        isHovering = false
         if not TabBtn:FindFirstChild("Active") then
             TweenService:Create(TabBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 250, 252)}):Play()
         end
