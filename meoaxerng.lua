@@ -7,8 +7,8 @@ local Config = {
     AutoUnlock = true,
     TreeFolder = workspace:FindFirstChild("Trees") or workspace:FindFirstChild("Map") or workspace, 
     GateFolder = workspace:FindFirstChild("Gates") or workspace:FindFirstChild("Borders") or workspace,
-    DistanceToCut = 3.5,
-    TweenSpeed = 55
+    DistanceToCut = 3.2,
+    TweenSpeed = 65
 }
 
 local Players = game:GetService("Players")
@@ -65,6 +65,52 @@ TimeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TimeLabel.TextSize = 16
 TimeLabel.Font = Enum.Font.Gotham
 TimeLabel.Parent = MainFrame
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Size = UDim2.new(0, 25, 0, 25)
+CloseButton.Position = UDim2.new(1, -30, 0, 5)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 14
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Parent = MainFrame
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 5)
+CloseCorner.Parent = CloseButton
+
+local OpenButton = Instance.new("TextButton")
+OpenButton.Name = "OpenButton"
+OpenButton.Size = UDim2.new(0, 40, 0, 40)
+OpenButton.Position = UDim2.new(0, 10, 0.5, -20)
+OpenButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+OpenButton.Text = "O"
+OpenButton.TextColor3 = Color3.fromRGB(0, 255, 127)
+OpenButton.TextSize = 18
+OpenButton.Font = Enum.Font.GothamBold
+OpenButton.Visible = false
+OpenButton.Parent = ScreenGui
+
+local OpenCorner = Instance.new("UICorner")
+OpenCorner.CornerRadius = UDim.new(0, 8)
+OpenCorner.Parent = OpenButton
+
+local OpenStroke = Instance.new("UIStroke")
+OpenStroke.Color = Color3.fromRGB(0, 255, 127)
+OpenStroke.Thickness = 2
+OpenStroke.Parent = OpenButton
+
+CloseButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+    OpenButton.Visible = true
+end)
+
+OpenButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = true
+    OpenButton.Visible = false
+end)
 
 task.spawn(function()
     local startTime = os.time()
@@ -208,7 +254,7 @@ end
 
 task.spawn(function()
     while Config.AutoFarm do
-        task.wait(0.1)
+        task.wait(0.01)
         
         if Config.AutoUnlock then
             local lockedGate = getLockedGate()
@@ -218,7 +264,7 @@ task.spawn(function()
                     StatusLabel.Text = "Kaitun: Đang đi mở khóa khu vực mới!"
                     local gatePart = lockedGate.PrimaryPart or lockedGate:FindFirstChildOfClass("Part") or lockedGate
                     teleportTo(gatePart.CFrame)
-                    task.wait(1)
+                    task.wait(0.5)
                     StatusLabel.Text = "kaitun đang hoạt động"
                     continue
                 end
@@ -229,14 +275,13 @@ task.spawn(function()
         if targetTree then
             local targetPart = targetTree:IsA("Model") and (targetTree.PrimaryPart or targetTree:FindFirstChildOfClass("Part")) or targetTree
             if targetPart and targetPart:IsA("BasePart") then
-                StatusLabel.Text = "Kaitun: Đang chặt cây xịn nhất"
+                StatusLabel.Text = "Kaitun: Đang quét chặt liên tục..."
                 local targetPos = targetPart.CFrame * CFrame.new(0, 0, Config.DistanceToCut)
                 teleportTo(targetPos)
-                task.wait(0.15)
             end
         else
             StatusLabel.Text = "Kaitun: Đang đợi cây xuất hiện..."
-            task.wait(0.3)
+            task.wait(0.1)
         end
     end
 end)
