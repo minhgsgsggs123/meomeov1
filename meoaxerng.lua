@@ -1,5 +1,5 @@
 
--- [[ CONFIGURATION / CÀI ĐẶT ]]
+-- [[  / CÀI ĐẶT ]]
 local Config = {
     AutoFarm = true,
     AutoUnlock = true, -- Tự động chạy tới mở khóa khu vực mới khi đủ gỗ
