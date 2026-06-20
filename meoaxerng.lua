@@ -1,29 +1,22 @@
--- ====================================================================
---                      KAITUN SCRIPT - AXE RNG (FIXED)
--- ====================================================================
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
 
--- [[ CONFIGURATION / CÀI ĐẶT ]]
 local Config = {
     AutoFarm = true,
-    AutoUnlock = true, -- Tự động chạy tới mở khóa khu vực mới khi đủ gỗ
+    AutoUnlock = true,
     TreeFolder = workspace:FindFirstChild("Trees") or workspace:FindFirstChild("Map") or workspace, 
     GateFolder = workspace:FindFirstChild("Gates") or workspace:FindFirstChild("Borders") or workspace,
-    DistanceToCut = 4, -- Khoảng cách áp sát cây
-    TweenSpeed = 45 -- Tốc độ di chuyển mượt mà
+    DistanceToCut = 4,
+    TweenSpeed = 45
 }
 
--- [[ SERVICES ]]
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local VirtualUser = game:GetService("VirtualUser")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- ====================================================================
--- [[ GIAO DIỆN UI TRẠNG THÁI CHÍNH GIỮA MÀN HÌNH ]]
--- ====================================================================
-
--- Xóa UI cũ nếu có tránh trùng lặp khi re-execute
 if PlayerGui:FindFirstChild("KaitunStatusUI") then
     PlayerGui.KaitunStatusUI:Destroy()
 end
@@ -36,7 +29,7 @@ ScreenGui.ResetOnSpawn = false
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Size = UDim2.new(0, 280, 0, 110)
-MainFrame.Position = UDim2.new(0.5, -140, 0.4, -55) -- Chính giữa màn hình
+MainFrame.Position = UDim2.new(0.5, -140, 0.4, -55)
 MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 MainFrame.BackgroundTransparency = 0.2
 MainFrame.BorderSizePixel = 0
@@ -47,7 +40,7 @@ UICorner.CornerRadius = UDim.new(0, 10)
 UICorner.Parent = MainFrame
 
 local UIStroke = Instance.new("UIStroke")
-UIStroke.Color = Color3.fromRGB(0, 255, 127) -- Viền xanh dạ quang rực rỡ
+UIStroke.Color = Color3.fromRGB(0, 255, 127)
 UIStroke.Thickness = 2
 UIStroke.Parent = MainFrame
 
@@ -73,7 +66,6 @@ TimeLabel.TextSize = 16
 TimeLabel.Font = Enum.Font.Gotham
 TimeLabel.Parent = MainFrame
 
--- [[ VÒNG LẶP ĐẾM THỜI GIAN TREO ]]
 task.spawn(function()
     local startTime = os.time()
     while true do
@@ -87,20 +79,12 @@ task.spawn(function()
     end
 end)
 
--- ====================================================================
--- [[ HỆ THỐNG ANTI-AFK CHỐNG KICK ]]
--- ====================================================================
 LocalPlayer.Idled:Connect(function()
     VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
     task.wait(1)
     VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
 end)
 
--- ====================================================================
--- [[ CORE FUNCTIONS / CHỨC NĂNG CHÍNH ]]
--- ====================================================================
-
--- Hàm di chuyển mượt mà (Tween)
 local function teleportTo(targetCFrame)
     local character = LocalPlayer.Character
     if not character or not character:FindFirstChild("HumanoidRootPart") then return end
@@ -115,7 +99,6 @@ local function teleportTo(targetCFrame)
     tween.Completed:Wait()
 end
 
--- Hàm lấy số gỗ hiện tại an toàn (Không lo crash nếu sai tên)
 local function getMyWood()
     local success, result = pcall(function()
         local leaderstats = LocalPlayer:FindFirstChild("leaderstats")
@@ -132,10 +115,8 @@ local function getMyWood()
     return success and result or 0
 end
 
--- Hàm tìm cổng chặn khu vực gần nhất
-local function getNextGate()
+local function getLockedGate()
     if not Config.GateFolder then return nil end
-    
     local closestGate = nil
     local shortestDistance = math.huge
     local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -143,14 +124,16 @@ local function getNextGate()
     
     for _, gate in pairs(Config.GateFolder:GetChildren()) do
         if gate:IsA("Part") or gate:IsA("Model") then
-            -- Bỏ qua nếu là Spawn hoặc các BasePart của map thường
             if gate.Name ~= "Baseplate" and gate.Name ~= "Terrain" then
                 local gatePart = gate:IsA("Model") and (gate.PrimaryPart or gate:FindFirstChildOfClass("Part")) or gate
-                if gatePart then
-                    local dist = (hrp.Position - gatePart.Position).Magnitude
-                    if dist < shortestDistance then
-                        shortestDistance = dist
-                        closestGate = gate
+                if gatePart and gatePart:IsA("BasePart") then
+                    local hasPrice = gate:FindFirstChild("Price") or gate:FindFirstChild("Cost") or gate:FindFirstChild("RequiredWood")
+                    if gatePart.CanCollide == true or hasPrice then
+                        local dist = (hrp.Position - gatePart.Position).Magnitude
+                        if dist < shortestDistance then
+                            shortestDistance = dist
+                            closestGate = gate
+                        end
                     end
                 end
             end
@@ -159,32 +142,28 @@ local function getNextGate()
     return closestGate
 end
 
--- Hàm tìm cây xịn nhất nằm trong ranh giới cho phép
 local function getBestTree()
     local bestTree = nil
     local highestValue = -1
     local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
     if not hrp then return nil end
     
-    local nextGate = getNextGate()
-    local gatePosition = nextGate and (nextGate.PrimaryPart or nextGate:FindFirstChildOfClass("Part") or nextGate).Position
+    local lockedGate = getLockedGate()
+    local gatePosition = lockedGate and (lockedGate.PrimaryPart or lockedGate:FindFirstChildOfClass("Part") or lockedGate).Position
     
     for _, obj in pairs(Config.TreeFolder:GetChildren()) do
-        -- Kiểm tra xem có đúng là Model cây hoặc Part chặt được không
-        if (obj:IsA("Model") or obj:IsA("Part")) and obj ~= nextGate then
+        if (obj:IsA("Model") or obj:IsA("Part")) and obj ~= lockedGate then
             local treePart = obj:IsA("Model") and (obj.PrimaryPart or obj:FindFirstChildOfClass("Part")) or obj
             
             if treePart and treePart:IsA("BasePart") then
-                -- CHECK RANH GIỚI MAP ĐƯỜNG THẲNG
                 if gatePosition then
-                    local distToTree = (hrp.Position - treePart.Position).Magnitude
-                    local distToGate = (hrp.Position - gatePosition).Magnitude
-                    if distToTree > distToGate then
-                        continue -- Cây nằm ở vùng khóa, bỏ qua
+                    local distTreeToSpawn = (treePart.Position - Vector3.new(0,0,0)).Magnitude
+                    local distGateToSpawn = (gatePosition - Vector3.new(0,0,0)).Magnitude
+                    if distTreeToSpawn > distGateToSpawn then
+                        continue
                     end
                 end
                 
-                -- Phân cấp độ xịn của cây qua từ khóa trong tên
                 local treeValue = 1
                 local nameLower = string.lower(obj.Name)
                 if string.find(nameLower, "mythic") or string.find(nameLower, "divine") then
@@ -205,24 +184,17 @@ local function getBestTree()
     return bestTree
 end
 
--- ====================================================================
--- [[ MAIN LOOP / VÒNG LẶP CHẠY CHÍNH ]]
--- ====================================================================
 task.spawn(function()
-    print("Kaitun Axe RNG đã khởi chạy thành công!")
-    
     while Config.AutoFarm do
         task.wait(0.2)
         
-        -- BƯỚC 1: TỰ ĐỘNG CHẠY ĐI MỞ KHU VỰC MỚI KHI ĐỦ TIỀN
         if Config.AutoUnlock then
-            local nextGate = getNextGate()
-            if nextGate then
-                local priceValue = nextGate:FindFirstChild("Price") or nextGate:FindFirstChild("Cost") or nextGate:FindFirstChild("RequiredWood")
-                
+            local lockedGate = getLockedGate()
+            if lockedGate then
+                local priceValue = lockedGate:FindFirstChild("Price") or lockedGate:FindFirstChild("Cost") or lockedGate:FindFirstChild("RequiredWood")
                 if priceValue and getMyWood() >= priceValue.Value then
                     StatusLabel.Text = "Kaitun: Đang đi mở khóa khu vực mới!"
-                    local gatePart = nextGate.PrimaryPart or nextGate:FindFirstChildOfClass("Part") or nextGate
+                    local gatePart = lockedGate.PrimaryPart or lockedGate:FindFirstChildOfClass("Part") or lockedGate
                     teleportTo(gatePart.CFrame)
                     task.wait(1.5)
                     StatusLabel.Text = "kaitun đang hoạt động"
@@ -231,17 +203,14 @@ task.spawn(function()
             end
         end
         
-        -- BƯỚC 2: TỰ ĐỘNG QUÉT VÀ CHẶT CÂY XỊN
         local targetTree = getBestTree()
         if targetTree then
             local targetPart = targetTree:IsA("Model") and (targetTree.PrimaryPart or targetTree:FindFirstChildOfClass("Part")) or targetTree
             if targetPart and targetPart:IsA("BasePart") then
-                
                 while Config.AutoFarm and targetTree and targetTree.Parent == Config.TreeFolder do
                     local targetPos = targetPart.CFrame * CFrame.new(0, 0, Config.DistanceToCut)
                     teleportTo(targetPos)
-                    task.wait(0.3) -- Chờ game tự chặt
-                    
+                    task.wait(0.3)
                     if not targetTree or not targetTree.Parent then
                         break
                     end
