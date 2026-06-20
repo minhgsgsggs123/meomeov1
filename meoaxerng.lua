@@ -124,7 +124,6 @@ local function getMyWood()
         if leaderstats and (leaderstats:FindFirstChild("Wood") or leaderstats:FindFirstChild("Woods")) then
             return (leaderstats:FindFirstChild("Wood") or leaderstats:FindFirstChild("Woods")).Value
         end
-        
         local playerData = LocalPlayer:FindFirstChild("PlayerData") or LocalPlayer:FindFirstChild("Data")
         if playerData and (playerData:FindFirstChild("Wood") or playerData:FindFirstChild("Woods")) then
             return (playerData:FindFirstChild("Wood") or playerData:FindFirstChild("Woods")).Value
@@ -138,7 +137,6 @@ local function getLockedGate()
     if not Config.GateFolder then return nil end
     local closestGate = nil
     local shortestDistance = math.huge
-    
     for _, gate in pairs(Config.GateFolder:GetChildren()) do
         if gate:IsA("Part") or gate:IsA("Model") then
             if gate.Name ~= "Baseplate" and gate.Name ~= "Terrain" then
@@ -169,13 +167,11 @@ local function getBestTree()
     local gatePosition = lockedGate and (lockedGate.PrimaryPart or lockedGate:FindFirstChildOfClass("Part") or lockedGate).Position
     
     local validTrees = {}
-    
     for _, obj in pairs(Config.TreeFolder:GetChildren()) do
         if (obj:IsA("Model") or obj:IsA("Part")) and obj ~= lockedGate then
             local treePart = obj:IsA("Model") and (obj.PrimaryPart or obj:FindFirstChildOfClass("Part")) or obj
             if treePart and treePart:IsA("BasePart") then
                 local distTreeToBase = (treePart.Position - basePoint).Magnitude
-                
                 if gatePosition then
                     local distGateToBase = (gatePosition - basePoint).Magnitude
                     if distTreeToBase > distGateToBase then
@@ -202,51 +198,37 @@ local function getBestTree()
     
     local currentDist = (hrp.Position - basePoint).Magnitude
     
-    table.sort(validTrees, function(a, b)
+    local targetsInDirection = {}
+    for _, t in ipairs(validTrees) do
+        if movingForward and t.dist > currentDist then
+            table.insert(targetsInDirection, t)
+        elseif not movingForward and t.dist < currentDist then
+            table.insert(targetsInDirection, t)
+        end
+    end
+    
+    if #targetsInDirection == 0 then
+        movingForward = not movingForward
+        targetsInDirection = validTrees
+    end
+    
+    table.sort(targetsInDirection, function(a, b)
         if a.value ~= b.value then
             return a.value > b.value
         end
         if movingForward then
-            return a.dist > b.dist
-        else
             return a.dist < b.dist
+        else
+            return a.dist > b.dist
         end
     end)
     
-    local target = validTrees[1]
-    
-    if movingForward and target.dist <= currentDist then
-        local furtherTreeExists = false
-        for _, t in ipairs(validTrees) do
-            if t.value == target.value and t.dist > currentDist then
-                furtherTreeExists = true
-                target = t
-                break
-            end
-        end
-        if not furtherTreeExists then
-            movingForward = false
-        end
-    elseif not movingForward and target.dist >= currentDist then
-        local closerTreeExists = false
-        for _, t in ipairs(validTrees) do
-            if t.value == target.value and t.dist < currentDist then
-                closerTreeExists = true
-                target = t
-                break
-            end
-        end
-        if not closerTreeExists then
-            movingForward = true
-        end
-    end
-    
-    return target and target.instance or nil
+    return targetsInDirection[1] and targetsInDirection[1].instance or nil
 end
 
 task.spawn(function()
     while Config.AutoFarm do
-        task.wait(0.01)
+        task.wait(0.001)
         
         if Config.AutoUnlock then
             local lockedGate = getLockedGate()
@@ -267,13 +249,13 @@ task.spawn(function()
         if targetTree then
             local targetPart = targetTree:IsA("Model") and (targetTree.PrimaryPart or targetTree:FindFirstChildOfClass("Part")) or targetTree
             if targetPart and targetPart:IsA("BasePart") then
-                StatusLabel.Text = "Trạng thái: Quét chặt tuyến đường thẳng"
+                StatusLabel.Text = "Trạng thái: Tuần tra tuyến đường thẳng"
                 local targetPos = targetPart.CFrame * CFrame.new(0, 0, Config.DistanceToCut)
                 teleportTo(targetPos)
             end
         else
             StatusLabel.Text = "Trạng thái: Đợi cây xuất hiện..."
-            task.wait(0.1)
+            task.wait(0.05)
         end
     end
 end)
