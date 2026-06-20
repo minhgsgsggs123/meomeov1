@@ -28,89 +28,45 @@ ScreenGui.ResetOnSpawn = false
 
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 280, 0, 110)
-MainFrame.Position = UDim2.new(0.5, -140, 0.4, -55)
+MainFrame.Size = UDim2.new(0, 450, 0, 30)
+MainFrame.Position = UDim2.new(0.5, -225, 0, 15)
 MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-MainFrame.BackgroundTransparency = 0.2
+MainFrame.BackgroundTransparency = 0.3
 MainFrame.BorderSizePixel = 0
 MainFrame.Parent = ScreenGui
 
 local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.CornerRadius = UDim.new(0, 6)
 UICorner.Parent = MainFrame
 
 local UIStroke = Instance.new("UIStroke")
 UIStroke.Color = Color3.fromRGB(0, 255, 127)
-UIStroke.Thickness = 2
+UIStroke.Thickness = 1.5
 UIStroke.Parent = MainFrame
 
 local StatusLabel = Instance.new("TextLabel")
 StatusLabel.Name = "StatusLabel"
-StatusLabel.Size = UDim2.new(1, 0, 0, 40)
-StatusLabel.Position = UDim2.new(0, 0, 0, 15)
+StatusLabel.Size = UDim2.new(0.5, -10, 1, 0)
+StatusLabel.Position = UDim2.new(0, 10, 0, 0)
 StatusLabel.BackgroundTransparency = 1
-StatusLabel.Text = "kaitun đang hoạt động"
+StatusLabel.Text = "Trạng thái: Đang hoạt động"
 StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 127)
-StatusLabel.TextSize = 20
+StatusLabel.TextSize = 13
 StatusLabel.Font = Enum.Font.GothamBold
+StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
 StatusLabel.Parent = MainFrame
 
 local TimeLabel = Instance.new("TextLabel")
 TimeLabel.Name = "TimeLabel"
-TimeLabel.Size = UDim2.new(1, 0, 0, 30)
-TimeLabel.Position = UDim2.new(0, 0, 0, 55)
+TimeLabel.Size = UDim2.new(0.5, -10, 1, 0)
+TimeLabel.Position = UDim2.new(0.5, 0, 0, 0)
 TimeLabel.BackgroundTransparency = 1
-TimeLabel.Text = "đã treo :"
+TimeLabel.Text = "Đã treo: 00:00:00"
 TimeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TimeLabel.TextSize = 16
+TimeLabel.TextSize = 13
 TimeLabel.Font = Enum.Font.Gotham
+TimeLabel.TextXAlignment = Enum.TextXAlignment.Right
 TimeLabel.Parent = MainFrame
-
-local CloseButton = Instance.new("TextButton")
-CloseButton.Name = "CloseButton"
-CloseButton.Size = UDim2.new(0, 25, 0, 25)
-CloseButton.Position = UDim2.new(1, -30, 0, 5)
-CloseButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.TextSize = 14
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.Parent = MainFrame
-
-local CloseCorner = Instance.new("UICorner")
-CloseCorner.CornerRadius = UDim.new(0, 5)
-CloseCorner.Parent = CloseButton
-
-local OpenButton = Instance.new("TextButton")
-OpenButton.Name = "OpenButton"
-OpenButton.Size = UDim2.new(0, 40, 0, 40)
-OpenButton.Position = UDim2.new(0, 10, 0.5, -20)
-OpenButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-OpenButton.Text = "O"
-OpenButton.TextColor3 = Color3.fromRGB(0, 255, 127)
-OpenButton.TextSize = 18
-OpenButton.Font = Enum.Font.GothamBold
-OpenButton.Visible = false
-OpenButton.Parent = ScreenGui
-
-local OpenCorner = Instance.new("UICorner")
-OpenCorner.CornerRadius = UDim.new(0, 8)
-OpenCorner.Parent = OpenButton
-
-local OpenStroke = Instance.new("UIStroke")
-OpenStroke.Color = Color3.fromRGB(0, 255, 127)
-OpenStroke.Thickness = 2
-OpenStroke.Parent = OpenButton
-
-CloseButton.MouseButton1Click:Connect(function()
-    MainFrame.Visible = false
-    OpenButton.Visible = true
-end)
-
-OpenButton.MouseButton1Click:Connect(function()
-    MainFrame.Visible = true
-    OpenButton.Visible = false
-end)
 
 task.spawn(function()
     local startTime = os.time()
@@ -121,7 +77,7 @@ task.spawn(function()
         local minutes = math.floor((elapsedTime % 3600) / 60)
         local seconds = elapsedTime % 60
         local timeString = string.format("%02d:%02d:%02d", hours, minutes, seconds)
-        TimeLabel.Text = "đã treo : " .. timeString
+        TimeLabel.Text = "Đã treo: " .. timeString
     end
 end)
 
@@ -203,23 +159,24 @@ local function getLockedGate()
     return closestGate
 end
 
+local movingForward = true
+
 local function getBestTree()
-    local bestTree = nil
-    local highestValue = -1
-    local closestDistance = math.huge
     local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
     if not hrp then return nil end
     
     local lockedGate = getLockedGate()
     local gatePosition = lockedGate and (lockedGate.PrimaryPart or lockedGate:FindFirstChildOfClass("Part") or lockedGate).Position
     
+    local validTrees = {}
+    
     for _, obj in pairs(Config.TreeFolder:GetChildren()) do
         if (obj:IsA("Model") or obj:IsA("Part")) and obj ~= lockedGate then
             local treePart = obj:IsA("Model") and (obj.PrimaryPart or obj:FindFirstChildOfClass("Part")) or obj
-            
             if treePart and treePart:IsA("BasePart") then
+                local distTreeToBase = (treePart.Position - basePoint).Magnitude
+                
                 if gatePosition then
-                    local distTreeToBase = (treePart.Position - basePoint).Magnitude
                     local distGateToBase = (gatePosition - basePoint).Magnitude
                     if distTreeToBase > distGateToBase then
                         continue
@@ -236,20 +193,55 @@ local function getBestTree()
                     treeValue = 10
                 end
                 
-                local distToPlayer = (hrp.Position - treePart.Position).Magnitude
-                
-                if treeValue > highestValue then
-                    highestValue = treeValue
-                    closestDistance = distToPlayer
-                    bestTree = obj
-                elseif treeValue == highestValue and distToPlayer < closestDistance then
-                    closestDistance = distToPlayer
-                    bestTree = obj
-                end
+                table.insert(validTrees, {instance = obj, part = treePart, dist = distTreeToBase, value = treeValue})
             end
         end
     end
-    return bestTree
+    
+    if #validTrees == 0 then return nil end
+    
+    local currentDist = (hrp.Position - basePoint).Magnitude
+    
+    table.sort(validTrees, function(a, b)
+        if a.value ~= b.value then
+            return a.value > b.value
+        end
+        if movingForward then
+            return a.dist > b.dist
+        else
+            return a.dist < b.dist
+        end
+    end)
+    
+    local target = validTrees[1]
+    
+    if movingForward and target.dist <= currentDist then
+        local furtherTreeExists = false
+        for _, t in ipairs(validTrees) do
+            if t.value == target.value and t.dist > currentDist then
+                furtherTreeExists = true
+                target = t
+                break
+            end
+        end
+        if not furtherTreeExists then
+            movingForward = false
+        end
+    elseif not movingForward and target.dist >= currentDist then
+        local closerTreeExists = false
+        for _, t in ipairs(validTrees) do
+            if t.value == target.value and t.dist < currentDist then
+                closerTreeExists = true
+                target = t
+                break
+            end
+        end
+        if not closerTreeExists then
+            movingForward = true
+        end
+    end
+    
+    return target and target.instance or nil
 end
 
 task.spawn(function()
@@ -261,11 +253,11 @@ task.spawn(function()
             if lockedGate then
                 local priceValue = lockedGate:FindFirstChild("Price") or lockedGate:FindFirstChild("Cost") or lockedGate:FindFirstChild("RequiredWood")
                 if priceValue and getMyWood() >= priceValue.Value then
-                    StatusLabel.Text = "Kaitun: Đang đi mở khóa khu vực mới!"
+                    StatusLabel.Text = "Trạng thái: Mở khóa khu vực mới"
                     local gatePart = lockedGate.PrimaryPart or lockedGate:FindFirstChildOfClass("Part") or lockedGate
                     teleportTo(gatePart.CFrame)
                     task.wait(0.5)
-                    StatusLabel.Text = "kaitun đang hoạt động"
+                    StatusLabel.Text = "Trạng thái: Đang hoạt động"
                     continue
                 end
             end
@@ -275,12 +267,12 @@ task.spawn(function()
         if targetTree then
             local targetPart = targetTree:IsA("Model") and (targetTree.PrimaryPart or targetTree:FindFirstChildOfClass("Part")) or targetTree
             if targetPart and targetPart:IsA("BasePart") then
-                StatusLabel.Text = "Kaitun: Đang quét chặt liên tục..."
+                StatusLabel.Text = "Trạng thái: Quét chặt tuyến đường thẳng"
                 local targetPos = targetPart.CFrame * CFrame.new(0, 0, Config.DistanceToCut)
                 teleportTo(targetPos)
             end
         else
-            StatusLabel.Text = "Kaitun: Đang đợi cây xuất hiện..."
+            StatusLabel.Text = "Trạng thái: Đợi cây xuất hiện..."
             task.wait(0.1)
         end
     end
