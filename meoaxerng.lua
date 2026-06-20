@@ -8,7 +8,7 @@ local Config = {
     TreeFolder = workspace:FindFirstChild("Trees") or workspace:FindFirstChild("Map") or workspace, 
     GateFolder = workspace:FindFirstChild("Gates") or workspace:FindFirstChild("Borders") or workspace,
     DistanceToCut = 3.2,
-    TweenSpeed = 65
+    TweenSpeed = 68
 }
 
 local Players = game:GetService("Players")
@@ -49,7 +49,7 @@ StatusLabel.Name = "StatusLabel"
 StatusLabel.Size = UDim2.new(0.5, -10, 1, 0)
 StatusLabel.Position = UDim2.new(0, 10, 0, 0)
 StatusLabel.BackgroundTransparency = 1
-StatusLabel.Text = "Trạng thái: Đang hoạt động"
+StatusLabel.Text = "Trạng thái: Khởi động Kaitun"
 StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 127)
 StatusLabel.TextSize = 13
 StatusLabel.Font = Enum.Font.GothamBold
@@ -157,7 +157,7 @@ local function getLockedGate()
     return closestGate
 end
 
-local movingForward = true
+local loopPhase = 1 
 
 local function getBestTree()
     local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -189,7 +189,8 @@ local function getBestTree()
                     treeValue = 10
                 end
                 
-                table.insert(validTrees, {instance = obj, part = treePart, dist = distTreeToBase, value = treeValue})
+                local distToPlayer = (hrp.Position - treePart.Position).Magnitude
+                table.insert(validTrees, {instance = obj, part = treePart, dist = distTreeToBase, distPlayer = distToPlayer, value = treeValue})
             end
         end
     end
@@ -197,26 +198,54 @@ local function getBestTree()
     if #validTrees == 0 then return nil end
     
     local currentDist = (hrp.Position - basePoint).Magnitude
-    
     local targetsInDirection = {}
-    for _, t in ipairs(validTrees) do
-        if movingForward and t.dist > currentDist then
-            table.insert(targetsInDirection, t)
-        elseif not movingForward and t.dist < currentDist then
-            table.insert(targetsInDirection, t)
+    
+    if loopPhase == 1 then
+        for _, t in ipairs(validTrees) do
+            if t.dist > currentDist then
+                table.insert(targetsInDirection, t)
+            end
+        end
+        if #targetsInDirection == 0 then
+            loopPhase = 2
+        end
+    elseif loopPhase == 2 then
+        for _, t in ipairs(validTrees) do
+            if t.dist < currentDist then
+                table.insert(targetsInDirection, t)
+            end
+        end
+        if #targetsInDirection == 0 then
+            loopPhase = 3
+        end
+    elseif loopPhase == 3 then
+        for _, t in ipairs(validTrees) do
+            if t.dist > currentDist then
+                table.insert(targetsInDirection, t)
+            end
+        end
+        if #targetsInDirection == 0 then
+            loopPhase = 4
         end
     end
     
-    if #targetsInDirection == 0 then
-        movingForward = not movingForward
+    if loopPhase == 4 or #targetsInDirection == 0 then
         targetsInDirection = validTrees
+        table.sort(targetsInDirection, function(a, b)
+            if a.value ~= b.value then
+                return a.value > b.value
+            end
+            return a.distPlayer < b.distPlayer
+        end)
+        loopPhase = 1
+        return targetsInDirection[1] and targetsInDirection[1].instance or nil
     end
     
     table.sort(targetsInDirection, function(a, b)
         if a.value ~= b.value then
             return a.value > b.value
         end
-        if movingForward then
+        if loopPhase == 1 or loopPhase == 3 then
             return a.dist < b.dist
         else
             return a.dist > b.dist
@@ -249,13 +278,19 @@ task.spawn(function()
         if targetTree then
             local targetPart = targetTree:IsA("Model") and (targetTree.PrimaryPart or targetTree:FindFirstChildOfClass("Part")) or targetTree
             if targetPart and targetPart:IsA("BasePart") then
-                StatusLabel.Text = "Trạng thái: Tuần tra tuyến đường thẳng"
+                if loopPhase == 1 or loopPhase == 3 then
+                    StatusLabel.Text = "Trạng thái: Tiến thẳng dọn cây"
+                elseif loopPhase == 2 then
+                    StatusLabel.Text = "Trạng thái: Đi lùi quét góc sau"
+                else
+                    StatusLabel.Text = "Trạng thái: Quét vòng tròn vét map"
+                end
                 local targetPos = targetPart.CFrame * CFrame.new(0, 0, Config.DistanceToCut)
                 teleportTo(targetPos)
             end
         else
             StatusLabel.Text = "Trạng thái: Đợi cây xuất hiện..."
-            task.wait(0.05)
+            task.wait(0.01)
         end
     end
 end)
