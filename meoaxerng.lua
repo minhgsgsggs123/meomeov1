@@ -8,7 +8,7 @@ local Config = {
     TreeFolder = workspace:FindFirstChild("Trees") or workspace:FindFirstChild("Map") or workspace, 
     GateFolder = workspace:FindFirstChild("Gates") or workspace:FindFirstChild("Borders") or workspace,
     DistanceToCut = 4,
-    TweenSpeed = 45
+    TweenSpeed = 40
 }
 
 local Players = game:GetService("Players")
@@ -85,6 +85,19 @@ LocalPlayer.Idled:Connect(function()
     VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
 end)
 
+local function getBasePoint()
+    local spawnPart = workspace:FindFirstChild("SpawnLocation") or workspace:FindFirstChildOfClass("SpawnLocation")
+    if spawnPart then
+        return spawnPart.Position
+    end
+    local character = LocalPlayer.Character
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        return character.HumanoidRootPart.Position
+    end
+    return Vector3.new(0, 0, 0)
+end
+local basePoint = getBasePoint()
+
 local function teleportTo(targetCFrame)
     local character = LocalPlayer.Character
     if not character or not character:FindFirstChild("HumanoidRootPart") then return end
@@ -97,6 +110,10 @@ local function teleportTo(targetCFrame)
     local tween = TweenService:Create(hrp, tweenInfo, {CFrame = targetCFrame})
     tween:Play()
     tween.Completed:Wait()
+    
+    if character:FindFirstChildOfClass("Humanoid") then
+        character:FindFirstChildOfClass("Humanoid").PlatformStand = false
+    end
 end
 
 local function getMyWood()
@@ -119,8 +136,6 @@ local function getLockedGate()
     if not Config.GateFolder then return nil end
     local closestGate = nil
     local shortestDistance = math.huge
-    local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if not hrp then return nil end
     
     for _, gate in pairs(Config.GateFolder:GetChildren()) do
         if gate:IsA("Part") or gate:IsA("Model") then
@@ -129,7 +144,7 @@ local function getLockedGate()
                 if gatePart and gatePart:IsA("BasePart") then
                     local hasPrice = gate:FindFirstChild("Price") or gate:FindFirstChild("Cost") or gate:FindFirstChild("RequiredWood")
                     if gatePart.CanCollide == true or hasPrice then
-                        local dist = (hrp.Position - gatePart.Position).Magnitude
+                        local dist = (basePoint - gatePart.Position).Magnitude
                         if dist < shortestDistance then
                             shortestDistance = dist
                             closestGate = gate
@@ -145,8 +160,6 @@ end
 local function getBestTree()
     local bestTree = nil
     local highestValue = -1
-    local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if not hrp then return nil end
     
     local lockedGate = getLockedGate()
     local gatePosition = lockedGate and (lockedGate.PrimaryPart or lockedGate:FindFirstChildOfClass("Part") or lockedGate).Position
@@ -157,9 +170,9 @@ local function getBestTree()
             
             if treePart and treePart:IsA("BasePart") then
                 if gatePosition then
-                    local distTreeToSpawn = (treePart.Position - Vector3.new(0,0,0)).Magnitude
-                    local distGateToSpawn = (gatePosition - Vector3.new(0,0,0)).Magnitude
-                    if distTreeToSpawn > distGateToSpawn then
+                    local distTreeToBase = (treePart.Position - basePoint).Magnitude
+                    local distGateToBase = (gatePosition - basePoint).Magnitude
+                    if distTreeToBase > distGateToBase then
                         continue
                     end
                 end
