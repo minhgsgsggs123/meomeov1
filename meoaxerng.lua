@@ -7,8 +7,8 @@ local Config = {
     AutoUnlock = true,
     TreeFolder = workspace:FindFirstChild("Trees") or workspace:FindFirstChild("Map") or workspace, 
     GateFolder = workspace:FindFirstChild("Gates") or workspace:FindFirstChild("Borders") or workspace,
-    DistanceToCut = 4,
-    TweenSpeed = 40
+    DistanceToCut = 3.5,
+    TweenSpeed = 55
 }
 
 local Players = game:GetService("Players")
@@ -160,6 +160,9 @@ end
 local function getBestTree()
     local bestTree = nil
     local highestValue = -1
+    local closestDistance = math.huge
+    local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return nil end
     
     local lockedGate = getLockedGate()
     local gatePosition = lockedGate and (lockedGate.PrimaryPart or lockedGate:FindFirstChildOfClass("Part") or lockedGate).Position
@@ -187,8 +190,14 @@ local function getBestTree()
                     treeValue = 10
                 end
                 
+                local distToPlayer = (hrp.Position - treePart.Position).Magnitude
+                
                 if treeValue > highestValue then
                     highestValue = treeValue
+                    closestDistance = distToPlayer
+                    bestTree = obj
+                elseif treeValue == highestValue and distToPlayer < closestDistance then
+                    closestDistance = distToPlayer
                     bestTree = obj
                 end
             end
@@ -199,7 +208,7 @@ end
 
 task.spawn(function()
     while Config.AutoFarm do
-        task.wait(0.2)
+        task.wait(0.1)
         
         if Config.AutoUnlock then
             local lockedGate = getLockedGate()
@@ -209,7 +218,7 @@ task.spawn(function()
                     StatusLabel.Text = "Kaitun: Đang đi mở khóa khu vực mới!"
                     local gatePart = lockedGate.PrimaryPart or lockedGate:FindFirstChildOfClass("Part") or lockedGate
                     teleportTo(gatePart.CFrame)
-                    task.wait(1.5)
+                    task.wait(1)
                     StatusLabel.Text = "kaitun đang hoạt động"
                     continue
                 end
@@ -220,19 +229,14 @@ task.spawn(function()
         if targetTree then
             local targetPart = targetTree:IsA("Model") and (targetTree.PrimaryPart or targetTree:FindFirstChildOfClass("Part")) or targetTree
             if targetPart and targetPart:IsA("BasePart") then
-                while Config.AutoFarm and targetTree and targetTree.Parent == Config.TreeFolder do
-                    local targetPos = targetPart.CFrame * CFrame.new(0, 0, Config.DistanceToCut)
-                    teleportTo(targetPos)
-                    task.wait(0.3)
-                    if not targetTree or not targetTree.Parent then
-                        break
-                    end
-                end
+                StatusLabel.Text = "Kaitun: Đang chặt cây xịn nhất"
+                local targetPos = targetPart.CFrame * CFrame.new(0, 0, Config.DistanceToCut)
+                teleportTo(targetPos)
+                task.wait(0.15)
             end
         else
             StatusLabel.Text = "Kaitun: Đang đợi cây xuất hiện..."
-            task.wait(0.5)
-            StatusLabel.Text = "kaitun đang hoạt động"
+            task.wait(0.3)
         end
     end
 end)
